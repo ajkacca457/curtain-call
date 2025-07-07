@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
+import { IoTicket } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
+  const navigate = useNavigate();
+
+  const handleBookingsClick = () => {
+    if (!user) {
+      openSignIn();
+    } else {
+      navigate("/my-bookings");
+    }
+  }
+
 
   return (
     <div>
@@ -38,9 +50,6 @@ const Navbar = () => {
                 <Link to="/shows">Shows</Link>
               </li>
               <li>
-                <Link to="/my-bookings">My Bookings</Link>
-              </li>
-              <li>
                 <Link to="/my-favorite">My Favorite</Link>
               </li>
             </ul>
@@ -56,9 +65,6 @@ const Navbar = () => {
               <Link to="/shows">Shows</Link>
             </li>
             <li>
-              <Link to="/my-bookings">My Bookings</Link>
-            </li>
-            <li>
               <Link to="/my-favorite">My Favorite</Link>
             </li>
           </ul>
@@ -66,9 +72,22 @@ const Navbar = () => {
 
         <div className="navbar-end">
           {!user ? (
-            <button class="btn btn-outline btn-secondary" onClick={openSignIn}>Login</button>
+            <button
+              className="btn btn-outline btn-secondary"
+              onClick={openSignIn}
+            >
+              Login
+            </button>
           ) : (
-            <UserButton />
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="My Bookings"
+                  labelIcon={<IoTicket />}
+                  onClick={handleBookingsClick}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
           )}
         </div>
       </div>
