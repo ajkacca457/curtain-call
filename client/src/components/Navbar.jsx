@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
+
   return (
     <div>
       <div className="navbar max-w-[1600px] mx-auto">
@@ -59,8 +63,13 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+
         <div className="navbar-end">
-          <button class="btn btn-outline btn-secondary">Login</button>
+          {!user ? (
+            <button class="btn btn-outline btn-secondary" onClick={openSignIn}>Login</button>
+          ) : (
+            <UserButton />
+          )}
         </div>
       </div>
     </div>
