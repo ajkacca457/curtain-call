@@ -1,4 +1,4 @@
-import React from 'react'
+import {Link} from 'react-router-dom';
 
 const ShowCard = ({ show }) => {
   return (
@@ -23,9 +23,9 @@ const ShowCard = ({ show }) => {
           <span>{new Date(show.release_date).getFullYear()}</span>
         </div>
 
-        <button className="mt-4 w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition cursor-pointer">
+        <Link className="mt-4 block w-fit px-4 py-2 bg-purple-600 text-white ml-auto rounded hover:bg-purple-700 transition cursor-pointer" to={`/shows/${show._id}`}  >
            Buy Tickets
-        </button>
+        </Link>
         
       </div>
     </div>
