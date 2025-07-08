@@ -14,66 +14,77 @@ const Navbar = () => {
     } else {
       navigate("/my-bookings");
     }
-  }
-
+  };
 
   return (
-    <div>
-      <div className="navbar max-w-[1600px] mx-auto">
+    <div className="w-full bg-white">
+      <div className="navbar max-w-[1600px] mx-auto px-6 py-3">
+        {/* Start */}
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost lg:hidden text-gray-700"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {" "}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{" "}
+                />
               </svg>
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-white rounded-md mt-3 w-52 p-2 border border-gray-200"
             >
               <li>
-                <Link to="/">Home</Link>
+                <Link className="hover:text-indigo-500" to="/">Home</Link>
               </li>
               <li>
-                <Link to="/shows">Shows</Link>
+                <Link className="hover:text-indigo-500" to="/shows">Shows</Link>
               </li>
               <li>
-                <Link to="/my-favorite">My Favorite</Link>
+                <Link className="hover:text-indigo-500" to="/my-favorite">My Favorite</Link>
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <Link
+            to="/"
+            className="text-2xl font-playfair text-gray-800 hover:text-indigo-600 transition"
+          >
+            CurtainsCall
+          </Link>
         </div>
+
+        {/* Center */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal px-1 text-gray-700 font-medium">
             <li>
-              <Link to="/">Home</Link>
+              <Link className="hover:text-indigo-500 transition" to="/">Home</Link>
             </li>
             <li>
-              <Link to="/shows">Shows</Link>
+              <Link className="hover:text-indigo-500 transition" to="/shows">Shows</Link>
             </li>
             <li>
-              <Link to="/my-favorite">My Favorite</Link>
+              <Link className="hover:text-indigo-500 transition" to="/my-favorite">My Favorite</Link>
             </li>
           </ul>
         </div>
 
+        {/* End */}
         <div className="navbar-end">
           {!user ? (
             <button
-              className="btn btn-outline btn-secondary"
+              className="btn btn-outline border-indigo-500 text-indigo-600 hover:bg-indigo-50"
               onClick={openSignIn}
             >
               Login
