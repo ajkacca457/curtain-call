@@ -6,7 +6,7 @@ const Trailers = () => {
   const [currentTrailer, setCurrentTrailer] = useState(dummyTrailers[0]);
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-8">
+    <div className="max-w-[1600px] mx-auto px-4 py-8 bg-rose-100 rounded-3xl">
       <h2 className="text-2xl font-bold mb-6">🎬 Trailers</h2>
       <div className="flex justify-center mb-6">
         <ReactPlayer
