@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 @plugin "daisyui";
 
+
+/* Apply Playfair Display to all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Body text uses Roboto */
+body, p, span, a, li, button, input, textarea {
+  font-family: 'Roboto', sans-serif;
+}
