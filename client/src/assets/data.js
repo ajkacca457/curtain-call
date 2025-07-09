@@ -1,14 +1,14 @@
 export const dummyCastsData = [
-  { name: "Ramin Karimloo", profile_path: "https://image.tmdb.org/t/p/original/xJGZqspJGTrN1phnK5FENyXW7Al.jpg" }, // Phantom, Les Mis
-  { name: "Sutton Foster", profile_path: "https://image.tmdb.org/t/p/original/lqY2Wvm2frOUaT8vD0zNvBDR1TC.jpg" }, // Anything Goes
-  { name: "Leslie Odom Jr.", profile_path: "https://image.tmdb.org/t/p/original/o2S8EjY5VEn5W2aA3uZhD8MTuf2.jpg" }, // Hamilton
-  { name: "Ben Platt", profile_path: "https://image.tmdb.org/t/p/original/4TYQddcID3Zs9W1EyEeyZ1E4uRU.jpg" }, // Dear Evan Hansen
-  { name: "Patti LuPone", profile_path: "https://image.tmdb.org/t/p/original/hFvIxZTRbsm5wUVnZRWqf7C2rXH.jpg" }, // Broadway legend
-  { name: "Andrew Rannells", profile_path: "https://image.tmdb.org/t/p/original/zCh6kGy4KpDydRKP7YJeTVUTsvo.jpg" },
-  { name: "Laura Benanti", profile_path: "https://image.tmdb.org/t/p/original/7HpMy1zkcYgr2RKHr97iSldRXaa.jpg" },
-  { name: "Cynthia Erivo", profile_path: "https://image.tmdb.org/t/p/original/qFieWqTSO5EvOnuWbMuRz1MW4zF.jpg" },
-  { name: "Jonathan Groff", profile_path: "https://image.tmdb.org/t/p/original/77hElG7ZtKLw0QgMC7JpNHkTXd4.jpg" },
-  { name: "Lin-Manuel Miranda", profile_path: "https://image.tmdb.org/t/p/original/6G3HyZ1HckKqLPQqUcbUkB1h0dD.jpg" }
+  { name: "Ramin Karimloo", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Phantom, Les Mis
+  { name: "Sutton Foster", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Anything Goes
+  { name: "Leslie Odom Jr.", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Hamilton
+  { name: "Ben Platt", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Dear Evan Hansen
+  { name: "Patti LuPone", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Broadway legend
+  { name: "Andrew Rannells", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
+  { name: "Laura Benanti", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
+  { name: "Cynthia Erivo", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
+  { name: "Jonathan Groff", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
+  { name: "Lin-Manuel Miranda", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }
 ];
 
 
