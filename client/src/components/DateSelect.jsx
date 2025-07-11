@@ -1,16 +1,18 @@
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { useState } from "react";
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const DateSelect = ({ dateTime, id }) => {
   const [selected, setSelected] = useState(null);
 
+  const navigate= useNavigate();
+
   const handleBooking = () => {
     if (!selected) {
-      toast("please select a date for booking");
-    } else {
-      toast("booking is successful");
-    }
+        return toast("please select a date for booking");
+    } 
+    navigate(`/shows/${id}/${selected}`);
   };
 
   return (
@@ -28,7 +30,7 @@ const DateSelect = ({ dateTime, id }) => {
               <button
                 key={item}
                 onClick={() => setSelected(item)}
-                className={`px-5 py-6 rounded-xl transition-all duration-200 border-2 ${
+                className={`px-5 py-6 rounded-xl transition-all duration-200 border-2 cursor-pointer ${
                   isActive
                     ? "bg-amber-400 text-white border-amber-500"
                     : "bg-white/80 text-gray-800 hover:bg-white border-gray-300"
@@ -53,7 +55,7 @@ const DateSelect = ({ dateTime, id }) => {
       <div className="mt-12 text-center">
         <button
           onClick={handleBooking}
-          className="px-8 py-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow-md transition"
+          className="px-8 py-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow-md transition cursor-pointer"
         >
           Book Show
         </button>
