@@ -91,10 +91,8 @@ const ShowDetails = () => {
             ))}
           </div>
         </div>
- 
         {/*date select*/}
-
-        <DateSelect/>
+        <DateSelect dateTime={show.dateTime} id={show.showInfo._id}/>
       </div>
     </div>
   )
