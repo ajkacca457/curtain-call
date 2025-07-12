@@ -1,22 +1,31 @@
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { dummyShowsData, dummyDateTimeData } from '../assets/data'
-import DateSelect from '../components/DateSelect'
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { dummyShowsData, dummyDateTimeData } from "../assets/data";
+import DateSelect from "../components/DateSelect";
+import ShowCard from "../components/ShowCard";
 
 const ShowDetails = () => {
-  const { id } = useParams()
-  const [show, setShow] = useState(null)
+  const { id } = useParams();
+  const [show, setShow] = useState(null);
+
+  const SuggestedShows = dummyShowsData
+    .filter((item) => item._id !== id)
+    .slice(0, 4);
 
   useEffect(() => {
-    const showData = dummyShowsData.find((show) => show._id === id)
+    const showData = dummyShowsData.find((show) => show._id === id);
     setShow({
-      showInfo:showData,
-      dateTime: dummyDateTimeData
-    })
-  }, [id])
+      showInfo: showData,
+      dateTime: dummyDateTimeData,
+    });
+  }, [id]);
 
   if (!show) {
-    return <div className="text-center py-20 text-gray-500">Loading show details...</div>
+    return (
+      <div className="text-center py-20 text-gray-500">
+        Loading show details...
+      </div>
+    );
   }
 
   return (
@@ -35,7 +44,9 @@ const ShowDetails = () => {
             className="w-40 md:w-52 rounded-xl shadow-lg border-4 border-white"
           />
           <div className="text-white space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold">{show.showInfo.title}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold">
+              {show.showInfo.title}
+            </h1>
             <p className="italic text-sm">{show.showInfo.tagline}</p>
             <div className="flex gap-3 flex-wrap text-sm">
               <span className="px-2 py-1 rounded bg-white/10 border border-white/20">
@@ -92,10 +103,22 @@ const ShowDetails = () => {
           </div>
         </div>
         {/*date select*/}
-        <DateSelect dateTime={show.dateTime} id={show.showInfo._id}/>
+        <DateSelect dateTime={show.dateTime} id={show.showInfo._id} />
       </div>
-    </div>
-  )
-}
 
-export default ShowDetails
+        <div className="max-w-[1600px] mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-left my-8">
+            Other shows you can watch:
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {SuggestedShows.map((show) => (
+              <ShowCard key={show.id} show={show} />
+            ))}
+          </div>
+        </div>
+
+    </div>
+  );
+};
+
+export default ShowDetails;
