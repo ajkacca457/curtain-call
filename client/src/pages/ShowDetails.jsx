@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { dummyShowsData, dummyDateTimeData } from "../assets/data";
 import DateSelect from "../components/DateSelect";
 import ShowCard from "../components/ShowCard";
+import { Link } from "react-router-dom";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const ShowDetails = () => {
   const { id } = useParams();
@@ -106,17 +108,22 @@ const ShowDetails = () => {
         <DateSelect dateTime={show.dateTime} id={show.showInfo._id} />
       </div>
 
-        <div className="max-w-[1600px] mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-left my-8">
-            Other shows you can watch:
-          </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {SuggestedShows.map((show) => (
-              <ShowCard key={show.id} show={show} />
-            ))}
-          </div>
+      <div className="max-w-[1600px] mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-left my-8">
+          Other shows you can watch:
+        </h1>
+        <div className="grid grid-cols-1 mb-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {SuggestedShows.map((show) => (
+            <ShowCard key={show.id} show={show} />
+          ))}
         </div>
 
+        <div className="flex justify-end">
+          <Link to="/shows" className="text-xl flex items-center gap-x-2 transition-colors duration-100 hover:underline hover:text-blue-950">
+            All Shows <FaArrowRightLong />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
