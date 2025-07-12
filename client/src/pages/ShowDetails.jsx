@@ -5,6 +5,7 @@ import DateSelect from "../components/DateSelect";
 import ShowCard from "../components/ShowCard";
 import { Link } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
+import Loading from "../components/Loading";
 
 const ShowDetails = () => {
   const { id } = useParams();
@@ -24,12 +25,10 @@ const ShowDetails = () => {
 
   if (!show) {
     return (
-      <div className="text-center py-20 text-gray-500">
-        Loading show details...
-      </div>
+      <Loading/>
     );
   }
-
+  
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       {/* Hero Section */}
