@@ -4,6 +4,7 @@ import Loading from "../components/Loading";
 import { dummyShowsData, dummyDateTimeData } from "../assets/data";
 import { isoTimeFormat } from "../lib/utils";
 import ScreenImage from "../assets/screenImage.svg";
+import toast from "react-hot-toast";
 
 const SeatLayout = () => {
   const { id, date } = useParams();
@@ -18,6 +19,31 @@ const SeatLayout = () => {
       dateTime: dummyDateTimeData,
     });
   }, [id]);
+
+
+  const handleClick=(seatId)=> {
+    if (!selectedTime) {
+      return toast("please select time to book seat");
+    }
+    if(!selectedSeats.includes(seatId) && selectedSeats.length>4) {
+      return toast ("you can not select more than 5 seats");
+    }
+    setSelectedSeats(prev=> [...prev, seatId]);
+  }
+
+
+const renderRows= (row, count= 9) => {
+ return <div className="flex flex-wrap items-center justify-center gap-2">
+    {Array.from({length:count}, (_, i)=> {
+      const seatId= `${row}${i+1}`; 
+      return(
+        <button key={seatId} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`} onClick={()=> {handleClick(seatId)}}></button>
+      )
+
+    })}
+ </div>    
+}
+
 
   if (!show) {
     return <Loading />;
@@ -57,6 +83,11 @@ const SeatLayout = () => {
           <img src={ScreenImage} alt="show-stage"/>
           <h4 className="mb-2">Screen Position</h4>
         </div>
+
+          <div>
+              {renderRows("A",9)}
+          </div>
+
       </div>
     </div>
   );
