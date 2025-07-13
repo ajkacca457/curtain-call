@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import { dummyShowsData, dummyDateTimeData } from "../assets/data";
 import { isoTimeFormat } from "../lib/utils";
+import ScreenImage from "../assets/screenImage.svg";
 
 const SeatLayout = () => {
   const { id, date } = useParams();
@@ -50,8 +51,11 @@ const SeatLayout = () => {
       </div>
 
       {/* Seat Layout Panel Placeholder */}
-      <div className="col-span-3 bg-gray-50 rounded-2xl shadow-inner p-6 border border-gray-100 min-h-[300px] flex items-center justify-center">
-        <p className="text-gray-400 italic">Seat layout coming soon...</p>
+      <div className="col-span-3 bg-gray-50 flex flex-col items-center rounded-2xl shadow-inner p-6 border border-gray-100 min-h-[300px]">
+        <div className="text-center mt-10">
+          <h4 className="mb-2">Screen Position</h4>
+          <img src={ScreenImage} alt="show-stage"/>
+        </div>
       </div>
     </div>
   );
