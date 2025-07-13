@@ -11,7 +11,15 @@ const SeatLayout = () => {
   const [show, setShow] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
+  const rowGroups = [
+    ["A", "B"],
+    ["C", "E"],
+    ["D", "F"],
+    ["G", "I"],
+    ["H", "J"]
+  ];
 
+  const OtherRows = rowGroups.slice(1);
   useEffect(() => {
     const showData = dummyShowsData.find((show) => show._id === id);
     setShow({
@@ -20,30 +28,42 @@ const SeatLayout = () => {
     });
   }, [id]);
 
-
-  const handleClick=(seatId)=> {
+  const handleClick = (seatId) => {
     if (!selectedTime) {
       return toast("please select time to book seat");
     }
-    if(!selectedSeats.includes(seatId) && selectedSeats.length>4) {
-      return toast ("you can not select more than 5 seats");
+    if (!selectedSeats.includes(seatId) && selectedSeats.length > 4) {
+      return toast("you can not select more than 5 seats");
     }
-    setSelectedSeats(prev=> prev.includes(seatId)?prev.filter(item=> item !== seatId) :[...prev, seatId]);
-  }
+    setSelectedSeats((prev) =>
+      prev.includes(seatId)
+        ? prev.filter((item) => item !== seatId)
+        : [...prev, seatId]
+    );
+  };
 
-
-const renderRows= (row, count= 9) => {
- return <div className="flex flex-wrap items-center justify-center gap-2">
-    {Array.from({length:count}, (_, i)=> {
-      const seatId= `${row}${i+1}`; 
-      return(
-        <button key={seatId} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`} onClick={()=> {handleClick(seatId)}}></button>
-      )
-
-    })}
- </div>    
-}
-
+  const renderRows = (row, count = 9) => {
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+        {Array.from({ length: count }, (_, i) => {
+          const seatId = `${row}${i + 1}`;
+          return (
+            <button
+              key={seatId}
+              className={`h-10 w-10 rounded border border-primary/60 cursor-pointer ${
+                selectedSeats.includes(seatId) && "bg-primary text-white"
+              }`}
+              onClick={() => {
+                handleClick(seatId);
+              }}
+            >
+              {seatId}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
 
   if (!show) {
     return <Loading />;
@@ -53,41 +73,50 @@ const renderRows= (row, count= 9) => {
     <div className="grid grid-cols-4 gap-x-6 max-w-[1600px] mx-auto mt-10">
       {/* Time Selector Panel */}
       <div className="col-span-1">
-      <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Select Show Timing</h3>
-        <div className="grid grid-cols-2 gap-3">
-          {show.dateTime[date].map((item) => {
-            const isSelected = selectedTime === item.time;
-            return (
-              <div
-                key={item.time}
-                onClick={() => setSelectedTime(item.time)}
-                className={`cursor-pointer px-4 py-2 rounded-lg text-sm font-medium text-center transition-all
-                  ${isSelected
-                    ? "bg-indigo-600 text-white shadow"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"}
+        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            Select Show Timing
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {show.dateTime[date].map((item) => {
+              const isSelected = selectedTime === item.time;
+              return (
+                <div
+                  key={item.time}
+                  onClick={() => setSelectedTime(item.time)}
+                  className={`cursor-pointer px-4 py-2 rounded-lg text-sm font-medium text-center transition-all
+                  ${
+                    isSelected
+                      ? "bg-indigo-600 text-white shadow"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }
                 `}
-              >
-                {isoTimeFormat(item.time)}
-              </div>
-            );
-          })}
+                >
+                  {isoTimeFormat(item.time)}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
       </div>
 
       {/* Seat Layout Panel Placeholder */}
       <div className="col-span-3 bg-gray-50 flex flex-col items-center rounded-2xl shadow-inner p-6 border border-gray-100 min-h-[300px]">
         <div className="text-center mt-10">
           <h3 className="mb-4 font-semibold text-xl">Select your seats</h3>
-          <img src={ScreenImage} alt="show-stage"/>
+          <img src={ScreenImage} alt="show-stage" />
           <h4 className="mb-2">Screen Position</h4>
         </div>
 
-          <div>
-              {renderRows("A",9)}
-          </div>
+        <div className="mt-8">
+          {rowGroups[0].map((item) => renderRows(item))}
+        </div>
 
+        <div className="grid grid-cols-2 gap-8 mt-8">
+          {OtherRows.map((group, index) => {
+            return <div key={index}>{group.map((row) => renderRows(row))}</div>;
+          })}
+        </div>
       </div>
     </div>
   );
