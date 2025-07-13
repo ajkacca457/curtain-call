@@ -53,8 +53,9 @@ const SeatLayout = () => {
       {/* Seat Layout Panel Placeholder */}
       <div className="col-span-3 bg-gray-50 flex flex-col items-center rounded-2xl shadow-inner p-6 border border-gray-100 min-h-[300px]">
         <div className="text-center mt-10">
-          <h4 className="mb-2">Screen Position</h4>
+          <h3 className="mb-4 font-semibold text-xl">Select your seats</h3>
           <img src={ScreenImage} alt="show-stage"/>
+          <h4 className="mb-2">Screen Position</h4>
         </div>
       </div>
     </div>
