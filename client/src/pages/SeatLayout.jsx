@@ -28,7 +28,7 @@ const SeatLayout = () => {
     if(!selectedSeats.includes(seatId) && selectedSeats.length>4) {
       return toast ("you can not select more than 5 seats");
     }
-    setSelectedSeats(prev=> [...prev, seatId]);
+    setSelectedSeats(prev=> prev.includes(seatId)?prev.filter(item=> item !== seatId) :[...prev, seatId]);
   }
 
 
