@@ -5,6 +5,7 @@ import { dummyShowsData, dummyDateTimeData } from "../assets/data";
 import { isoTimeFormat } from "../lib/utils";
 import ScreenImage from "../assets/screenImage.svg";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const SeatLayout = () => {
   const { id, date } = useParams();
@@ -117,6 +118,11 @@ const SeatLayout = () => {
             return <div key={index}>{group.map((row) => renderRows(row))}</div>;
           })}
         </div>
+
+          {selectedTime && selectedSeats.length>0 && <div className="my-10">
+              <Link to="/my-bookings" className="btn btn-primary">Proceed to checkout</Link>
+            </div>}
+
       </div>
     </div>
   );
