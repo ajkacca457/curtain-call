@@ -28,6 +28,9 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <Dashboard /> },
+      { path:"add-shows", element: <Dashboard /> },
+      { path:"list-shows", element: <Dashboard /> },
+      { path:"list-bookings", element: <Dashboard /> }
     ],
   },
 ]);
