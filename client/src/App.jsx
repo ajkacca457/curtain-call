@@ -11,6 +11,7 @@ import AppLayout from './components/AppLayout.jsx'
 import AdminLayout from './components/admin/AdminLayout.jsx'
 import ListShows from './components/admin/ListShows.jsx'
 import BookingList from './components/admin/BookingList.jsx'
+import AddShows from './components/admin/AddShows.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path:"add-shows", element: <Dashboard /> },
+      { path:"add-shows", element: <AddShows /> },
       { path:"list-shows", element: <ListShows /> },
       { path:"list-bookings", element: <BookingList /> },
     ],
