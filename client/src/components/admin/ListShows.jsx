@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { dummyShowsData } from '../../assets/data';
+import { dummyDashboardData } from '../../assets/data';
 
 const ListShows = () => {
     const [shows, setShows] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchListShows = async () => {
-        setShows(dummyShowsData);
+        setShows(dummyDashboardData.activeShows || []);
         setLoading(false);
     };
 
