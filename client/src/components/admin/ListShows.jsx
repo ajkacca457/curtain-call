@@ -41,9 +41,9 @@ const ListShows = () => {
                                     key={show._id}
                                     className="border-b hover:bg-gray-50 transition-all"
                                 >
-                                    <td className="px-6 py-4 font-medium text-gray-800">{show?.title || "Untitled"}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-800">{show?.movie?.title || "Untitled"}</td>
                                     <td className="px-6 py-4 text-gray-600">
-                                        {new Date(show.release_date).toLocaleString(undefined, {
+                                        {new Date(show?.movie?.release_date).toLocaleString(undefined, {
                                             dateStyle: "medium",
                                             timeStyle: "short",
                                         })}
