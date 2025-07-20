@@ -9,6 +9,7 @@ import Dashboard from './components/admin/Dashboard.jsx'
 
 import AppLayout from './components/AppLayout.jsx'
 import AdminLayout from './components/admin/AdminLayout.jsx'
+import ListShows from './components/admin/ListShows.jsx'
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path:"add-shows", element: <Dashboard /> },
-      { path:"list-shows", element: <Dashboard /> },
+      { path:"list-shows", element: <ListShows /> },
       { path:"list-bookings", element: <Dashboard /> }
     ],
   },
