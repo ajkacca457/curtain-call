@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import ConnectDB from './config/db.js';
 
 const app = express();
 
@@ -13,6 +14,18 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer= async()=> {
+  try {
+    await ConnectDB();
+    app.listen(PORT, ()=> {
+      console.log(`server is running on ${PORT}`)
+    })
+    
+  } catch (error) {
+     console.log(`failed to start server`, error.message);
+     process.exit(1);    
+  }
+}
+
+
+startServer();
