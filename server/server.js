@@ -14,7 +14,10 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 app.get('/', (req, res) => {
-    res.send('Welcome to the Curtain Call API');
+    res.status(200).json({
+      success:true,
+      message:"Welcome to curtain calls api"
+    });
 });
 app.use("/api/inngest", serve({client:inngest,functions}));
 
