@@ -25,12 +25,10 @@ const showSchema = new mongoose.Schema(
     genres: {
       type: Array,
       required: true,
-      validate: [arrayLimit, 'At least one genre is required'],
     },
     casts: {
       type: Array,
       required: true,
-      validate: [arrayLimit, 'At least one cast member is required'],
     },
     release_date: {
       type: Date,

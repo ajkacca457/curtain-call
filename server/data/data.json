@@ -1,0 +1,93 @@
+[
+  {
+    "_id": "100001",
+    "id": 100001,
+    "title": "The Phantom of the Opera",
+    "overview": "The timeless story of love, obsession, and tragedy unfolds beneath the Paris Opera House. Featuring Andrew Lloyd Webber’s iconic score and dazzling stagecraft.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "backdrop_path": "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "genres": [
+      { "id": 10402, "name": "Musical" },
+      { "id": 18, "name": "Drama" },
+      { "id": 10749, "name": "Romance" }
+    ],
+    "casts": [
+      { "name": "Ramin Karimloo", "character": "The Phantom","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+      { "name": "Sierra Boggess", "character": "Christine Daaé", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    ],
+    "release_date": "2025-09-12",
+    "original_language": "en",
+    "tagline": "Let the music of the night enchant you.",
+    "vote_average": 9.1,
+    "vote_count": 12450,
+    "runtime": 150
+  },
+  {
+    "_id": "100002",
+    "id": 100002,
+    "title": "Matilda The Musical",
+    "overview": "A witty, uplifting musical about a gifted girl who overcomes her neglectful parents and tyrannical headmistress with the power of imagination and books.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "backdrop_path": "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "genres": [
+      { "id": 10402, "name": "Musical" },
+      { "id": 10751, "name": "Family" },
+      { "id": 35, "name": "Comedy" }
+    ],
+    "casts": [
+      { "name": "Alisha Weir", "character": "Matilda","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+      { "name": "Emma Thompson", "character": "Miss Trunchbull","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    ],
+    "release_date": "2025-10-01",
+    "original_language": "en",
+    "tagline": "Sometimes you have to be a little bit naughty.",
+    "vote_average": 8.7,
+    "vote_count": 9000,
+    "runtime": 135
+  },
+  {
+    "_id": "100003",
+    "id": 100003,
+    "title": "The Curious Incident of the Dog in the Night-Time",
+    "overview": "A visually stunning stage adaptation of Mark Haddon's best-selling novel, following a neurodivergent boy as he investigates a neighborhood mystery.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "backdrop_path": "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "genres": [
+      { "id": 18, "name": "Drama" },
+      { "id": 9648, "name": "Mystery" }
+    ],
+    "casts": [
+      { "name": "Luke Treadaway", "character": "Christopher Boone","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+      { "name": "Niamh Cusack", "character": "Siobhan","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    ],
+    "release_date": "2025-08-18",
+    "original_language": "en",
+    "tagline": "15 years old. Exceptional mind.",
+    "vote_average": 8.9,
+    "vote_count": 6850,
+    "runtime": 130
+  },
+  {
+    "_id": "100004",
+    "id": 100004,
+    "title": "Swan Lake",
+    "overview": "The most famous classical ballet of all time. A breathtaking blend of drama, passion, and choreography set to Tchaikovsky’s legendary score.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "backdrop_path": "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "genres": [
+      { "id": 10749, "name": "Romance" },
+      { "id": 10402, "name": "Musical" },
+      { "id": 16, "name": "Ballet" }
+    ],
+    "casts": [
+      { "name": "Natalia Osipova", "character": "Odette/Odile","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+      { "name": "Matthew Ball", "character": "Prince Siegfried","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    ],
+    "release_date": "2025-11-05",
+    "original_language": "en",
+    "tagline": "A love story that defies fate.",
+    "vote_average": 9.4,
+    "vote_count": 17200,
+    "runtime": 140
+  }
+]

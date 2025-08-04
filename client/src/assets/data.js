@@ -1,16 +1,15 @@
 export const dummyCastsData = [
-  { name: "Ramin Karimloo", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Phantom, Les Mis
-  { name: "Sutton Foster", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Anything Goes
-  { name: "Leslie Odom Jr.", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Hamilton
-  { name: "Ben Platt", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Dear Evan Hansen
-  { name: "Patti LuPone", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }, // Broadway legend
-  { name: "Andrew Rannells", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
-  { name: "Laura Benanti", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
-  { name: "Cynthia Erivo", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
-  { name: "Jonathan Groff", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" },
-  { name: "Lin-Manuel Miranda", profile_path: "https://images.pexels.com/photos/4029925/pexels-photo-4029925.jpeg" }
+  { name: "Ramin Karimloo", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, // Phantom, Les Mis
+  { name: "Sutton Foster", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, // Anything Goes
+  { name: "Leslie Odom Jr.", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, // Hamilton
+  { name: "Ben Platt", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, // Dear Evan Hansen
+  { name: "Patti LuPone", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, // Broadway legend
+  { name: "Andrew Rannells", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Laura Benanti", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Cynthia Erivo", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Jonathan Groff", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Lin-Manuel Miranda", profile_path: "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
 ];
-
 
 export const dummyShowsData = [
   {
@@ -19,8 +18,8 @@ export const dummyShowsData = [
     title: "The Phantom of the Opera",
     overview:
       "The timeless story of love, obsession, and tragedy unfolds beneath the Paris Opera House. Featuring Andrew Lloyd Webber’s iconic score and dazzling stagecraft.",
-    poster_path: "https://image.tmdb.org/t/p/original/juA4IWO52Fecx8lhAsxmDgy3M3.jpg",
-    backdrop_path: "https://image.tmdb.org/t/p/original/op3qmNhvwEvyT7UFyPbIfQmKriB.jpg",
+    poster_path: "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    backdrop_path: "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     genres: [
       { id: 10402, name: "Musical" },
       { id: 18, name: "Drama" },
@@ -40,8 +39,8 @@ export const dummyShowsData = [
     title: "Matilda The Musical",
     overview:
       "A witty, uplifting musical about a gifted girl who overcomes her neglectful parents and tyrannical headmistress with the power of imagination and books.",
-    poster_path: "https://image.tmdb.org/t/p/original/juA4IWO52Fecx8lhAsxmDgy3M3.jpg",
-    backdrop_path: "https://image.tmdb.org/t/p/original/icFWIk1KfkWLZnugZAJEDauNZ94.jpg",
+    poster_path: "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    backdrop_path: "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     genres: [
       { id: 10402, name: "Musical" },
       { id: 10751, name: "Family" },
