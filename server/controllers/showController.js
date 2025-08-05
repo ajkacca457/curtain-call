@@ -3,7 +3,7 @@ import ErrorResponse from "../utils/ErrorHandle.js";
 
 export const getActiveShows = async (req, res, next) => {
     try {
-        const shows = await Show.find();
+        const shows = await Show.find({});
 
         if (!shows) {
             return next(new ErrorResponse("no active shows found", 404))
@@ -38,4 +38,33 @@ export const getSingleShow= async(req,res,next) => {
     } catch (error) {
         next(error);        
     }
+}
+
+export const createSingleShow= async(req,res,next)=> {
+    console.log(req.body);
+    try {
+        const show= await Show.create(req.body);
+        
+        if(!show) {
+            return next(new ErrorResponse("show cant be created",400));
+        }   
+
+        res.status(200).json({
+            success:true,
+            show,
+            message:`new show created`        
+        })
+        
+    } catch (error) {
+        next(error);    
+    }
+}
+
+export const createShowTime=async(req,res,next)=> {
+    res.status(200).json({
+        success:true,
+        message: "new show times are added"
+
+    })
+
 }
