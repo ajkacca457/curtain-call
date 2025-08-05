@@ -3,17 +3,13 @@
     "_id": "100001",
     "id": 100001,
     "title": "The Phantom of the Opera",
-    "overview": "The timeless story of love, obsession, and tragedy unfolds beneath the Paris Opera House. Featuring Andrew Lloyd Webber’s iconic score and dazzling stagecraft.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "backdrop_path": "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "genres": [
-      { "id": 10402, "name": "Musical" },
-      { "id": 18, "name": "Drama" },
-      { "id": 10749, "name": "Romance" }
-    ],
+    "overview": "A timeless story of love and mystery beneath the Paris Opera House.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 18, "name": "Drama" }],
     "casts": [
-      { "name": "Ramin Karimloo", "character": "The Phantom","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-      { "name": "Sierra Boggess", "character": "Christine Daaé", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+      { "name": "Ramin Karimloo", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Sierra Boggess", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
     ],
     "release_date": "2025-09-12",
     "original_language": "en",
@@ -26,17 +22,13 @@
     "_id": "100002",
     "id": 100002,
     "title": "Matilda The Musical",
-    "overview": "A witty, uplifting musical about a gifted girl who overcomes her neglectful parents and tyrannical headmistress with the power of imagination and books.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "backdrop_path": "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "genres": [
-      { "id": 10402, "name": "Musical" },
-      { "id": 10751, "name": "Family" },
-      { "id": 35, "name": "Comedy" }
-    ],
+    "overview": "A witty musical about a gifted girl overcoming odds with imagination.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 10751, "name": "Family" }],
     "casts": [
-      { "name": "Alisha Weir", "character": "Matilda","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-      { "name": "Emma Thompson", "character": "Miss Trunchbull","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+      { "name": "Emma Thompson", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Alisha Weir", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
     ],
     "release_date": "2025-10-01",
     "original_language": "en",
@@ -49,16 +41,13 @@
     "_id": "100003",
     "id": 100003,
     "title": "The Curious Incident of the Dog in the Night-Time",
-    "overview": "A visually stunning stage adaptation of Mark Haddon's best-selling novel, following a neurodivergent boy as he investigates a neighborhood mystery.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=665&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "backdrop_path": "https://images.unsplash.com/photo-1587398458654-6a55d2d0dd61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "genres": [
-      { "id": 18, "name": "Drama" },
-      { "id": 9648, "name": "Mystery" }
-    ],
+    "overview": "A stage adaptation of a boy's journey to solve a mystery.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1675250055113-e88f5a04ecff?q=80&w=700&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1558901174-16a8deb09c30?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 18, "name": "Drama" }, { "id": 9648, "name": "Mystery" }],
     "casts": [
-      { "name": "Luke Treadaway", "character": "Christopher Boone","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-      { "name": "Niamh Cusack", "character": "Siobhan","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+      { "name": "Luke Treadaway", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Niamh Cusack", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
     ],
     "release_date": "2025-08-18",
     "original_language": "en",
@@ -71,23 +60,133 @@
     "_id": "100004",
     "id": 100004,
     "title": "Swan Lake",
-    "overview": "The most famous classical ballet of all time. A breathtaking blend of drama, passion, and choreography set to Tchaikovsky’s legendary score.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1694473860676-2fe17ca0d76a?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "backdrop_path": "https://images.unsplash.com/photo-1577179269308-b2e290d07ce5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "genres": [
-      { "id": 10749, "name": "Romance" },
-      { "id": 10402, "name": "Musical" },
-      { "id": 16, "name": "Ballet" }
-    ],
+    "overview": "A breathtaking blend of drama, passion, and classical choreography.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1709324143060-6217cf81827f?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1549887534-bd0b37f6105b?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 10749, "name": "Romance" }],
     "casts": [
-      { "name": "Natalia Osipova", "character": "Odette/Odile","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-      { "name": "Matthew Ball", "character": "Prince Siegfried","profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+      { "name": "Natalia Osipova", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Matthew Ball", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
     ],
-    "release_date": "2025-11-05",
+    "release_date": "2025-11-01",
     "original_language": "en",
     "tagline": "A love story that defies fate.",
     "vote_average": 9.4,
-    "vote_count": 17200,
+    "vote_count": 15200,
     "runtime": 140
+  },
+  {
+    "_id": "100005",
+    "id": 100005,
+    "title": "Hamilton",
+    "overview": "A revolutionary musical blending hip-hop and history to tell Alexander Hamilton’s story.",
+    "poster_path": "https://images.unsplash.com/photo-1588167056543-61c9c819b70c?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1515169067865-5387ec356754?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 36, "name": "Historical" }],
+    "casts": [
+      { "name": "Lin-Manuel Miranda", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Leslie Odom Jr.", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-07-15",
+    "original_language": "en",
+    "tagline": "Who lives, who dies, who tells your story?",
+    "vote_average": 9.3,
+    "vote_count": 19200,
+    "runtime": 160
+  },
+  {
+    "_id": "100006",
+    "id": 100006,
+    "title": "Les Misérables",
+    "overview": "A sweeping musical about love, redemption, and revolution in 19th-century France.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1669860720077-ec5a3d58e5c1?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 18, "name": "Drama" }],
+    "casts": [
+      { "name": "Alfie Boe", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Carrie Hope Fletcher", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-12-05",
+    "original_language": "en",
+    "tagline": "To love another person is to see the face of God.",
+    "vote_average": 9.0,
+    "vote_count": 14200,
+    "runtime": 180
+  },
+  {
+    "_id": "100007",
+    "id": 100007,
+    "title": "Blue Man Group",
+    "overview": "A high-energy show that fuses music, art, and comedy.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1681485937449-7c7f19ae7ff3?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1556139930-bb2a88f1a0f2?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 35, "name": "Comedy" }],
+    "casts": [
+      { "name": "Chris Wink", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Phil Stanton", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-10-22",
+    "original_language": "en",
+    "tagline": "Three men. One unforgettable experience.",
+    "vote_average": 8.8,
+    "vote_count": 9300,
+    "runtime": 95
+  },
+  {
+    "_id": "100008",
+    "id": 100008,
+    "title": "Chicago",
+    "overview": "A sizzling tale of murder, fame, and jazz set in the roaring '20s.",
+    "poster_path": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1500336624523-d727130c3328?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 80, "name": "Crime" }],
+    "casts": [
+      { "name": "Renee Zellweger", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Catherine Zeta-Jones", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-06-01",
+    "original_language": "en",
+    "tagline": "If you can't be famous, be infamous.",
+    "vote_average": 8.6,
+    "vote_count": 11000,
+    "runtime": 113
+  },
+  {
+    "_id": "100009",
+    "id": 100009,
+    "title": "Dear Evan Hansen",
+    "overview": "A deeply personal and contemporary musical about connection and belonging.",
+    "poster_path": "https://images.unsplash.com/photo-1529243856184-fd5465488984?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1496381041707-1359d731dadb?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 10402, "name": "Musical" }, { "id": 18, "name": "Drama" }],
+    "casts": [
+      { "name": "Ben Platt", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Laura Dreyfuss", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-09-20",
+    "original_language": "en",
+    "tagline": "You will be found.",
+    "vote_average": 8.7,
+    "vote_count": 8900,
+    "runtime": 135
+  },
+  {
+    "_id": "100010",
+    "id": 100010,
+    "title": "Wicked",
+    "overview": "The untold story of the witches of Oz, before Dorothy arrived.",
+    "poster_path": "https://plus.unsplash.com/premium_photo-1670426564893-9d01440c86f9?q=80&w=665&auto=format&fit=crop",
+    "backdrop_path": "https://images.unsplash.com/photo-1587223962933-31eec1f5df5b?q=80&w=1170&auto=format&fit=crop",
+    "genres": [{ "id": 14, "name": "Fantasy" }, { "id": 10402, "name": "Musical" }],
+    "casts": [
+      { "name": "Idina Menzel", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" },
+      { "name": "Kristin Chenoweth", "profile_path": "https://images.unsplash.com/photo-1580518337843-f959e992563b?q=80&w=687&auto=format&fit=crop" }
+    ],
+    "release_date": "2025-12-20",
+    "original_language": "en",
+    "tagline": "So much happened before Dorothy dropped in.",
+    "vote_average": 9.2,
+    "vote_count": 16000,
+    "runtime": 145
   }
 ]
