@@ -19,3 +19,23 @@ export const getActiveShows = async (req, res, next) => {
         next(error)
     }
 };
+
+
+export const getSingleShow= async(req,res,next) => {
+    try {
+        const show = await Show.findById(req.params.id);
+
+        if(!show) {
+            return next(new ErrorResponse(`show with ${req.params.id} is not available`, 404))
+        }
+
+        res.status(200).json({
+            success:true,
+            show,
+            message:`${req.params.id} show is available`
+        })
+        
+    } catch (error) {
+        next(error);        
+    }
+}
