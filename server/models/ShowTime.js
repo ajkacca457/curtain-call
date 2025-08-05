@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const showTimeSchema= new mongoose.Schema({
-    show: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Show" },
+    showId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Show" },
     showDateTime: {type:Date, required:true},
     showPrice : {type:Object, default:{}},
     occupiedSeats: {type:Object, default: {}}
