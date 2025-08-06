@@ -6,7 +6,7 @@ const router= express.Router();
 
 router.get("/active-shows",protectAdminRoutes,getActiveShows);
 router.get("/:id",getSingleShow);
-router.post("/",createSingleShow);
-router.post("/add-show-time",createShowTime);
+router.post("/",protectAdminRoutes,createSingleShow);
+router.post("/add-show-time",protectAdminRoutes,createShowTime);
 
 export default router;
