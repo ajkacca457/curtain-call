@@ -102,3 +102,59 @@ export const createShowTime = async (req, res, next) => {
     }
 
 }
+
+export const dummyAllShow = async (res, req, next) => {
+    try {
+        res.status(200).json({
+            message: "all dummy show times are going to be send using this route"
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+export const getAllShowTime = async (req, res, next) => {
+    try {
+        // first get all the ShowTIme
+        const showtimes = await ShowTime.find({ showDateTime: { $gte: new Date() } })
+            .populate("showId")
+            .sort({ showDateTime: 1 });
+
+        if (showtimes.length === 0) {
+            return next(new ErrorResponse("No show times available", 404));
+        }
+        // next create uniqueArrayMap
+
+        const uniqueArrayMap = new Map();
+
+        // now loop through the showtime array
+
+        showtimes.forEach(item => {
+            const show = item.showId;
+            const showKey = show._id.toString();
+            //check if key already exists in the map
+            if (!uniqueArrayMap.has(showKey)) {
+                uniqueArrayMap.set(showKey, { show, times: [] });
+            }
+
+            const entry = uniqueArrayMap.get(showKey);
+
+            if (!entry.times.some(t => t.getTime() === item.showDateTime.getTime())) {
+                entry.times.push(item.showDateTime)
+            }
+
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "All available show timings grouped by show",
+            showtimes: Array.from(uniqueArrayMap.values())
+        });
+
+
+    } catch (error) {
+        next(error);
+    }
+};
