@@ -36,7 +36,12 @@ export const createBooking = async (req, res, next) => {
 
         }
 
-        const showTimeData = await ShowTime.find({showId});
+        const showTimeData = await ShowTime.find({showId}).populate("showId");
+
+        if(!showTimeData) {
+            return next(new ErrorResponse("show times are not available",404))
+        }
+
 
 
         res.status(200).json({
