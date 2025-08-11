@@ -103,18 +103,6 @@ export const createShowTime = async (req, res, next) => {
 
 }
 
-export const dummyAllShow = async (res, req, next) => {
-    try {
-        res.status(200).json({
-            message: "all dummy show times are going to be send using this route"
-        })
-    } catch (error) {
-        next(error);
-    }
-}
-
-
-
 export const getAllShowTime = async (req, res, next) => {
     try {
         // first get all the ShowTIme
@@ -158,3 +146,44 @@ export const getAllShowTime = async (req, res, next) => {
         next(error);
     }
 };
+
+
+
+export const getSingleShowTime = async (req, res, next) => {
+
+    try {
+        const { showId } = req.params;
+
+        const showtimes = await ShowTime.find({ showId, showDateTime: { $gte: new Date() } });
+
+        const show = await Show.findById(showId);
+
+        if (!show) {
+            return next(new ErrorResponse("no show available", 404))
+
+        }
+
+        const dateTime = {};
+
+        showtimes.forEach((item) => {
+            const date = item.showDateTime.toISOString().split("T")[0];
+            if (!dateTime[date]) {
+                dateTime[date] = [];
+            }
+            dateTime[date].push({
+                time: item.showDateTime,
+                show
+            })
+        })
+        res.status(200).json({
+            success: true,
+            dateTime,
+            message: "All date and time for the shows"
+        })
+
+    } catch (error) {
+        next(error)
+    }
+
+
+}
