@@ -9,6 +9,7 @@ router.get("/all-show-timing",getAllShowTime);
 router.get("/showtime/:showId",getSingleShowTime)
 router.get("/:id",getSingleShow);
 router.post("/",protectAdminRoutes,createSingleShow);
+// protect this route as it will be used by admin to add show timings
 router.post("/add-show-time",createShowTime);
 
 export default router;

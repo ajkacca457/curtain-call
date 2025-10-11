@@ -3,6 +3,7 @@ import { clerkClient } from "@clerk/express";
 
 export const protectAdminRoutes = async (req, res, next) => {
     try {
+        console.log("protectAdminRoutes middleware called");
         const { userId } = req.auth();
         const user = await clerkClient.users.getUser(userId);
 

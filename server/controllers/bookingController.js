@@ -1,6 +1,7 @@
 import { err } from "inngest/types";
 import ShowTime from "../models/ShowTime.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
+import Booking from "../models/Booking.js";
 
 
 const checkAvailability = async (showId, selectedSeats) => {
@@ -26,7 +27,7 @@ export const createBooking = async (req, res, next) => {
     try {
 
         const { userId } = req.auth();
-        const { showId, selectedSeats } = req.body;
+        const { showTimeId, selectedSeats } = req.body;
         const { origin } = req.headers;
 
         const isAvailable = checkAvailability(showId, selectedSeats);
@@ -36,13 +37,18 @@ export const createBooking = async (req, res, next) => {
 
         }
 
-        const showTimeData = await ShowTime.find({showId}).populate("showId");
+        const showTimeData = await ShowTime.find({showTimeId}).populate("show");
 
         if(!showTimeData) {
             return next(new ErrorResponse("show times are not available",404))
         }
 
+        const booking = await Booking.create ({
+            user: userId,
+            showTime: showId
 
+
+        })
 
         res.status(200).json({
             success: true,
