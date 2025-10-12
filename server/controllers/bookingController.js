@@ -60,14 +60,13 @@ export const createBooking = async (req, res, next) => {
 
         await showTimeData.save();
 
+        // strip gateway initialization
 
         res.status(200).json({
             success: true,
-            showTimeData,
-            isAvailable
+            message: "booking has been successful",
         })
     } catch (error) {
         next(error);
     }
-
 }
