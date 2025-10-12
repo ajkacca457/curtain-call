@@ -45,10 +45,21 @@ export const createBooking = async (req, res, next) => {
 
         const booking = await Booking.create ({
             user: userId,
-            showTime: showId
-
-
+            showTime: showTimeId,
+            amount:showTimeData.showPrice*selectedSeats.length,
+            bookedSeats:selectedSeats
         })
+
+        // update occupied seats 
+
+        selectedSeats.map((seat)=> {
+            showTimeData.occupiedSeats[seat]= userId;
+        })
+
+        showTimeData.markModified('occupiedSeats');
+
+        await showTimeData.save();
+
 
         res.status(200).json({
             success: true,
