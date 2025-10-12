@@ -86,7 +86,7 @@ export const getOccupiedSeats = async (req, res, next) => {
 
         const occupiedSeats = Object.keys(showTimeData.occupiedSeats);
 
-        res.json({
+        res.status(200).json({
             success: true,
             occupiedSeats
         })

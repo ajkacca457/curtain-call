@@ -5,7 +5,7 @@ import User from "../models/User.js";
 import ErrorResponse from "../utils/ErrorHandle";
 
 export const userIsAdmin= async (req,res,next)=> {
-    res.json({
+    res.status(200).json({
         success:true,
         isAdmin:true
     })
@@ -29,7 +29,7 @@ export const getAdminDashboardData= async (req,res,next)=> {
             totalUsers
         }
 
-        res.json({
+        res.status(200).json({
             success:true,
             dashboardData
         })
@@ -49,7 +49,7 @@ export const getAllDashboardShowTIme= async (req,res,next)=> {
             return next(new ErrorResponse(404, "there are no time slots available for shows"));
         }
         
-        res.json({
+        res.status(200).json({
             success:true,
             showTimes
         })
@@ -64,7 +64,7 @@ export const getAllDashboardShowTIme= async (req,res,next)=> {
 export const getAllBookings= async(req,res,next)=> {
     try {
         const bookings= await Booking.find({}).populate("user").populate({
-            path:"showtime",
+            path:"showTime",
             populate: {path:"show"}
         }).sort({createdAt:-1});
 
@@ -72,7 +72,7 @@ export const getAllBookings= async(req,res,next)=> {
             return next(new ErrorResponse(404, "no bookings made for any shows"));
         }
 
-        res.json({
+        res.status(200).json({
             success:true,
             bookings
         })       
