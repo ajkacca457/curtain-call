@@ -4,9 +4,9 @@ import ErrorResponse from "../utils/ErrorHandle.js";
 import Booking from "../models/Booking.js";
 
 
-const checkAvailability = async (showId, selectedSeats) => {
+const checkAvailability = async (showTimeId, selectedSeats) => {
     try {
-        const showTimeData = await ShowTime.findById(showId);
+        const showTimeData = await ShowTime.findById(showTimeId);
         if (!showTimeData) return false;
 
         const occupiedSeats = showTimeData.occupiedSeats;
@@ -30,14 +30,14 @@ export const createBooking = async (req, res, next) => {
         const { showTimeId, selectedSeats } = req.body;
         const { origin } = req.headers;
 
-        const isAvailable = checkAvailability(showId, selectedSeats);
+        const isAvailable = checkAvailability(showTimeId, selectedSeats);
 
         if (!isAvailable) {
             return next(new ErrorResponse("seats are not available for booking", 404))
 
         }
 
-        const showTimeData = await ShowTime.find({showTimeId}).populate("show");
+        const showTimeData = await ShowTime.findById(showTimeId).populate("show");
 
         if(!showTimeData) {
             return next(new ErrorResponse("show times are not available",404))
@@ -62,10 +62,12 @@ export const createBooking = async (req, res, next) => {
 
         // strip gateway initialization
 
-        res.status(200).json({
-            success: true,
-            message: "booking has been successful",
-        })
+res.status(200).json({
+  success: true,
+  message: "Booking successful",
+  bookingId: booking._id,
+  showTimeId,
+})
     } catch (error) {
         next(error);
     }
