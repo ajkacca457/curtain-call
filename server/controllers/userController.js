@@ -1,4 +1,5 @@
 import Booking from "../models/Booking.js";
+import Show from "../models/Show.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
 import { clerkClient } from "@clerk/express";
 
@@ -99,5 +100,32 @@ export const updateFavorite = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+
+}
+
+
+export const getFavorites=async(req,res,next)=> {
+
+    try {
+
+        const user= await clerkClient.users.getUser(req.auth().userId);
+        
+        if(!user) {
+            return next(new ErrorResponse(404,"User is not exists"));
+        }
+
+        const favorites= user.privateMetadata.favorites;
+        
+        const shows= await Show.find({_id: {$in:favorites}});
+
+        res.status(200).json({
+            success:true,
+            shows
+        })
+     
+    } catch (error) {
+        next(error);
+    }
+
 
 }
