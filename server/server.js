@@ -6,8 +6,9 @@ import { clerkMiddleware } from '@clerk/express';
 import {serve} from "inngest/express";
 import { inngest,functions } from './inngest/index.js';
 import ShowRouter from "./routes/showRoutes.js";
-import BookingRouter from "./routes/bookingRoutes.js"
-import AdminRouter from "./routes/adminRoutes.js"
+import BookingRouter from "./routes/bookingRoutes.js";
+import AdminRouter from "./routes/adminRoutes.js";
+import UserRouter from "./routes/userRoutes.js";
 import ErrorHandler from "./middlewares/ErrorHandler.js";
 
 
@@ -22,6 +23,7 @@ app.use("/api/inngest", serve({client:inngest,functions}));
 app.use("/api/shows", ShowRouter);
 app.use("/api/booking",BookingRouter);
 app.use("/api/admin",AdminRouter);
+app.use("/api/user",UserRouter);
 
 app.use(ErrorHandler);
 
