@@ -1,8 +1,7 @@
-import { populate } from "dotenv";
 import Booking from "../models/Booking.js";
 import ShowTime from "../models/ShowTime.js";
 import User from "../models/User.js";
-import ErrorResponse from "../utils/ErrorHandle";
+import ErrorResponse from "../utils/ErrorHandle.js";
 
 export const userIsAdmin= async (req,res,next)=> {
     res.status(200).json({
@@ -41,7 +40,7 @@ export const getAdminDashboardData= async (req,res,next)=> {
 }
 
 
-export const getAllDashboardShowTIme= async (req,res,next)=> {
+export const getAllDashboardShowTime= async (req,res,next)=> {
     try {
         const showTimes= await ShowTime.find({showDateTime:{$gte: new Date()}}).populate("show").sort({showDateTime:1});
 

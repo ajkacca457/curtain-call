@@ -5,7 +5,7 @@ import { createBooking, getOccupiedSeats } from "../controllers/bookingControlle
 const router= express.Router();
 
 router.post("/create-booking",createBooking);
-router.get("/seats/:shotTimeId");
+router.get("/seats/:shotTimeId",getOccupiedSeats);
 
 
 export default router;
