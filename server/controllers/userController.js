@@ -63,3 +63,41 @@ export const addFavorite = async (req, res, next) => {
     }
 
 }
+
+
+export const updateFavorite = async (req, res, next) => {
+    try {
+        const { showId } = req.body;
+        const userId = req.auth().userId;
+
+        const user = await clerkClient.users.getUser(userId);
+
+        if (!user) {
+            return next(new ErrorResponse(404, "User not found"));
+        }
+
+        if (!user.privateMetadata.favorites) {
+            user.privateMetadata.favorites = [];
+        }
+
+        if (!user.privateMetadata.favorites.includes(showId)) {
+            user.privateMetadata.favorites.push(showId);
+        } else {
+            user.privateMetadata.favorites.filter(item=> item!==showId);
+        }
+
+
+        await clerkClient.users.updateUserMetadata(userId, {
+            privateMetadata: user.privateMetadata
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "favorites list update successfully"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+
+}
