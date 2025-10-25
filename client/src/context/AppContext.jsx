@@ -38,9 +38,14 @@ export const AppProvider = ({ children }) => {
        }
     };
 
+    const fetchSHows= async()=> {};
+
+    const fetchFavorites= async()=> {};
+
+
 
   return (
-    <AppContext.Provider value={{ isAdmin, shows, favorites }}>
+    <AppContext.Provider value={{ isAdmin, shows, favorites, fetchAdminStatus, fetchSHows, fetchFavorites }}>
       {children}
     </AppContext.Provider>
   );
