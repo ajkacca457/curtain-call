@@ -1,8 +1,8 @@
-import { createContext, useContext } from "react";
+import { createContext, use, useContext } from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
 
     const { user } = useUser();
     const {getToken} = useAuth(); 
+    const navigate = useNavigate();
 
     const fetchAdminStatus = async () => {
        try {
@@ -29,7 +30,7 @@ export const AppProvider = ({ children }) => {
            setIsAdmin(data.isAdmin);
 
            if(!data.isAdmin && location.pathname.startsWith("/admin")) {
-               <Navigate to="/" />;
+               navigate("/");
                toast.error("Access denied. Admins only.");
            }
 
@@ -42,7 +43,11 @@ export const AppProvider = ({ children }) => {
 
     const fetchFavorites= async()=> {};
 
-
+    useEffect(() => {
+      if(user) {
+          fetchAdminStatus();
+      }
+    }, [user]);
 
   return (
     <AppContext.Provider value={{ isAdmin, shows, favorites, fetchAdminStatus, fetchSHows, fetchFavorites }}>
