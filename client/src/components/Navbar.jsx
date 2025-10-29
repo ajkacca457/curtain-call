@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
 import { IoTicket } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -17,15 +16,15 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur-md">
       <div className="navbar max-w-[1600px] mx-auto px-6 py-3">
         {/* Start */}
         <div className="navbar-start">
+          {/* Mobile dropdown */}
           <div className="dropdown">
-            <div
+            <label
               tabIndex={0}
-              role="button"
-              className="btn btn-ghost lg:hidden text-gray-700"
+              className="btn btn-ghost lg:hidden text-gray-700 hover:bg-indigo-50"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,64 +40,74 @@ const Navbar = () => {
                   d="M4 6h16M4 12h8m-8 6h16"
                 />
               </svg>
-            </div>
+            </label>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-white rounded-md mt-3 w-52 p-2 border border-gray-200"
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-white/95 backdrop-blur-lg rounded-xl w-56 border border-gray-100"
             >
               <li>
-                <Link className="hover:text-indigo-500" to="/">Home</Link>
+                <Link className="hover:text-indigo-600" to="/">Home</Link>
               </li>
               <li>
-                <Link className="hover:text-indigo-500" to="/shows">Shows</Link>
+                <Link className="hover:text-indigo-600" to="/shows">Shows</Link>
               </li>
               <li>
-                <Link className="hover:text-indigo-500" to="/my-favorite">My Favorite</Link>
+                <Link className="hover:text-indigo-600" to="/my-favorite">My Favorite</Link>
               </li>
             </ul>
           </div>
+
+          {/* Logo */}
           <Link
             to="/"
-            className="text-2xl font-playfair text-gray-800 hover:text-indigo-600 transition"
+            className="text-2xl font-semibold font-playfair text-gray-800 tracking-wide hover:text-indigo-600 transition-colors"
           >
-            CurtainsCall
+            Curtains<span className="text-indigo-600">Call</span>
           </Link>
         </div>
 
-        {/* Center */}
+        {/* Center (desktop links) */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 text-gray-700 font-medium">
+          <ul className="menu menu-horizontal px-1 text-gray-700 font-medium space-x-4">
             <li>
-              <Link className="hover:text-indigo-500 transition" to="/">Home</Link>
+              <Link className="hover:text-indigo-600 transition-colors" to="/">Home</Link>
             </li>
             <li>
-              <Link className="hover:text-indigo-500 transition" to="/shows">Shows</Link>
+              <Link className="hover:text-indigo-600 transition-colors" to="/shows">Shows</Link>
             </li>
             <li>
-              <Link className="hover:text-indigo-500 transition" to="/my-favorite">My Favorite</Link>
+              <Link className="hover:text-indigo-600 transition-colors" to="/my-favorite">My Favorite</Link>
             </li>
           </ul>
         </div>
 
-        {/* End */}
+        {/* End (login/user button) */}
         <div className="navbar-end">
           {!user ? (
             <button
-              className="btn btn-outline border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+              className="btn btn-sm btn-outline border-indigo-500 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all"
               onClick={openSignIn}
             >
               Login
             </button>
           ) : (
-            <UserButton>
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="My Bookings"
-                  labelIcon={<IoTicket />}
-                  onClick={handleBookingsClick}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
+            <div className="flex items-center gap-3">
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "ring-2 ring-indigo-500 hover:ring-indigo-400 transition",
+                  },
+                }}
+              >
+                <UserButton.MenuItems>
+                  <UserButton.Action
+                    label="My Bookings"
+                    labelIcon={<IoTicket />}
+                    onClick={handleBookingsClick}
+                  />
+                </UserButton.MenuItems>
+              </UserButton>
+            </div>
           )}
         </div>
       </div>
