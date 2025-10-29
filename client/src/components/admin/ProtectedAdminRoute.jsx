@@ -6,6 +6,9 @@ import toast from "react-hot-toast";
 
 export default function ProtectedAdminRoute({ children }) {
   const { user, isAdmin, checkingAdmin } = useAppContext();
+
+    console.log(user, isAdmin, checkingAdmin);  
+
   const navigate = useNavigate();
   const [toastShown, setToastShown] = useState(false); // prevent multiple toasts
 
