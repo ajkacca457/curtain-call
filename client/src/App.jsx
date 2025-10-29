@@ -13,6 +13,8 @@ import ListShows from './components/admin/ListShows.jsx'
 import BookingList from './components/admin/BookingList.jsx'
 import AddShows from './components/admin/AddShows.jsx'
 
+import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute.jsx'
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -28,7 +30,10 @@ const router = createBrowserRouter([
   },
     {
     path: '/admin',
-    element: <AdminLayout />,
+    element: 
+      <ProtectedAdminRoute>
+        <AdminLayout />
+      </ProtectedAdminRoute>,
     children: [
       { index: true, element: <Dashboard /> },
       { path:"add-shows", element: <AddShows /> },

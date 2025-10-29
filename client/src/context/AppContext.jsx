@@ -67,7 +67,7 @@ export const AppProvider = ({ children }) => {
     }, [user]);
 
   return (
-    <AppContext.Provider value={{ isAdmin, shows, favorites, fetchAdminStatus,fetchFavorites }}>
+    <AppContext.Provider value={{ isAdmin, shows, favorites, user, fetchAdminStatus, fetchFavorites }}>
       {children}
     </AppContext.Provider>
   );
