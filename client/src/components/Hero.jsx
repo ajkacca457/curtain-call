@@ -1,7 +1,10 @@
-import React from 'react'
 import HeroImg from '../assets/hero-display.jpg'
+import { useAppContext } from '../context/AppContext'
 
 const Hero = () => {
+  const {isAdmin } = useAppContext();
+
+console.log("Is Admin:", isAdmin);
   return (
     <div
       className='relative h-[80vh] bg-cover bg-center bg-no-repeat max-w-[1600px] mx-auto rounded-2xl'
