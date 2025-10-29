@@ -24,7 +24,6 @@ export const AppProvider = ({ children }) => {
           Authorization: `Bearer ${await getToken()}`,
         },
       });
-
       setIsAdmin(data.isAdmin);
     } catch (error) {
       console.error("Error fetching admin status:", error);
