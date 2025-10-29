@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
-import { IoTicket } from "react-icons/io5";
+import { IoTicket, IoHome, IoFilm, IoHeart } from "react-icons/io5";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -14,6 +14,12 @@ const Navbar = () => {
       navigate("/my-bookings");
     }
   };
+
+  const navItems = [
+    { label: "Home", to: "/", icon: <IoHome className="inline mr-1" /> },
+    { label: "Shows", to: "/shows", icon: <IoFilm className="inline mr-1" /> },
+    { label: "My Favorite", to: "/my-favorite", icon: <IoHeart className="inline mr-1" /> },
+  ];
 
   return (
     <div className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur-md">
@@ -45,15 +51,13 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-white/95 backdrop-blur-lg rounded-xl w-56 border border-gray-100"
             >
-              <li>
-                <Link className="hover:text-indigo-600" to="/">Home</Link>
-              </li>
-              <li>
-                <Link className="hover:text-indigo-600" to="/shows">Shows</Link>
-              </li>
-              <li>
-                <Link className="hover:text-indigo-600" to="/my-favorite">My Favorite</Link>
-              </li>
+              {navItems.map((item) => (
+                <li key={item.to}>
+                  <Link className="hover:text-indigo-600 flex items-center" to={item.to}>
+                    {item.icon} {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -69,15 +73,13 @@ const Navbar = () => {
         {/* Center (desktop links) */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 text-gray-700 font-medium space-x-4">
-            <li>
-              <Link className="hover:text-indigo-600 transition-colors" to="/">Home</Link>
-            </li>
-            <li>
-              <Link className="hover:text-indigo-600 transition-colors" to="/shows">Shows</Link>
-            </li>
-            <li>
-              <Link className="hover:text-indigo-600 transition-colors" to="/my-favorite">My Favorite</Link>
-            </li>
+            {navItems.map((item) => (
+              <li key={item.to}>
+                <Link className="hover:text-indigo-600 transition-colors flex items-center" to={item.to}>
+                  {item.icon} {item.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
