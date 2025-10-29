@@ -1,13 +1,21 @@
+import { getAuth, clerkClient } from "@clerk/express";
 import Booking from "../models/Booking.js";
 import ShowTime from "../models/ShowTime.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
 
 export const userIsAdmin= async (req,res,next)=> {
-    res.status(200).json({
+    try {
+        const {userId}= getAuth(req);
+        res.status(200).json({
         success:true,
-        isAdmin:true
+        isAdmin:true,
+        user: userId
     })
+        
+    } catch (error) {
+        next(error)
+    }
 }
 
 

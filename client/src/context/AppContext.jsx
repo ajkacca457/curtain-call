@@ -25,6 +25,7 @@ export const AppProvider = ({ children }) => {
         },
       });
       setIsAdmin(data.isAdmin);
+      console.log("Admin status:", data);
     } catch (error) {
       console.error("Error fetching admin status:", error);
       setIsAdmin(false);

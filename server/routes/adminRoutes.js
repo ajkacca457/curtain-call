@@ -1,11 +1,12 @@
 import express from "express"
 import {userIsAdmin,getAdminDashboardData,getAllDashboardShowTime,getAllBookings} from "../controllers/adminController.js"
+import { requireAuth } from "@clerk/express";
 
 
 const router= express.Router();
 
 
-router.get("/is-admin",userIsAdmin);
+router.get("/is-admin",requireAuth(),userIsAdmin);
 router.get("/dashboard",getAdminDashboardData);
 router.get("/all-shows",getAllDashboardShowTime);
 router.get("/all-bookings",getAllBookings);
