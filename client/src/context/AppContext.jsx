@@ -39,9 +39,26 @@ export const AppProvider = ({ children }) => {
        }
     };
 
-    const fetchSHows= async()=> {};
 
-    const fetchFavorites= async()=> {};
+    const fetchFavorites= async()=> {
+      try {
+        const data= await axios.get(`/api/users/favorites`,{
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+
+        });
+
+        if(data.success) {
+          setFavorites(data.favorites);
+          toast.success("Favorites fetched successfully!");
+        } else {
+          toast.error("Failed to fetch favorites.");
+        }
+      } catch (error) {
+        console.error("Error fetching favorites:", error);        
+      }
+    };
 
     useEffect(() => {
       if(user) {
@@ -50,7 +67,7 @@ export const AppProvider = ({ children }) => {
     }, [user]);
 
   return (
-    <AppContext.Provider value={{ isAdmin, shows, favorites, fetchAdminStatus, fetchSHows, fetchFavorites }}>
+    <AppContext.Provider value={{ isAdmin, shows, favorites, fetchAdminStatus,fetchFavorites }}>
       {children}
     </AppContext.Provider>
   );
