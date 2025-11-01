@@ -1,10 +1,8 @@
 import { createContext, useContext } from "react";
-import axios from "axios";
+import api from "../api/axiosInstance";
 import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
-
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const AppContext = createContext();
 
@@ -19,7 +17,7 @@ export const AppProvider = ({ children }) => {
 
   const fetchAdminStatus = async () => {
     try {
-      const { data } = await axios.get(`/api/admin/is-admin`, {
+      const { data } = await api.get(`/api/admin/is-admin`, {
         headers: {
           Authorization: `Bearer ${await getToken()}`,
         },
@@ -36,7 +34,7 @@ export const AppProvider = ({ children }) => {
 
   const fetchFavorites = async () => {
     try {
-      const data = await axios.get(`/api/users/favorites`, {
+      const data = await api.get(`/api/users/favorites`, {
         headers: {
           Authorization: `Bearer ${await getToken()}`,
         },
