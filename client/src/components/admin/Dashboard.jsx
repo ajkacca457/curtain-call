@@ -76,8 +76,7 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  if (loading)
-    return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <div className="p-6 space-y-6">
@@ -104,25 +103,48 @@ const Dashboard = () => {
       {/* Active Shows */}
       {data.activeShows?.shows?.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold mt-8 mb-4">Active Shows</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h2 className="text-xl font-semibold mt-8 mb-4 text-gray-800 flex items-center gap-2">
+            🎭 Active Shows
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {data.activeShows.shows.map((show) => (
               <div
                 key={show._id}
-                className="p-4 bg-white rounded-md shadow-sm border border-gray-100 hover:shadow-md transition"
+                className="group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
               >
-                <h3 className="font-semibold text-gray-800">
+                {/* Show title */}
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
                   {show.showId?.title || "Untitled Movie"}
                 </h3>
-                <p className="text-gray-600 text-sm">
-                  Date: {new Date(show.showDateTime).toLocaleString()}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  Price: ${show.showPrice}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  Booked Seats: {Object.keys(show.occupiedSeats).length}
-                </p>
+
+                {/* Showtime Badge */}
+                <div className="mt-2 inline-block px-3 py-1 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-full shadow-sm">
+                  {new Date(show.showDateTime).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </div>
+
+                {/* Details */}
+                <div className="mt-3 space-y-1 text-sm text-gray-600">
+                  <p>
+                    <span className="font-medium text-gray-800">💰 Price:</span>{" "}
+                    ${show.showPrice}
+                  </p>
+                  <p>
+                    <span className="font-medium text-gray-800">
+                      🎟️ Booked Seats:
+                    </span>{" "}
+                    {Object.keys(show.occupiedSeats || {}).length}
+                  </p>
+                </div>
+
+                {/* Footer line */}
+                <div className="mt-4 border-t border-gray-100 pt-3 flex justify-between items-center text-xs text-gray-500">
+                  <span>ID: {show._id.slice(-6)}</span>
+                  <span className="italic">Showtime Active</span>
+                </div>
               </div>
             ))}
           </div>
