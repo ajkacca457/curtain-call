@@ -55,6 +55,7 @@ const showSchema = new mongoose.Schema(
       required: true,
       min: 1, // runtime in minutes
     },
+    isActive: { type: Boolean, default: true },
   },
   {
     timestamps: true,

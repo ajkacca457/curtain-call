@@ -61,48 +61,6 @@ export const createSingleShow = async (req, res, next) => {
     }
 }
 
-export const createShowTime = async (req, res, next) => {
-    try {
-        const { showId, showsInput, showPrice } = req.body;
-
-        const show = await Show.findById(showId);
-
-        if (!show) {
-            return next(new ErrorResponse(`${showId}:show is not a active show`), 400);
-        }
-
-        let showsToCreate = [];
-
-        showsInput.forEach(element => {
-            const showdate = element.date;
-            element.time.forEach(item => {
-                const showDateTime = `${showdate}T${item}`
-                const showtime = {
-                    showId,
-                    showDateTime: new Date(showDateTime),
-                    showPrice,
-                    occupiedSeats: {}
-                }
-                showsToCreate.push(showtime);
-            })
-
-        });
-
-        if (showsToCreate.length > 0) {
-            await ShowTime.insertMany(showsToCreate);
-        }
-        res.status(200).json({
-            success: true,
-            message: "new show times are added"
-
-        })
-
-    } catch (error) {
-        next(error)
-    }
-
-}
-
 export const getAllShowTime = async (req, res, next) => {
     try {
         // first get all the ShowTIme
@@ -146,8 +104,6 @@ export const getAllShowTime = async (req, res, next) => {
         next(error);
     }
 };
-
-
 
 export const getSingleShowTime = async (req, res, next) => {
 
