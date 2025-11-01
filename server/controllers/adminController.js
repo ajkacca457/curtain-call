@@ -55,8 +55,7 @@ export const getAdminDashboardData = async (req, res) => {
             dashboardData,
         });
     } catch (error) {
-        console.error("🔥 Dashboard controller error:", error);
-        res.status(500).json({ success: false, message: error.message });
+        next(error);
     }
 };
 
@@ -64,22 +63,52 @@ export const getAdminDashboardData = async (req, res) => {
 
 export const getAllDashboardShowTime = async (req, res, next) => {
     try {
-        const showTimes = await ShowTime.find({ showDateTime: { $gte: new Date() } }).populate("show").sort({ showDateTime: 1 });
+        const { userId } = req.auth();
 
-        if (!showTimes || showTimes.length < 1) {
-            return next(new ErrorResponse(404, "there are no time slots available for shows"));
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized. Please sign in.",
+            });
         }
 
+        // ✅ Get Clerk user details to verify role
+        const clerkUser = await clerkClient.users.getUser(userId);
+        const isAdmin = clerkUser.privateMetadata?.role === "admin";
+
+        if (!isAdmin) {
+            return res.status(403).json({
+                success: false,
+                message: "Access denied. Admin only.",
+            });
+        }
+
+        // ✅ Fetch upcoming showtimes and populate Show data
+        const showTimes = await ShowTime.find({
+            showDateTime: { $gte: new Date() },
+        })
+            .populate("showId")
+            .sort({ showDateTime: 1 });
+
+        if (!showTimes?.length) {
+            // Optional: Return empty array instead of throwing an error
+            return res.status(200).json({
+                success: true,
+                showTimes: [],
+                message: "No upcoming showtimes available.",
+            });
+        }
+
+        // ✅ Send response
         res.status(200).json({
             success: true,
-            showTimes
-        })
-
+            count: showTimes.length,
+            showTimes,
+        });
     } catch (error) {
-        next(error)
-
+        next(error);
     }
-}
+};
 
 
 export const getAllBookings = async (req, res, next) => {

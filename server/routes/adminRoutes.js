@@ -8,7 +8,7 @@ const router= express.Router();
 
 router.get("/is-admin",requireAuth(),userIsAdmin);
 router.get("/dashboard",requireAuth(),getAdminDashboardData);
-router.get("/all-shows",getAllDashboardShowTime);
+router.get("/all-shows",requireAuth(),getAllDashboardShowTime);
 router.get("/all-bookings",getAllBookings);
 
 export default router;
