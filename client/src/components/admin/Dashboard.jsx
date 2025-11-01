@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { IoCalendar, IoCash, IoPeople, IoFilm } from "react-icons/io5";
-import { dummyDashboardData } from "../../assets/data";
 import { useAuth } from "@clerk/clerk-react";
 import api from "../../api/axiosInstance";
+import Loading from "../Loading.jsx";
 
 const dashboardTemplate = {
   totalBookings: {
@@ -41,46 +41,43 @@ const Dashboard = () => {
       const res = await api.get("/api/admin/dashboard", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const { totalBookings, totalRevenue, totalUsers, activeShowTimes } =
+        res.data.dashboardData;
 
+      const formattedData = {
+        ...dashboardTemplate,
+        totalBookings: {
+          ...dashboardTemplate.totalBookings,
+          value: totalBookings,
+        },
+        totalRevenue: {
+          ...dashboardTemplate.totalRevenue,
+          value: `$${totalRevenue.toLocaleString()}`,
+        },
+        totalUsers: {
+          ...dashboardTemplate.totalUsers,
+          value: totalUsers,
+        },
+        activeShows: {
+          ...dashboardTemplate.activeShows,
+          value: activeShowTimes.length,
+          shows: activeShowTimes,
+        },
+      };
+      setData(formattedData);
+      setLoading(false);
       console.log("📊 Dashboard API response:", res.data); // 👈 Just log it for now
     } catch (error) {
       console.error("❌ Error fetching dashboard data:", error);
     }
-
-    // 🔹 Still use dummy data for UI
-    const { totalBookings, totalRevenue, totalUser, activeShows } =
-      dummyDashboardData;
-
-    const formattedData = {
-      ...dashboardTemplate,
-      totalBookings: {
-        ...dashboardTemplate.totalBookings,
-        value: totalBookings,
-      },
-      totalRevenue: {
-        ...dashboardTemplate.totalRevenue,
-        value: `$${totalRevenue.toLocaleString()}`,
-      },
-      totalUsers: {
-        ...dashboardTemplate.totalUsers,
-        value: totalUser,
-      },
-      activeShows: {
-        ...dashboardTemplate.activeShows,
-        value: activeShows.length,
-        shows: activeShows,
-      },
-    };
-
-    setData(formattedData);
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  if (loading) return <div className="text-center p-6 text-gray-500">Loading...</div>;
+  if (loading)
+    return <Loading />;
 
   return (
     <div className="p-6 space-y-6">
@@ -95,7 +92,9 @@ const Dashboard = () => {
           >
             <item.icon className="text-indigo-500 text-3xl" />
             <div>
-              <h2 className="text-lg font-semibold text-gray-700">{item.label}</h2>
+              <h2 className="text-lg font-semibold text-gray-700">
+                {item.label}
+              </h2>
               <p className="text-xl font-bold text-gray-900">{item.value}</p>
             </div>
           </div>
@@ -113,12 +112,14 @@ const Dashboard = () => {
                 className="p-4 bg-white rounded-md shadow-sm border border-gray-100 hover:shadow-md transition"
               >
                 <h3 className="font-semibold text-gray-800">
-                  {show.movie?.title || "Untitled Movie"}
+                  {show.showId?.title || "Untitled Movie"}
                 </h3>
                 <p className="text-gray-600 text-sm">
                   Date: {new Date(show.showDateTime).toLocaleString()}
                 </p>
-                <p className="text-gray-600 text-sm">Price: ${show.showPrice}</p>
+                <p className="text-gray-600 text-sm">
+                  Price: ${show.showPrice}
+                </p>
                 <p className="text-gray-600 text-sm">
                   Booked Seats: {Object.keys(show.occupiedSeats).length}
                 </p>
