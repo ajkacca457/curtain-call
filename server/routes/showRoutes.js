@@ -3,7 +3,7 @@ import {getActiveShows, getSingleShow,getAllShowTime, getSingleShowTime} from ".
 
 const router= express.Router();
 
-router.get("/active-shows",getActiveShows);
+router.get("/all-shows",getActiveShows);
 router.get("/all-show-timing",getAllShowTime);
 router.get("/showtime/:showId",getSingleShowTime)
 router.get("/:id",getSingleShow);

@@ -51,6 +51,23 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchAllShows= async()=> {
+    try {
+      const {data}= await api.get("/api/shows/all-shows");
+
+      if(data.success){
+
+      setShows(data.shows);
+      toast.success("Shows fetched successfully!");
+      } else {
+        toast.error("Failed to fetch shows.");
+      }
+    } catch (error) {
+      console.error("Error fetching shows:", error);
+      toast.error("Failed to fetch shows.");
+    }
+  }
+
   useEffect(() => {
     if (user) {
       fetchAdminStatus();
@@ -67,6 +84,7 @@ export const AppProvider = ({ children }) => {
         checkingAdmin,
         fetchAdminStatus,
         fetchFavorites,
+        fetchAllShows
       }}
     >
       {children}
