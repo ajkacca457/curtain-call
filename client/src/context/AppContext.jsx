@@ -54,10 +54,9 @@ export const AppProvider = ({ children }) => {
   const fetchAllShows= async()=> {
     try {
       const {data}= await api.get("/api/shows/all-shows");
-
       if(data.success){
-
-      setShows(data.shows);
+        const activeShows= data.shows.filter(show=> show.isActive);
+      setShows(activeShows);
       toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
