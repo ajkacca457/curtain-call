@@ -30,7 +30,8 @@
     "vote_average": 9.1,
     "vote_count": 12450,
     "runtime": 150,
-    "isActive": true
+    "isActive": true,
+    "isFeatued":true
   },
   {
     "title": "Matilda The Musical",
@@ -101,7 +102,7 @@
   {
     "title": "Swan Lake",
     "overview": "A breathtaking blend of drama, passion, and classical choreography.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1709324143060-6217cf81827f?q=80&w=665&auto=format&fit=crop",
+    "poster_path": "https://images.unsplash.com/photo-1506536329413-d2f0d31ceb9f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
     "backdrop_path": "https://images.unsplash.com/photo-1549887534-bd0b37f6105b?q=80&w=1170&auto=format&fit=crop",
     "genres": [
       {
@@ -129,12 +130,13 @@
     "vote_average": 9.4,
     "vote_count": 15200,
     "runtime": 140,
-    "isActive": true
+    "isActive": true,
+    "isFeatued":true
   },
   {
     "title": "Hamilton",
     "overview": "A revolutionary musical blending hip-hop and history to tell Alexander Hamilton’s story.",
-    "poster_path": "https://images.unsplash.com/photo-1588167056543-61c9c819b70c?q=80&w=665&auto=format&fit=crop",
+    "poster_path": "https://images.unsplash.com/photo-1761872936220-1531e97a158a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=764",
     "backdrop_path": "https://images.unsplash.com/photo-1515169067865-5387ec356754?q=80&w=1170&auto=format&fit=crop",
     "genres": [
       {
@@ -162,12 +164,13 @@
     "vote_average": 9.3,
     "vote_count": 19200,
     "runtime": 160,
-    "isActive": true
+    "isActive": true,
+    "isFeatued":true
   },
   {
     "title": "Les Misérables",
     "overview": "A sweeping musical about love, redemption, and revolution in 19th-century France.",
-    "poster_path": "https://plus.unsplash.com/premium_photo-1669860720077-ec5a3d58e5c1?q=80&w=665&auto=format&fit=crop",
+    "poster_path": "https://images.unsplash.com/photo-1506536329413-d2f0d31ceb9f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
     "backdrop_path": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1170&auto=format&fit=crop",
     "genres": [
       {
@@ -195,7 +198,8 @@
     "vote_average": 9.0,
     "vote_count": 14200,
     "runtime": 180,
-    "isActive": true
+    "isActive": true,
+    "isFeatued":true
   },
   {
     "title": "Blue Man Group",
