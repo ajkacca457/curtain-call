@@ -185,3 +185,27 @@ export const getSingleShowTime = async (req, res, next) => {
 
 
 }
+
+
+export const getFeaturedShows= async (req,res,next)=> {
+try {
+    const shows = await Show.find({isFeatured:true});
+
+    if (!shows || shows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No featured shows found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "All currently featured shows retrieved successfully.",
+      totalActiveShows: shows.length,
+      shows,
+    });
+  } catch (error) {
+    next(error);
+  }
+
+}

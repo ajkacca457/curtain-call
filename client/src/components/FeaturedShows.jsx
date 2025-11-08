@@ -1,26 +1,57 @@
-import { dummyShowsData } from "../assets/data"
-import ShowCard from "./ShowCard"
-import { useState } from "react"
+import { dummyShowsData } from "../assets/data";
+import ShowCard from "./ShowCard";
+import { useState, useEffect } from "react";
+import api from "../api/axiosInstance.js";
+
 const FeaturedShows = () => {
-  const [visibleCount, setVisibleCount] = useState(4)
+  const [featured, setFeatured] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedShows = async () => {
+      try {
+        const res = await api.get("/api/shows/featured");
+        const { shows } = res.data;
+        setFeatured(Array.isArray(shows) ? shows : []);
+      } catch (error) {
+        console.error("Error fetching featured shows:", error);
+        setFeatured([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedShows();
+  }, []);
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 4)
+    setVisibleCount((prev) => prev + 4);
+  };
+
+  const visibleShows = Array.isArray(featured)
+    ? featured.slice(0, visibleCount)
+    : [];
+
+  if (loading) {
+    return <p className="p-6 text-gray-500">Loading featured shows...</p>;
   }
 
-  const visibleShows = dummyShowsData.slice(0, visibleCount)
+  if (!visibleShows.length) {
+    return <p className="p-6 text-gray-500">No featured shows available.</p>;
+  }
 
   return (
     <section className="max-w-[1600px] mx-auto px-4 py-12">
       <h2 className="text-2xl font-bold mb-6">🎭 Featured Shows</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {visibleShows.map(show => (
-          <ShowCard key={show.id} show={show} />
+        {visibleShows.map((show) => (
+          <ShowCard key={show._id || show.id} show={show} />
         ))}
       </div>
 
-      {visibleCount < dummyShowsData.length && (
+      {visibleCount < featured.length && (
         <div className="flex justify-center">
           <button
             onClick={handleLoadMore}
@@ -31,7 +62,7 @@ const FeaturedShows = () => {
         </div>
       )}
     </section>
-  )
-}
+  );
+};
 
-export default FeaturedShows
+export default FeaturedShows;
