@@ -9,6 +9,7 @@ import ShowRouter from "./routes/showRoutes.js";
 import BookingRouter from "./routes/bookingRoutes.js";
 import AdminRouter from "./routes/adminRoutes.js";
 import UserRouter from "./routes/userRoutes.js";
+import NewsRouter from "./routes/newsRoutes.js";
 import ErrorHandler from "./middlewares/ErrorHandler.js";
 
 
@@ -24,6 +25,7 @@ app.use("/api/shows", ShowRouter);
 app.use("/api/booking",BookingRouter);
 app.use("/api/admin",AdminRouter);
 app.use("/api/user",UserRouter);
+app.use("/api/news",NewsRouter);
 
 app.use(ErrorHandler);
 
