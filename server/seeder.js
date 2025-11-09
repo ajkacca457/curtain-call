@@ -4,6 +4,7 @@ import "dotenv/config";
 import { fileURLToPath } from 'url';
 import Show from "./models/Show.js";
 import News from './models/News.js';
+import Trailer from './models/Trailer.js';
 import mongoose from 'mongoose';
 
 // 👇 Recreate __dirname manually
@@ -16,6 +17,10 @@ const shows = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
 const newsFilePath = path.join(__dirname, 'data', 'data-news.json');
 const news = JSON.parse(fs.readFileSync(newsFilePath, 'utf-8'));
+
+
+const trailersFilePath = path.join(__dirname, 'data', 'data-trailers.json');
+const trailers = JSON.parse(fs.readFileSync(trailersFilePath, 'utf-8'));
 
 // connect to db;
 
@@ -31,6 +36,9 @@ const importData = async (type) => {
         } else if (type === 'news') {
             await News.create(news);
             console.log("📰 News data inserted successfully!");
+        } else if (type === 'trailers') {
+            await Trailer.create(trailers);
+            console.log("📰 Trailers data inserted successfully!");
         } else {
             console.log("⚠️ Please specify a valid type: shows | news");
         }
@@ -49,7 +57,11 @@ const deleteData = async (type) => {
         } else if (type === 'news') {
             await News.deleteMany();
             console.log("🗑️ News data deleted successfully!");
-        } else {
+        } else if (type === 'trailers') {
+            await Trailer.deleteMany();
+            console.log("🗑️ Trailers data deleted successfully!");
+        }
+        else {
             console.log("⚠️ Please specify a valid type: shows | news");
         }
         process.exit();
@@ -60,17 +72,17 @@ const deleteData = async (type) => {
 }
 
 // Handle CLI Arguments
-const [,, action, type] = process.argv;
+const [, , action, type] = process.argv;
 
 if (action === '-i') {
-  importData(type);
+    importData(type);
 } else if (action === '-d') {
-  deleteData(type);
+    deleteData(type);
 } else {
-  console.log("Usage:");
-  console.log("  node seeder.js -i shows   → Import shows data");
-  console.log("  node seeder.js -i news    → Import news data");
-  console.log("  node seeder.js -d shows   → Delete shows data");
-  console.log("  node seeder.js -d news    → Delete news data");
-  process.exit();
+    console.log("Usage:");
+    console.log("  node seeder.js -i shows   → Import shows data");
+    console.log("  node seeder.js -i news    → Import news data");
+    console.log("  node seeder.js -d shows   → Delete shows data");
+    console.log("  node seeder.js -d news    → Delete news data");
+    process.exit();
 }

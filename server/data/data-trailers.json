@@ -1,0 +1,37 @@
+[
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "title": "The Phantom of the Opera",
+    "thumbnail": "https://img.youtube.com/vi/WpW36ldAqnM/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=WpW36ldAqnM",
+    "releaseDate": "2025-09-12T00:00:00.000Z"
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "title": "Chicago",
+    "thumbnail": "https://img.youtube.com/vi/-sAOWhvheK8/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=-sAOWhvheK8",
+    "releaseDate": "2025-06-01T00:00:00.000Z"
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "title": "Les Misérables",
+    "thumbnail": "https://img.youtube.com/vi/1pHDWnXmK7Y/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=1pHDWnXmK7Y",
+    "releaseDate": "2025-10-15T00:00:00.000Z"
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "title": "Hamilton",
+    "thumbnail": "https://img.youtube.com/vi/umiKiW4En9g/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=umiKiW4En9g",
+    "releaseDate": "2025-11-20T00:00:00.000Z"
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "title": "Wicked",
+    "thumbnail": "https://img.youtube.com/vi/abc123xyz/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=abc123xyz",
+    "releaseDate": "2025-12-05T00:00:00.000Z"
+  }
+]
