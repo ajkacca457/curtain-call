@@ -1,5 +1,5 @@
 import News from "../models/News.js";
-import ErrorResponse from "../utils/ErrorResponse.js";
+import ErrorResponse from "../utils/ErrorHandle.js"
 
 // Get all active news
 export const getAllNews = async (req, res, next) => {
