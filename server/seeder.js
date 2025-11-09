@@ -3,6 +3,7 @@ import path from 'path';
 import "dotenv/config";
 import { fileURLToPath } from 'url';
 import Show from "./models/Show.js";
+import News from './models/News.js';
 import mongoose from 'mongoose';
 
 // 👇 Recreate __dirname manually
@@ -13,34 +14,63 @@ const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, 'data', 'data.json');
 const shows = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
+const newsFilePath = path.join(__dirname, 'data', 'data-news.json');
+const news = JSON.parse(fs.readFileSync(newsFilePath, 'utf-8'));
+
 // connect to db;
 
 mongoose.connect(process.env.MONGO_URI);
 
 // importData 
 
-const importData=async()=> {
+const importData = async (type) => {
     try {
-        await Show.create(shows);
-        console.log("data injected successfully");
-        process.exit();       
+        if (type === 'shows') {
+            await Show.create(shows);
+            console.log("🎬 Shows data inserted successfully!");
+        } else if (type === 'news') {
+            await News.create(news);
+            console.log("📰 News data inserted successfully!");
+        } else {
+            console.log("⚠️ Please specify a valid type: shows | news");
+        }
+        process.exit();
     } catch (error) {
         console.log(error);
+        process.exit(1);
     }
 }
 
-const deleteData=async()=> {
+const deleteData = async (type) => {
     try {
-        await Show.deleteMany();
-        console.log("data destroyed from database");
-        process.exit();        
+        if (type === 'shows') {
+            await Show.deleteMany();
+            console.log("🗑️ Shows data deleted successfully!");
+        } else if (type === 'news') {
+            await News.deleteMany();
+            console.log("🗑️ News data deleted successfully!");
+        } else {
+            console.log("⚠️ Please specify a valid type: shows | news");
+        }
+        process.exit();
     } catch (error) {
-        console.log(error);
+        console.error(err);
+        process.exit(1);
     }
 }
 
-if(process.argv[2]==="-i") {
-    importData();
-} else if (process.argv[2]==="-d") {
-    deleteData();
+// Handle CLI Arguments
+const [,, action, type] = process.argv;
+
+if (action === '-i') {
+  importData(type);
+} else if (action === '-d') {
+  deleteData(type);
+} else {
+  console.log("Usage:");
+  console.log("  node seeder.js -i shows   → Import shows data");
+  console.log("  node seeder.js -i news    → Import news data");
+  console.log("  node seeder.js -d shows   → Delete shows data");
+  console.log("  node seeder.js -d news    → Delete news data");
+  process.exit();
 }
