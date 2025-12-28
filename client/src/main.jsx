@@ -13,10 +13,10 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
         <Toaster position="top-right" reverseOrder={false} />
         <App />
     </ClerkProvider>
-  </StrictMode>
+  </>
 );

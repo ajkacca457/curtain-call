@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 
+
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
