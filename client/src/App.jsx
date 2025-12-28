@@ -13,6 +13,11 @@ import ListShows from "./components/admin/ListShows.jsx";
 import BookingList from "./components/admin/BookingList.jsx";
 import AddShows from "./components/admin/AddShows.jsx";
 
+
+import AboutUs from "./pages/AboutUs.jsx";
+import Contact from "./pages/Contact.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+
 import { AppProvider } from "./context/AppContext.jsx";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute.jsx";
 
@@ -31,6 +36,9 @@ const router = createBrowserRouter([
       { path: "/shows/:id/:date", element: <SeatLayout /> },
       { path: "/my-bookings", element: <Bookings /> },
       { path: "/my-favorite", element: <Favorite /> },
+      { path: "/about-us", element: <AboutUs /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
     ],
   },
   {
