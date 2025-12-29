@@ -31,77 +31,51 @@ export const userBooking = async (req, res, next) => {
 }
 
 
-export const addFavorite = async (req, res, next) => {
-    try {
-        const { showId } = req.body;
-        const userId = req.auth().userId;
+export const toggleFavorite = async (req, res, next) => {
+  try {
+    const { showId } = req.body;
+    const userId = req.auth().userId;
 
-        const user = await clerkClient.users.getUser(userId);
+    // Check if the show exists
+    const show = await Show.findById(showId);
+    if (!show) return next(new ErrorResponse(404, "Show not found"));
 
-        if (!user) {
-            return next(new ErrorResponse(404, "User not found"));
-        }
+    // Get the user from Clerk
+    const user = await clerkClient.users.getUser(userId);
+    if (!user) return next(new ErrorResponse(404, "User not found"));
 
-        if (!user.privateMetadata.favorites) {
-            user.privateMetadata.favorites = [];
-        }
-
-        if (!user.privateMetadata.favorites.includes(showId)) {
-            user.privateMetadata.favorites.push(showId);
-        }
-
-        await clerkClient.users.updateUserMetadata(userId, {
-            privateMetadata: user.privateMetadata
-        });
-
-        res.status(200).json({
-            success: true,
-            message: "Show is added to favorites successfully"
-        })
-
-    } catch (error) {
-        next(error);
+    if (!user.privateMetadata.favorites) {
+      user.privateMetadata.favorites = [];
     }
 
-}
+    const favorites = user.privateMetadata.favorites;
+    let message;
 
-
-export const updateFavorite = async (req, res, next) => {
-    try {
-        const { showId } = req.body;
-        const userId = req.auth().userId;
-
-        const user = await clerkClient.users.getUser(userId);
-
-        if (!user) {
-            return next(new ErrorResponse(404, "User not found"));
-        }
-
-        if (!user.privateMetadata.favorites) {
-            user.privateMetadata.favorites = [];
-        }
-
-        if (!user.privateMetadata.favorites.includes(showId)) {
-            user.privateMetadata.favorites.push(showId);
-        } else {
-            user.privateMetadata.favorites.filter(item=> item!==showId);
-        }
-
-
-        await clerkClient.users.updateUserMetadata(userId, {
-            privateMetadata: user.privateMetadata
-        });
-
-        res.status(200).json({
-            success: true,
-            message: "favorites list update successfully"
-        })
-
-    } catch (error) {
-        next(error);
+    if (favorites.includes(showId)) {
+      // Remove from favorites
+      user.privateMetadata.favorites = favorites.filter(id => id !== showId);
+      message = "Show removed from favorites";
+    } else {
+      // Add to favorites
+      favorites.push(showId);
+      message = "Show added to favorites";
     }
 
-}
+    // Update user metadata in Clerk
+    await clerkClient.users.updateUserMetadata(userId, {
+      privateMetadata: user.privateMetadata
+    });
+
+    res.status(200).json({
+      success: true,
+      message,
+      favorites: user.privateMetadata.favorites
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 export const getFavorites=async(req,res,next)=> {
