@@ -13,54 +13,52 @@ const ShowDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { getToken } = useAuth();
 
   // Suggested shows (dummy for now)
   const SuggestedShows = dummyShowsData.filter(item => item._id !== id).slice(0, 4);
 
-  // Fetch show details
+  // Fetch show details and user favorites
   useEffect(() => {
-    const fetchSingleShow = async (showId) => {
+    const fetchShowAndFavorites = async () => {
+      setLoading(true);
       try {
-        const { data } = await api.get(`/api/shows/${showId}`);
-        if (data.success) {
-          setShow(data.show);
-        } else {
-          toast.error("Failed to fetch show details.");
+        // Fetch show details
+        const { data: showData } = await api.get(`/api/shows/${id}`);
+        if (showData.success) setShow(showData.show);
+        else toast.error("Failed to fetch show details.");
+
+        // Fetch favorites
+        const token = await getToken();
+        const { data: favData } = await api.get("/api/user/favorites", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (favData.success) {
+          setIsFavorite(favData.shows.some(s => s._id === id));
         }
       } catch (error) {
-        console.error("Error fetching show:", error);
-        toast.error("Failed to fetch show.");
+        console.error(error);
+        toast.error("Something went wrong.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchSingleShow(id);
-  }, [id]);
-
-  // Fetch user favorites
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const { data } = await api.get("/api/user/favorites");
-        if (data.success) {
-          setIsFavorite(data.shows.some(s => s._id === id));
-        }
-      } catch (error) {
-        console.error("Failed to fetch favorites", error);
-      }
-    };
-
-    fetchFavorites();
+    fetchShowAndFavorites();
   }, [id]);
 
   // Toggle favorite
   const handleToggleFavorite = async () => {
     try {
-      const { data } = await api.post("/api/user/favorite", { showId: id }, {
-        headers: {
-          Authorization: `Bearer ${await getToken()}`,
-        },
-      });
+      const token = await getToken();
+      const { data } = await api.post(
+        "/api/user/favorite",
+        { showId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
       if (data.success) {
         setIsFavorite(prev => !prev);
         toast.success(data.message);
@@ -71,7 +69,7 @@ const ShowDetails = () => {
     }
   };
 
-  if (!show) return <Loading />;
+  if (loading || !show) return <Loading />;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
