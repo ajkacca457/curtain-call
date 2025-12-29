@@ -8,6 +8,6 @@ const router= express.Router();
 
 router.get("/booking",userBooking);
 router.post("/favorite",requireAuth(), toggleFavorite);
-router.get("/favorites", getFavorites);
+router.get("/favorites", requireAuth(), getFavorites);
 
 export default router;

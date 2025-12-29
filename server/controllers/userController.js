@@ -81,8 +81,8 @@ export const toggleFavorite = async (req, res, next) => {
 export const getFavorites = async (req, res, next) => {
 
   try {
-
-    const user = await clerkClient.users.getUser(req.auth().userId);
+    const {userId} = req.auth();
+    const user = await clerkClient.users.getUser(userId);
 
     if (!user) {
       return next(new ErrorResponse(404, "User is not exists"));
