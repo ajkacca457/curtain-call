@@ -6,27 +6,27 @@ import { clerkClient } from "@clerk/express";
 
 export const userBooking = async (req, res, next) => {
 
-    try {
-        const user = req.auth().userId;
+  try {
+    const user = req.auth().userId;
 
-        const bookings = await Booking.find({ user }).populate({
-            path: "showTime",
-            populate: { path: "show" }
-        }).sort({ createdAt: -1 });
+    const bookings = await Booking.find({ user }).populate({
+      path: "showTime",
+      populate: { path: "show" }
+    }).sort({ createdAt: -1 });
 
-        if (bookings.length < 1) {
-            return next(new ErrorResponse(404, "user has no available bookings"));
-        }
-
-        res.status(200).json({
-            success: true,
-            bookings
-        })
-
-
-    } catch (error) {
-        next(error)
+    if (bookings.length < 1) {
+      return next(new ErrorResponse(404, "user has no available bookings"));
     }
+
+    res.status(200).json({
+      success: true,
+      bookings
+    })
+
+
+  } catch (error) {
+    next(error)
+  }
 
 }
 
@@ -34,7 +34,7 @@ export const userBooking = async (req, res, next) => {
 export const toggleFavorite = async (req, res, next) => {
   try {
     const { showId } = req.body;
-    const userId = req.auth().userId;
+    const {userId} = req.auth();
 
     // Check if the show exists
     const show = await Show.findById(showId);
@@ -44,20 +44,20 @@ export const toggleFavorite = async (req, res, next) => {
     const user = await clerkClient.users.getUser(userId);
     if (!user) return next(new ErrorResponse(404, "User not found"));
 
+
     if (!user.privateMetadata.favorites) {
       user.privateMetadata.favorites = [];
     }
 
-    const favorites = user.privateMetadata.favorites;
     let message;
 
-    if (favorites.includes(showId)) {
+    if (user.privateMetadata.favorites.includes(showId)) {
       // Remove from favorites
-      user.privateMetadata.favorites = favorites.filter(id => id !== showId);
+      user.privateMetadata.favorites = user.privateMetadata.favorites.filter(id => id !== showId);
       message = "Show removed from favorites";
     } else {
       // Add to favorites
-      favorites.push(showId);
+      user.privateMetadata.favorites.push(showId);
       message = "Show added to favorites";
     }
 
@@ -78,28 +78,28 @@ export const toggleFavorite = async (req, res, next) => {
 };
 
 
-export const getFavorites=async(req,res,next)=> {
+export const getFavorites = async (req, res, next) => {
 
-    try {
+  try {
 
-        const user= await clerkClient.users.getUser(req.auth().userId);
-        
-        if(!user) {
-            return next(new ErrorResponse(404,"User is not exists"));
-        }
+    const user = await clerkClient.users.getUser(req.auth().userId);
 
-        const favorites= user.privateMetadata.favorites;
-        
-        const shows= await Show.find({_id: {$in:favorites}});
-
-        res.status(200).json({
-            success:true,
-            shows
-        })
-     
-    } catch (error) {
-        next(error);
+    if (!user) {
+      return next(new ErrorResponse(404, "User is not exists"));
     }
+
+    const favorites = user.privateMetadata.favorites;
+
+    const shows = await Show.find({ _id: { $in: favorites } });
+
+    res.status(200).json({
+      success: true,
+      shows
+    })
+
+  } catch (error) {
+    next(error);
+  }
 
 
 }
