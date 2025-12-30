@@ -6,38 +6,27 @@ import Loading from "../components/Loading";
 import ShowCard from "../components/ShowCard";
 import api from "../api/axiosInstance.js";
 import { toast } from "react-hot-toast";
-import { useAuth } from "@clerk/clerk-react";
+import { useAppContext } from "../context/AppContext.jsx";
 import { dummyShowsData } from "../assets/data";
 
 const ShowDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { getToken } = useAuth();
+
+  const { favorites, toggleFavorite, favoritesLoaded } = useAppContext();
 
   // Suggested shows (dummy for now)
   const SuggestedShows = dummyShowsData.filter(item => item._id !== id).slice(0, 4);
 
-  // Fetch show details and user favorites
+  // Fetch show details
   useEffect(() => {
-    const fetchShowAndFavorites = async () => {
+    const fetchShow = async () => {
       setLoading(true);
       try {
-        // Fetch show details
-        const { data: showData } = await api.get(`/api/shows/${id}`);
-        if (showData.success) setShow(showData.show);
+        const { data } = await api.get(`/api/shows/${id}`);
+        if (data.success) setShow(data.show);
         else toast.error("Failed to fetch show details.");
-
-        // Fetch favorites
-        const token = await getToken();
-        const { data: favData } = await api.get("/api/user/favorites", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (favData.success) {
-          setIsFavorite(favData.shows.some(s => s._id === id));
-        }
       } catch (error) {
         console.error(error);
         toast.error("Something went wrong.");
@@ -46,30 +35,22 @@ const ShowDetails = () => {
       }
     };
 
-    fetchShowAndFavorites();
+    fetchShow();
   }, [id]);
 
-  // Toggle favorite
+  const isFavorite = favorites.some(s => s._id === id);
+
   const handleToggleFavorite = async () => {
     try {
-      const token = await getToken();
-      const { data } = await api.post(
-        "/api/user/favorite",
-        { showId: id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (data.success) {
-        setIsFavorite(prev => !prev);
-        toast.success(data.message);
-      }
+      await toggleFavorite(id);
+      toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
     } catch (error) {
       console.error("Failed to toggle favorite", error);
       toast.error("Failed to update favorite");
     }
   };
 
-  if (loading || !show) return <Loading />;
+  if (loading || !show || !favoritesLoaded) return <Loading />;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
