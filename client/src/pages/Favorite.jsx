@@ -1,40 +1,16 @@
-import { useState, useEffect } from "react";
 import ShowCard from "../components/ShowCard";
-import api from "../api/axiosInstance";
-import { useAuth } from "@clerk/clerk-react";
-import Loading from "../components/Loading";
-import toast from "react-hot-toast";
+import { useAppContext } from "../context/AppContext.jsx";
+import { useEffect } from "react";
 
 const Favorite = () => {
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { getToken } = useAuth();
+  const { favorites, favoritesLoaded, fetchFavorites } = useAppContext();
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const token = await getToken();
-        const { data } = await api.get("/api/user/favorites", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (data.success) {
-          setFavorites(data.shows);
-        } else {
-          toast.error("Failed to fetch favorites");
-        }
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
-        toast.error("Failed to fetch favorites");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchFavorites();
-  }, [getToken]);
+  }, []);
 
-  if (loading) return <Loading />;
+  if (!favoritesLoaded)
+    return <div className="text-center py-20">Loading...</div>;
 
   if (!favorites || favorites.length === 0)
     return (
@@ -49,9 +25,11 @@ const Favorite = () => {
         Your Favorite Shows and Events:
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {favorites.map((show) => (
-          <ShowCard key={show._id} show={show} />
-        ))}
+        {favorites
+          .filter(show => show && show._id) // ensure show is valid
+          .map(show => (
+            <ShowCard key={show._id} show={show} />
+          ))}
       </div>
     </div>
   );

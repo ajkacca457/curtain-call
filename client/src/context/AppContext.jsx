@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 
-
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -12,6 +11,7 @@ export const AppProvider = ({ children }) => {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [shows, setShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -29,36 +29,35 @@ export const AppProvider = ({ children }) => {
       console.error("Error fetching admin status:", error);
       setIsAdmin(false);
     } finally {
-      setCheckingAdmin(false); 
+      setCheckingAdmin(false);
     }
   };
 
   const fetchFavorites = async () => {
     try {
-      const data = await api.get(`/api/users/favorites`, {
+      const { data } = await api.get("/api/user/favorites", {
         headers: {
           Authorization: `Bearer ${await getToken()}`,
         },
       });
 
       if (data.success) {
-        setFavorites(data.favorites);
-        toast.success("Favorites fetched successfully!");
-      } else {
-        toast.error("Failed to fetch favorites.");
+        setFavorites(data.shows);
       }
     } catch (error) {
-      console.error("Error fetching favorites:", error);
+      console.error("Failed to fetch favorites", error);
+    } finally {
+      setFavoritesLoaded(true);
     }
   };
 
-  const fetchAllShows= async()=> {
+  const fetchAllShows = async () => {
     try {
-      const {data}= await api.get("/api/shows/all-shows");
-      if(data.success){
-        const activeShows= data.shows.filter(show=> show.isActive);
-      setShows(activeShows);
-      toast.success("Shows fetched successfully!");
+      const { data } = await api.get("/api/shows/all-shows");
+      if (data.success) {
+        const activeShows = data.shows.filter((show) => show.isActive);
+        setShows(activeShows);
+        toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
       }
@@ -66,11 +65,36 @@ export const AppProvider = ({ children }) => {
       console.error("Error fetching shows:", error);
       toast.error("Failed to fetch shows.");
     }
-  }
+  };
+
+  const toggleFavorite = async (showId) => {
+    try {
+      const { data } = await api.post(
+        "/api/user/favorite",
+        { showId },
+        { headers: { Authorization: `Bearer ${await getToken()}` } }
+      );
+
+      if (data.success) {
+        setFavorites((prev) => {
+          const exists = prev.some((s) => s._id === showId);
+          return exists
+            ? prev.filter((s) => s._id !== showId)
+            : [...prev, { _id: showId }];
+        });
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite", error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       fetchAdminStatus();
+      fetchFavorites(); // added here
+    } else {
+      setFavorites([]);
+      setFavoritesLoaded(false);
     }
   }, [user]);
 
@@ -80,11 +104,13 @@ export const AppProvider = ({ children }) => {
         isAdmin,
         shows,
         favorites,
+        favoritesLoaded,
         user,
         checkingAdmin,
         fetchAdminStatus,
         fetchFavorites,
-        fetchAllShows
+        fetchAllShows,
+        toggleFavorite,
       }}
     >
       {children}
