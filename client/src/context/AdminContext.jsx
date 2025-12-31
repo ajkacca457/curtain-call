@@ -9,7 +9,6 @@ export const AdminProvider = ({ children }) => {
   const { getToken } = useAuth();
 
   const [dashboardData, setDashboardData] = useState(null);
-  const [recentBookings, setRecentBookings] = useState([]);
 
   const fetchDashboardData = async () => {
     try {
@@ -24,31 +23,11 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  const fetchRecentBookings = async () => {
-    try {
-      const token = await getToken();
-      const res = await api.get("/api/admin/all-bookings", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRecentBookings(res.data.bookings.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching recent bookings:", error);
-      toast.error("Failed to fetch recent bookings");
-    }
-  };
-
-  const fetchAllAdminData = async () => {
-    await Promise.all([fetchDashboardData(), fetchRecentBookings()]);
-  };
-
   return (
     <AdminContext.Provider
       value={{
         dashboardData,
-        recentBookings,
         fetchDashboardData,
-        fetchRecentBookings,
-        fetchAllAdminData,
       }}
     >
       {children}

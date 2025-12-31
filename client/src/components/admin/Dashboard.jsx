@@ -11,13 +11,13 @@ const dashboardTemplate = {
 };
 
 const Dashboard = () => {
-  const { dashboardData, recentBookings, fetchAllAdminData } = useAdmin();
+  const { dashboardData,fetchDashboardData } = useAdmin();
   const [data, setData] = useState(dashboardTemplate);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      await fetchAllAdminData();
+      await fetchDashboardData();
       setLoading(false);
     };
     loadData();
