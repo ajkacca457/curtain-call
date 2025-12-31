@@ -1,11 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { IoHome, IoAddCircle, IoList, IoTicket } from "react-icons/io5";
+import { IoHome, IoAddCircle, IoList, IoTicket, IoFilm } from "react-icons/io5";
 
 const navItems = [
   { label: "Dashboard", path: "/admin", icon: <IoHome /> },
-  { label: "Add Show Timings", path: "/admin/add-show-times", icon: <IoAddCircle /> },
   { label: "List Shows", path: "/admin/list-shows", icon: <IoList /> },
+  { label: "Add Show", path: "/admin/add-show", icon: <IoFilm /> },
+  {
+    label: "Add Show Timings",
+    path: "/admin/add-show-times",
+    icon: <IoAddCircle />,
+  },
   { label: "Bookings", path: "/admin/list-bookings", icon: <IoTicket /> },
 ];
 
