@@ -19,6 +19,7 @@ import Contact from "./pages/Contact.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 import { AppProvider } from "./context/AppContext.jsx";
+import { AdminProvider } from "./context/AdminContext.jsx";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute.jsx";
 
 const router = createBrowserRouter([
@@ -46,7 +47,9 @@ const router = createBrowserRouter([
     element: (
       <AppProvider>
         <ProtectedAdminRoute>
-          <AdminLayout />
+          <AdminProvider>
+            <AdminLayout />
+          </AdminProvider>
         </ProtectedAdminRoute>
       </AppProvider>
     ),
