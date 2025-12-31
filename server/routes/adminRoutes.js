@@ -10,7 +10,7 @@ router.get("/is-admin",requireAuth(),userIsAdmin);
 router.get("/dashboard",requireAuth(),getAdminDashboardData);
 router.get("/all-shows",requireAuth(),getAllDashboardShowTime);
 router.get("/all-bookings",getAllBookings);
-router.post("/",protectAdminRoutes,createSingleShow);
+router.post("/",requireAuth(),createSingleShow);
 
 
 export default router;

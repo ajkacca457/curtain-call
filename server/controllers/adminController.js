@@ -3,6 +3,7 @@ import Booking from "../models/Booking.js";
 import ShowTime from "../models/ShowTime.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
+import Show from "../models/Show.js";
 
 export const userIsAdmin = async (req, res, next) => {
     try {
@@ -132,24 +133,36 @@ export const getAllBookings = async (req, res, next) => {
 }
 
 export const createSingleShow = async (req, res, next) => {
-    console.log(req.body);
     try {
-        const show = await Show.create(req.body);
+        const { userId } = getAuth(req);
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
 
+        const user = await clerkClient.users.getUser(userId);
+        const isAdmin = user.privateMetadata?.role === "admin";
+
+        if (!isAdmin) {
+            return res.status(403).json({ success: false, message: "Access denied. Admin only." });
+        }
+        const show = await Show.create({
+            ...req.body,
+            release_date: new Date(req.body.release_date),
+        });
+        console.log("Created Show:", show); // Debugging line
         if (!show) {
-            return next(new ErrorResponse("show cant be created", 400));
+            return next(new ErrorResponse("Show could not be created", 400));
         }
 
         res.status(200).json({
             success: true,
             show,
-            message: `new show created`
-        })
-
+            message: "New show created successfully",
+        });
     } catch (error) {
         next(error);
     }
-}
+};
 
 export const createShowTime = async (req, res, next) => {
     try {

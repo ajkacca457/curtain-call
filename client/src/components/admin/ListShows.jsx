@@ -1,39 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
-import api from "../../api/axiosInstance"; // ✅ your axios instance with baseURL
+import { useEffect, useState } from "react";
+import { useAdmin } from "../../context/AdminContext.jsx";
 
 const ListShows = () => {
-  const [shows, setShows] = useState([]);
+  
   const [loading, setLoading] = useState(true);
-  const { getToken } = useAuth();
-
-  const fetchListShows = async () => {
-    try {
-      const token = await getToken();
-
-      // ✅ Ensure token is available before request
-      if (!token) {
-        console.warn("No token found, skipping fetch.");
-        return;
-      }
-
-      const response = await api.get("/api/admin/all-shows", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log("✅ Fetched shows:", response.data);
-      setShows(response.data.showTimes || []);
-    } catch (error) {
-      console.error("❌ Error fetching shows:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { showTimes, fetchListShows } = useAdmin();
 
   useEffect(() => {
-    fetchListShows();
+    const loadShows = async () => {
+      setLoading(true);
+      await fetchListShows();
+      setLoading(false);
+    }
+    loadShows();
   }, []);
 
   if (loading) {
@@ -50,7 +29,7 @@ const ListShows = () => {
         🎭 Show Listings
       </h1>
 
-      {shows.length === 0 ? (
+      {showTimes.length === 0 ? (
         <p className="text-gray-500 text-center">No active shows found.</p>
       ) : (
         <div className="overflow-x-auto">
@@ -64,7 +43,7 @@ const ListShows = () => {
               </tr>
             </thead>
             <tbody>
-              {shows.map((show) => {
+              {showTimes.map((show) => {
                 const totalBookings = show.occupiedSeats
                   ? Object.keys(show.occupiedSeats).length
                   : 0;
