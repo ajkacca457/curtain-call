@@ -4,8 +4,7 @@ import { IoHome, IoAddCircle, IoList, IoTicket, IoFilm } from "react-icons/io5";
 
 const navItems = [
   { label: "Dashboard", path: "/admin", icon: <IoHome /> },
-  { label: "List Shows", path: "/admin/list-shows", icon: <IoList /> },
-  { label: "Add Show", path: "/admin/add-show", icon: <IoFilm /> },
+  { label: "Shows", path: "/admin/list-shows", icon: <IoList /> },
   {
     label: "Add Show Timings",
     path: "/admin/add-show-times",

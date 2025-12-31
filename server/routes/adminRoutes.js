@@ -1,7 +1,6 @@
 import express from "express"
 import {userIsAdmin,getAdminDashboardData,getAllDashboardShowTime,getAllBookings, createSingleShow} from "../controllers/adminController.js"
 import { requireAuth } from "@clerk/express";
-import { protectAdminRoutes } from "../middlewares/auth.js";
 
 const router= express.Router();
 
