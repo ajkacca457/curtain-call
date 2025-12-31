@@ -11,7 +11,7 @@ import AppLayout from "./components/AppLayout.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import ListShows from "./components/admin/ListShows.jsx";
 import BookingList from "./components/admin/BookingList.jsx";
-import AddShows from "./components/admin/AddShows.jsx";
+import AddShowTimes from "./components/admin/AddShowTimes.jsx";
 
 
 import AboutUs from "./pages/AboutUs.jsx";
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "add-shows", element: <AddShows /> },
+      { path: "add-show-times", element: <AddShowTimes /> },
       { path: "list-shows", element: <ListShows /> },
       { path: "list-bookings", element: <BookingList /> },
     ],
