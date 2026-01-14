@@ -3,6 +3,7 @@ import api from "../api/axiosInstance";
 import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
+import { sortShows, SORT_TYPES } from "../lib/utils.js";
 
 const AppContext = createContext();
 
@@ -10,6 +11,8 @@ export const AppProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [shows, setShows] = useState([]);
+  const [sortBy, setSortBy] = useState(SORT_TYPES.NEWEST);
+  const [rawShows, setRawShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
@@ -56,7 +59,8 @@ export const AppProvider = ({ children }) => {
       const { data } = await api.get("/api/shows/all-shows");
       if (data.success) {
         const activeShows = data.shows.filter((show) => show.isActive);
-        setShows(activeShows);
+        setRawShows(activeShows);
+        setShows(sortShows(activeShows, sortBy));
         toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
@@ -98,6 +102,10 @@ export const AppProvider = ({ children }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    setShows(sortShows(rawShows, sortBy));
+  }, [rawShows, sortBy]);
+
   return (
     <AppContext.Provider
       value={{
@@ -107,6 +115,8 @@ export const AppProvider = ({ children }) => {
         favoritesLoaded,
         user,
         checkingAdmin,
+        sortBy,
+        setSortBy,
         fetchAdminStatus,
         fetchFavorites,
         fetchAllShows,
