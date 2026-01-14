@@ -21,6 +21,26 @@ export const getActiveShows = async (req, res, next) => {
     }
 };
 
+export const getAllShows = async (req, res, next) => {
+    try {
+        const shows = await Show.find({});
+
+        if (!shows) {
+            return next(new ErrorResponse("no shows found", 404))
+        }
+        res.status(200).json({
+            success: true,
+            message: "this will get all the shows",
+            shows,
+            totalShows: shows.length
+        })
+
+    } catch (error) {
+        next(error)
+    }
+};
+
+
 export const getSingleShow = async (req, res, next) => {
     try {
         const show = await Show.findById(req.params.id);
