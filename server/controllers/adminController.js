@@ -19,7 +19,6 @@ export const userIsAdmin = async (req, res, next) => {
     }
 }
 
-
 export const getAdminDashboardData = async (req, res) => {
     try {
         const { userId } = req.auth(); // populated by requireAuth()
@@ -59,7 +58,6 @@ export const getAdminDashboardData = async (req, res) => {
         next(error);
     }
 };
-
 
 
 export const getAllDashboardShowTime = async (req, res, next) => {

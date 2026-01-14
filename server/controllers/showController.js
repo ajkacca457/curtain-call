@@ -21,7 +21,6 @@ export const getActiveShows = async (req, res, next) => {
     }
 };
 
-
 export const getSingleShow = async (req, res, next) => {
     try {
         const show = await Show.findById(req.params.id);
@@ -186,7 +185,6 @@ export const getSingleShowTime = async (req, res, next) => {
 
 }
 
-
 export const getFeaturedShows= async (req,res,next)=> {
 try {
     const shows = await Show.find({isFeatured:true});
@@ -209,3 +207,31 @@ try {
   }
 
 }
+
+export const getUpcomingShows = async (req, res, next) => {
+    try {
+        const currentDate = new Date();
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(currentDate.getMonth() + 1);
+
+        const shows = await Show.find({
+            release_date: {
+                $gte: oneMonthLater
+            }
+        });
+
+        if(!shows || shows.length ===0){
+          return next(new ErrorResponse("No upcoming shows found",404))
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "All upcoming shows retrieved successfully",
+            totalUpcomingShows: shows.length,
+            shows
+        })
+        
+    } catch (error) {
+        next(error)        
+    }
+} 
