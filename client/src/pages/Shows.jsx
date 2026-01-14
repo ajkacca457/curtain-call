@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ShowCard from "../components/ShowCard";
 import { useAppContext } from "../context/AppContext";
+import ShowSorting from "../components/ShowSorting";
 
 const Shows = () => {
   const { shows, fetchAllShows } = useAppContext();
@@ -46,11 +47,14 @@ const Shows = () => {
       )}
 
       {!isLoading && !error && shows.length > 0 && (
+        <>
+        <ShowSorting />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {shows.map((show) => (
             <ShowCard key={show.id} show={show} />
           ))}
         </div>
+        </>
       )}
     </div>
   );

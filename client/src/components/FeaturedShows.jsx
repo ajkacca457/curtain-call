@@ -13,7 +13,7 @@ const FeaturedShows = () => {
       try {
         const res = await api.get("/api/shows/featured");
         const { shows } = res.data;
-        setFeatured(Array.isArray(shows) ? shows : []);
+        setFeatured(Array.isArray(shows) ? shows.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) : []);
       } catch (error) {
         console.error("Error fetching featured shows:", error);
         setFeatured([]);
