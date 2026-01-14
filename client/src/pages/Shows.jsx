@@ -4,7 +4,7 @@ import { useAppContext } from "../context/AppContext";
 import ShowSorting from "../components/ShowSorting";
 
 const Shows = () => {
-  const { shows, fetchAllShows } = useAppContext();
+  const { activeShows, fetchActiveShows } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ const Shows = () => {
       setIsLoading(true);
       setError(null);
       try {
-        await fetchAllShows(); // fetch shows from API
+        await fetchActiveShows(); // fetch shows from API
       } catch (err) {
         setError("Failed to fetch shows. Please try again later.");
       } finally {
@@ -40,17 +40,17 @@ const Shows = () => {
         <p className="text-red-600 text-lg text-center py-12">{error}</p>
       )}
 
-      {!isLoading && !error && shows.length === 0 && (
+      {!isLoading && !error && activeShows.length === 0 && (
         <p className="text-gray-600 text-lg text-center py-12">
           No shows available at the moment. Please check back later.
         </p>
       )}
 
-      {!isLoading && !error && shows.length > 0 && (
+      {!isLoading && !error && activeShows.length > 0 && (
         <>
         <ShowSorting />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {shows.map((show) => (
+          {activeShows.map((show) => (
             <ShowCard key={show.id} show={show} />
           ))}
         </div>

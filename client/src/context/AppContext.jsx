@@ -11,6 +11,7 @@ export const AppProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [shows, setShows] = useState([]);
+  const [activeShows, setActiveShows] = useState([]);
   const [sortBy, setSortBy] = useState(SORT_TYPES.NEWEST);
   const [rawShows, setRawShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -54,13 +55,12 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchAllShows = async () => {
+  const fetchActiveShows = async () => {
     try {
       const { data } = await api.get("/api/shows/all-shows");
       if (data.success) {
-        const activeShows = data.shows.filter((show) => show.isActive);
-        setRawShows(activeShows);
-        setShows(sortShows(activeShows, sortBy));
+        setRawShows(data.shows);
+        setActiveShows(sortShows(data.shows, sortBy));
         toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
@@ -103,14 +103,14 @@ export const AppProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    setShows(sortShows(rawShows, sortBy));
+    setActiveShows(sortShows(rawShows, sortBy));
   }, [rawShows, sortBy]);
 
   return (
     <AppContext.Provider
       value={{
         isAdmin,
-        shows,
+        activeShows,
         favorites,
         favoritesLoaded,
         user,
@@ -119,7 +119,7 @@ export const AppProvider = ({ children }) => {
         setSortBy,
         fetchAdminStatus,
         fetchFavorites,
-        fetchAllShows,
+        fetchActiveShows,
         toggleFavorite,
       }}
     >

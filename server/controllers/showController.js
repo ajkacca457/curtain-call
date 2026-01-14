@@ -4,7 +4,7 @@ import ErrorResponse from "../utils/ErrorHandle.js";
 
 export const getActiveShows = async (req, res, next) => {
     try {
-        const shows = await Show.find({});
+        const shows = await Show.find({isActive:true});
 
         if (!shows) {
             return next(new ErrorResponse("no active shows found", 404))
