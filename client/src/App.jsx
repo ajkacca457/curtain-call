@@ -13,6 +13,7 @@ import ListShows from "./components/admin/ListShows.jsx";
 import BookingList from "./components/admin/BookingList.jsx";
 import AddShowTimes from "./components/admin/AddShowTimes.jsx";
 import AddShow from "./components/admin/AddShow.jsx";
+import AdminUpcomingShows from "./components/admin/AdminUpcomingShows.jsx";
 
 
 import AboutUs from "./pages/AboutUs.jsx";
@@ -59,7 +60,8 @@ const router = createBrowserRouter([
       { path: "add-show", element: <AddShow /> },
       { path: "add-show-times", element: <AddShowTimes /> },
       { path: "list-shows", element: <ListShows /> },
-      { path: "list-bookings", element: <BookingList /> },
+      { path: "upcoming-shows", element: <AdminUpcomingShows /> },
+      { path: "list-bookings", element: <BookingList /> }, 
     ],
   },
 ]);
