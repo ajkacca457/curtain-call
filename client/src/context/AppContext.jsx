@@ -11,6 +11,8 @@ export const AppProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [shows, setShows] = useState([]);
+  const [activeShows, setActiveShows] = useState([]);
+  const [upcomingShows, setUpcomingShows] = useState([]);
   const [sortBy, setSortBy] = useState(SORT_TYPES.NEWEST);
   const [rawShows, setRawShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -54,13 +56,12 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchAllShows = async () => {
+  const fetchActiveShows = async () => {
     try {
-      const { data } = await api.get("/api/shows/all-shows");
+      const { data } = await api.get("/api/shows/active-shows");
       if (data.success) {
-        const activeShows = data.shows.filter((show) => show.isActive);
-        setRawShows(activeShows);
-        setShows(sortShows(activeShows, sortBy));
+        setRawShows(data.shows);
+        setActiveShows(sortShows(data.shows, sortBy));
         toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
@@ -70,6 +71,38 @@ export const AppProvider = ({ children }) => {
       toast.error("Failed to fetch shows.");
     }
   };
+
+  const fetchAllShows = async () => {
+    try {
+      const { data } = await api.get("/api/shows/all-shows");
+      if (data.success) {
+        setShows(data.shows);
+        toast.success("Shows fetched successfully!");
+      } else {
+        toast.error("Failed to fetch shows.");
+      }
+    } catch (error) {
+      console.error("Error fetching shows:", error);
+      toast.error("Failed to fetch shows.");
+    }
+  };
+
+  const fetchUpcomingShows = async () => {
+    try {
+      const { data } = await api.get("/api/shows/upcoming-shows");
+      if (data.success) {
+        setUpcomingShows(data.shows);
+        console.log("Upcoming shows:", data.shows);
+        toast.success("Upcoming shows fetched successfully!");
+      } else {
+        toast.error("Failed to fetch shows.");
+      }
+    } catch (error) {
+      console.error("Error fetching shows:", error);
+      toast.error("Failed to fetch shows.");
+    }
+  };
+
 
   const toggleFavorite = async (showId) => {
     try {
@@ -103,22 +136,26 @@ export const AppProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    setShows(sortShows(rawShows, sortBy));
+    setActiveShows(sortShows(rawShows, sortBy));
   }, [rawShows, sortBy]);
 
   return (
     <AppContext.Provider
       value={{
         isAdmin,
-        shows,
+        activeShows,
         favorites,
         favoritesLoaded,
         user,
         checkingAdmin,
         sortBy,
+        shows,
+        upcomingShows,
+        fetchUpcomingShows,
         setSortBy,
         fetchAdminStatus,
         fetchFavorites,
+        fetchActiveShows,
         fetchAllShows,
         toggleFavorite,
       }}
