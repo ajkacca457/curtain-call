@@ -9,6 +9,16 @@ export const isoTimeFormat = (dateTime) => {
     return localTime;
 };
 
+export const formatDate = (dateString) => {
+  if (!dateString) return 'TBA';
+
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
 
 export const SORT_TYPES = {
   NEWEST: "NEWEST",

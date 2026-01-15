@@ -12,6 +12,7 @@ export const AppProvider = ({ children }) => {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [shows, setShows] = useState([]);
   const [activeShows, setActiveShows] = useState([]);
+  const [upcomingShows, setUpcomingShows] = useState([]);
   const [sortBy, setSortBy] = useState(SORT_TYPES.NEWEST);
   const [rawShows, setRawShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -86,6 +87,22 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchUpcomingShows = async () => {
+    try {
+      const { data } = await api.get("/api/shows/upcoming-shows");
+      if (data.success) {
+        setUpcomingShows(data.shows);
+        console.log("Upcoming shows:", data.shows);
+        toast.success("Upcoming shows fetched successfully!");
+      } else {
+        toast.error("Failed to fetch shows.");
+      }
+    } catch (error) {
+      console.error("Error fetching shows:", error);
+      toast.error("Failed to fetch shows.");
+    }
+  };
+
 
   const toggleFavorite = async (showId) => {
     try {
@@ -133,6 +150,8 @@ export const AppProvider = ({ children }) => {
         checkingAdmin,
         sortBy,
         shows,
+        upcomingShows,
+        fetchUpcomingShows,
         setSortBy,
         fetchAdminStatus,
         fetchFavorites,

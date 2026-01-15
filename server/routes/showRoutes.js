@@ -4,12 +4,12 @@ import {getActiveShows, getAllShows, getSingleShow,getAllShowTime, getSingleShow
 const router= express.Router();
 
 router.get("/featured", getFeaturedShows);
+router.get("/upcoming-shows",getUpcomingShows);
 router.get("/active-shows",getActiveShows);
 router.get("/all-shows",getAllShows);
 router.get("/all-show-timing",getAllShowTime);
 router.get("/showtime/:showId",getSingleShowTime);
 router.get("/:id",getSingleShow);
-router.get("/upcoming-shows",getUpcomingShows);
 
 
 export default router;
