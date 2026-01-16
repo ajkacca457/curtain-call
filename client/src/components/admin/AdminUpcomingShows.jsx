@@ -56,7 +56,7 @@ const AdminUpcomingShows = () => {
         </h1>
 
         <Link
-          to="/admin/shows"
+          to="/admin/list-shows"
           className="text-indigo-600 hover:underline font-medium"
         >
           ← Back to All Shows
