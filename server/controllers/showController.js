@@ -60,26 +60,6 @@ export const getSingleShow = async (req, res, next) => {
     }
 }
 
-export const createSingleShow = async (req, res, next) => {
-    console.log(req.body);
-    try {
-        const show = await Show.create(req.body);
-
-        if (!show) {
-            return next(new ErrorResponse("show cant be created", 400));
-        }
-
-        res.status(200).json({
-            success: true,
-            show,
-            message: `new show created`
-        })
-
-    } catch (error) {
-        next(error);
-    }
-}
-
 export const createShowTime = async (req, res, next) => {
     try {
         const { showId, showsInput, showPrice } = req.body;
