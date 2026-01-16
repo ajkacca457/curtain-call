@@ -14,8 +14,7 @@ import BookingList from "./components/admin/BookingList.jsx";
 import AddShow from "./components/admin/AddShow.jsx";
 import AdminUpcomingShows from "./components/admin/AdminUpcomingShows.jsx";
 import AdminEditShow from "./components/admin/AdminEditShow.jsx";
-import DisplayShowTimings from "./components/admin/DisplayShowTimings.jsx";
-import AddShowTiming from "./components/admin/AddShowTiming.jsx";
+import ManageShowTiming from "./components/admin/ManageShowTiming.jsx";
 
 
 import AboutUs from "./pages/AboutUs.jsx";
@@ -64,8 +63,7 @@ const router = createBrowserRouter([
       { path: "upcoming-shows", element: <AdminUpcomingShows /> },
       { path: "list-bookings", element: <BookingList /> }, 
       { path: "edit-show/:id", element: <AdminEditShow /> },
-      { path: "show-timings/:id", element: <DisplayShowTimings /> },
-      { path: "add-show-time/:id", element: <AddShowTiming /> }
+      { path: "shows/:id/show-times", element: <ManageShowTiming /> }
     ],
   },
 ]);
