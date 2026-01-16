@@ -163,46 +163,55 @@ export const createSingleShow = async (req, res, next) => {
 };
 
 export const createShowTime = async (req, res, next) => {
-    try {
-        const { showId, showsInput, showPrice } = req.body;
+  try {
+    // --- Admin Authorization ---
+    const { userId } = getAuth(req);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-        const show = await Show.findById(showId);
+    const user = await clerkClient.users.getUser(userId);
+    const isAdmin = user?.privateMetadata?.role === "admin";
+    if (!isAdmin) return res.status(403).json({ success: false, message: "Access denied" });
 
-        if (!show) {
-            return next(new ErrorResponse(`${showId}:show is not a active show`), 400);
-        }
+    // --- Input ---
+    const { showId, showsInput, showPrice } = req.body;
 
-        let showsToCreate = [];
-
-        showsInput.forEach(element => {
-            const showdate = element.date;
-            element.time.forEach(item => {
-                const showDateTime = `${showdate}T${item}`
-                const showtime = {
-                    showId,
-                    showDateTime: new Date(showDateTime),
-                    showPrice,
-                    occupiedSeats: {}
-                }
-                showsToCreate.push(showtime);
-            })
-
-        });
-
-        if (showsToCreate.length > 0) {
-            await ShowTime.insertMany(showsToCreate);
-        }
-        res.status(200).json({
-            success: true,
-            message: "new show times are added"
-
-        })
-
-    } catch (error) {
-        next(error)
+    if (!Array.isArray(showsInput) || showsInput.length === 0) {
+      return next(new ErrorResponse("No show times provided", 400));
     }
 
-}
+    const show = await Show.findById(showId);
+    if (!show) return next(new ErrorResponse(`${showId}: show not found`, 404));
+
+    let showsToCreate = [];
+
+    showsInput.forEach((element) => {
+      if (!element.date || !Array.isArray(element.time) || element.time.length === 0) {
+        return next(new ErrorResponse("Invalid date/time format", 400));
+      }
+
+      element.time.forEach((item) => {
+        const showDateTime = new Date(`${element.date}T${item}`);
+        showsToCreate.push({
+          showId,
+          showDateTime,
+          showPrice,
+          occupiedSeats: {},
+        });
+      });
+    });
+
+    if (showsToCreate.length > 0) {
+      await ShowTime.insertMany(showsToCreate, { ordered: false });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Showtimes added successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const updateShow = async (req, res, next) => {
     try {
