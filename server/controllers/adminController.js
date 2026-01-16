@@ -203,3 +203,36 @@ export const createShowTime = async (req, res, next) => {
     }
 
 }
+
+export const updateShow = async (req, res, next) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        const user = await clerkClient.users.getUser(userId);
+        const isAdmin = user?.privateMetadata?.role === "admin";
+
+        if (!isAdmin) {
+            return res.status(403).json({ success: false, message: "Access denied. Admin only." });
+        }
+
+        const showId = req.params.id;
+        const updateData = req.body;
+
+        const updatedShow = await Show.findByIdAndUpdate(showId, updateData, { new: true });
+
+        if (!updatedShow) {
+            return next(new ErrorResponse("Show not found or could not be updated", 404));
+        }
+        res.status(200).json({
+            success: true,
+            show: updatedShow,
+            message: "Show updated successfully",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
