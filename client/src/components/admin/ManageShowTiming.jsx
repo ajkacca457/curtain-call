@@ -15,9 +15,7 @@ const ManageShowTiming = () => {
   // ✅ single price
   const [showPrice, setShowPrice] = useState(200);
 
-  const [showsInput, setShowsInput] = useState([
-    { date: "", time: [""] },
-  ]);
+  const [showsInput, setShowsInput] = useState([{ date: "", time: [""] }]);
 
   // ---------------- FETCH DATA ----------------
   useEffect(() => {
@@ -34,7 +32,7 @@ const ManageShowTiming = () => {
         ]);
 
         setShow(showRes.data.show);
-        setExistingShowTimes(showTimeRes.data.showTimes);        
+        setExistingShowTimes(showTimeRes.data.showTimes);
       } catch (err) {
         toast.error("Failed to load show data");
       } finally {
@@ -86,17 +84,24 @@ const ManageShowTiming = () => {
       const token = await getToken();
 
       await api.post(
-        "/api/show-time",
+        "/api/admin/show-time",
         {
           showId,
           showsInput,
-          showPrice: { price: showPrice }, // ✅ single price
+          showPrice,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
+      // ✅ re-fetch showtimes
+      const showTimeRes = await api.get(`/api/admin/show-times/${showId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setExistingShowTimes(showTimeRes.data.showTimes);
+      setShowPrice(0);
       toast.success("Showtimes added successfully");
       setShowsInput([{ date: "", time: [""] }]);
     } catch (err) {
@@ -124,21 +129,18 @@ const ManageShowTiming = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-8">
-      <h1 className="text-3xl font-semibold">
-        🎭 Manage Showtimes 
-      </h1>
+      <h1 className="text-3xl font-semibold">🎭 Manage Showtimes</h1>
 
-      <h2 className="text-xl font-semibold">
-          {show?.title}
-      </h2>
+      <h2 className="text-xl font-semibold">{show?.title}</h2>
 
       {/* EXISTING SHOWTIMES */}
       <div>
         <h2 className="text-xl font-semibold mb-2">Existing Showtimes</h2>
+
         {Object.keys(groupedShowTimes).length === 0 ? (
           <p className="text-gray-500">No showtimes added yet.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
             {Object.entries(groupedShowTimes).map(([date, times]) => (
               <div key={date} className="bg-gray-50 p-3 rounded">
                 <p className="font-medium">{date}</p>
@@ -224,10 +226,7 @@ const ManageShowTiming = () => {
           </div>
         ))}
 
-        <button
-          onClick={addDateBlock}
-          className="text-indigo-600 text-sm mb-4"
-        >
+        <button onClick={addDateBlock} className="text-indigo-600 text-sm mb-4">
           + Add Another Date
         </button>
 
