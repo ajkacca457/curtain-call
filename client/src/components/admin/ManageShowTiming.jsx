@@ -6,17 +6,14 @@ import toast from "react-hot-toast";
 
 const ManageShowTiming = () => {
   const { id: showId } = useParams();
-
   const { getToken } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(null);
   const [existingShowTimes, setExistingShowTimes] = useState([]);
 
-  const [showPrice, setShowPrice] = useState({
-    regular: 200,
-    premium: 350,
-  });
+  // ✅ single price
+  const [showPrice, setShowPrice] = useState(200);
 
   const [showsInput, setShowsInput] = useState([
     { date: "", time: [""] },
@@ -24,9 +21,6 @@ const ManageShowTiming = () => {
 
   // ---------------- FETCH DATA ----------------
   useEffect(() => {
-
-    console.log("Fetching show and showtimes for showId:", showId);
-
     const loadData = async () => {
       try {
         setLoading(true);
@@ -34,13 +28,13 @@ const ManageShowTiming = () => {
 
         const [showRes, showTimeRes] = await Promise.all([
           api.get(`/api/shows/${showId}`),
-          api.get(`/api/admin/show-times/${showId}`),
+          api.get(`/api/admin/show-times/${showId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
-        console.log("✅ Fetched show and showtimes data",showRes);
-
         setShow(showRes.data.show);
-        setExistingShowTimes(showTimeRes.data.showTimes);
+        setExistingShowTimes(showTimeRes.data.showTimes);        
       } catch (err) {
         toast.error("Failed to load show data");
       } finally {
@@ -96,7 +90,7 @@ const ManageShowTiming = () => {
         {
           showId,
           showsInput,
-          showPrice,
+          showPrice: { price: showPrice }, // ✅ single price
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -113,13 +107,14 @@ const ManageShowTiming = () => {
   // ---------------- GROUP EXISTING SHOWTIMES ----------------
   const groupedShowTimes = existingShowTimes.reduce((acc, item) => {
     const date = new Date(item.showDateTime).toDateString();
-    acc[date] = acc[date] || [];
-    acc[date].push(
-      new Date(item.showDateTime).toLocaleTimeString([], {
+    if (!acc[date]) acc[date] = [];
+    acc[date].push({
+      time: new Date(item.showDateTime).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
-      })
-    );
+      }),
+      price: item?.showPrice,
+    });
     return acc;
   }, {});
 
@@ -147,9 +142,9 @@ const ManageShowTiming = () => {
                   {times.map((t, i) => (
                     <span
                       key={i}
-                      className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-sm"
+                      className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded text-sm"
                     >
-                      {t}
+                      {t.time} — ${t.price}
                     </span>
                   ))}
                 </div>
@@ -164,24 +159,13 @@ const ManageShowTiming = () => {
         <h2 className="text-xl font-semibold mb-4">➕ Add New Showtimes</h2>
 
         {/* PRICE */}
-        <div className="flex gap-4 mb-4">
+        <div className="mb-4">
           <input
             type="number"
-            placeholder="Regular Price"
-            value={showPrice.regular}
-            onChange={(e) =>
-              setShowPrice({ ...showPrice, regular: Number(e.target.value) })
-            }
-            className="border p-2 rounded"
-          />
-          <input
-            type="number"
-            placeholder="Premium Price"
-            value={showPrice.premium}
-            onChange={(e) =>
-              setShowPrice({ ...showPrice, premium: Number(e.target.value) })
-            }
-            className="border p-2 rounded"
+            placeholder="Show Price"
+            value={showPrice}
+            onChange={(e) => setShowPrice(Number(e.target.value))}
+            className="border p-2 rounded w-48"
           />
         </div>
 
