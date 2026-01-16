@@ -125,8 +125,12 @@ const ManageShowTiming = () => {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-8">
       <h1 className="text-3xl font-semibold">
-        🎭 Manage Showtimes — {show?.title}
+        🎭 Manage Showtimes 
       </h1>
+
+      <h2 className="text-xl font-semibold">
+          {show?.title}
+      </h2>
 
       {/* EXISTING SHOWTIMES */}
       <div>
@@ -160,6 +164,7 @@ const ManageShowTiming = () => {
 
         {/* PRICE */}
         <div className="mb-4">
+          <label className="block font-bold mb-2">Show Price ($):</label>
           <input
             type="number"
             placeholder="Show Price"
@@ -170,7 +175,8 @@ const ManageShowTiming = () => {
         </div>
 
         {showsInput.map((block, dateIndex) => (
-          <div key={dateIndex} className="border p-4 rounded mb-4">
+          <div key={dateIndex} className="border p-4 rounded mb-4 w-1/2">
+            <label className="block font-bold mb-4">Date:</label>
             <div className="flex justify-between items-center mb-2">
               <input
                 type="date"
