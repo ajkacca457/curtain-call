@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 const ManageShowTiming = () => {
   const { id: showId } = useParams();
+
   const { getToken } = useAuth();
 
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,9 @@ const ManageShowTiming = () => {
 
   // ---------------- FETCH DATA ----------------
   useEffect(() => {
+
+    console.log("Fetching show and showtimes for showId:", showId);
+
     const loadData = async () => {
       try {
         setLoading(true);
@@ -30,8 +34,10 @@ const ManageShowTiming = () => {
 
         const [showRes, showTimeRes] = await Promise.all([
           api.get(`/api/shows/${showId}`),
-          api.get(`/api/show-time/show/${showId}`),
+          api.get(`/api/admin/show-times/${showId}`),
         ]);
+
+        console.log("✅ Fetched show and showtimes data",showRes);
 
         setShow(showRes.data.show);
         setExistingShowTimes(showTimeRes.data.showTimes);
@@ -43,7 +49,7 @@ const ManageShowTiming = () => {
     };
 
     loadData();
-  }, [showId, getToken]);
+  }, [showId]);
 
   // ---------------- FORM HELPERS ----------------
   const addDateBlock = () => {

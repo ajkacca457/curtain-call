@@ -245,3 +245,25 @@ export const updateShow = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getAdminShowTimesByShow = async (req, res, next) => {
+  try {
+    const { showId } = req.params;
+
+    const show = await Show.findById(showId);
+    if (!show) {
+      return next(new ErrorResponse("Show not found", 404));
+    }
+
+    const showTimes = await ShowTime.find({ showId })
+      .sort({ showDateTime: 1 });
+
+    res.status(200).json({
+      success: true,
+      show,
+      showTimes,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
