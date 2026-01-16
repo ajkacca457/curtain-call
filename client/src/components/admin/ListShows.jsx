@@ -101,19 +101,19 @@ const AdminShows = () => {
                   <td className="px-6 py-4 grid grid-cols-2 gap-2 justify-center">
                     <div className="flex flex-col gap-1">
                     <Link
-                      to={`/admin/shows/${show._id}`}
+                      to={`/admin/show-timings/${show._id}`}
                       className="text-indigo-600 hover:underline text-sm"
                     >
                       ShowTimes
                     </Link>
                     <Link
-                      to={`/admin/showtimes/add?showId=${show._id}`}
+                      to={`/admin/add-show-time/${show._id}`}
                       className="text-green-600 hover:underline text-sm"
                     >
                       Add Time
                     </Link>
                     <Link
-                      to={`/admin/shows/edit/${show._id}`}
+                      to={`/admin/edit-show/${show._id}`}
                       className="text-yellow-600 hover:underline text-sm"
                     >
                       Edit
