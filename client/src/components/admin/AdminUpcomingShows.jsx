@@ -111,7 +111,7 @@ const AdminUpcomingShows = () => {
 
                     <td className="px-6 py-4 text-center">
                       <Link
-                        to={`/admin/shows/edit/${show._id}`}
+                        to={`/admin/edit-show/${show._id}`}
                         className="text-yellow-600 hover:underline text-sm"
                       >
                         Edit
