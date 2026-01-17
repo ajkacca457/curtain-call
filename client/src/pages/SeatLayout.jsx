@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
 import { isoTimeFormat } from "../lib/utils";
 import ScreenImage from "../assets/screenImage.svg";
@@ -12,6 +12,7 @@ const SeatLayout = () => {
   const navigate = useNavigate();
   const { user } = useUser(); // Clerk hook
   const userId = user?.id;
+  const { getToken } = useAuth();
 
   const [show, setShow] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
@@ -111,11 +112,29 @@ const SeatLayout = () => {
       const payload = {
         showTimeId: selectedTime._id,
         selectedSeats,
+        userId, // send current user ID
       };
-      const { data } = await api.post("/api/bookings/hold-seats", payload);
+
+      const res = await api.post("/api/booking/hold-seats", payload);
+
+      console.log("Hold seats response:", res);
 
       if (data.success) {
         toast.success("Seats temporarily held! Proceeding to checkout...");
+
+        // Optimistically update local temporaryHolds so UI disables these seats
+        selectedTime.temporaryHolds = {
+          ...selectedTime.temporaryHolds,
+          ...selectedSeats.reduce((acc, seat) => {
+            acc[seat] = {
+              userId,
+              expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+            }; // 15 min expiry
+            return acc;
+          }, {}),
+        };
+
+        // Navigate to confirm booking page with necessary info
         navigate("/confirm-booking", {
           state: {
             showTimeId: selectedTime._id,
