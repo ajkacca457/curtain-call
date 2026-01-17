@@ -14,10 +14,10 @@ const ShowDetails = () => {
   const [show, setShow] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { favorites, toggleFavorite, favoritesLoaded } = useAppContext();
+  const { favorites, toggleFavorite, favoritesLoaded, activeShows, fetchActiveShows } = useAppContext();
 
   // Suggested shows (dummy for now)
-  const SuggestedShows = dummyShowsData.filter(item => item._id !== id).slice(0, 4);
+  const SuggestedShows = activeShows.filter(item => item._id !== id).slice(0, 4);
 
   // Fetch show details
   useEffect(() => {
@@ -140,6 +140,13 @@ const ShowDetails = () => {
         <h1 className="text-3xl font-bold text-left my-8">
           Other shows you can watch:
         </h1>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {SuggestedShows.map((s) => (
+            <ShowCard key={s._id} show={s} />
+          ))}
+        </div>
+
         <div className="flex justify-end">
           <Link
             to="/shows"
