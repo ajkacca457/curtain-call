@@ -235,3 +235,14 @@ export const getUpcomingShows = async (req, res, next) => {
         next(error)        
     }
 } 
+
+
+export const getShowTimes = async (req, res, next) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+
+
+}

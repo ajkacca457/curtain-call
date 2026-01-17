@@ -30,14 +30,14 @@ export const createBooking = async (req, res, next) => {
         const { showTimeId, selectedSeats } = req.body;
         const { origin } = req.headers;
 
-        const isAvailable = checkAvailability(showTimeId, selectedSeats);
+        const isAvailable = await checkAvailability(showTimeId, selectedSeats);
 
         if (!isAvailable) {
             return next(new ErrorResponse("seats are not available for booking", 404))
 
         }
 
-        const showTimeData = await ShowTime.findById(showTimeId).populate("show");
+        const showTimeData = await ShowTime.findById(showTimeId).populate("showId");
 
         if (!showTimeData) {
             return next(new ErrorResponse("show times are not available", 404))

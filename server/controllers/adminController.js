@@ -163,6 +163,7 @@ export const createSingleShow = async (req, res, next) => {
 };
 
 export const createShowTime = async (req, res, next) => {
+    console.log("hitting route");
   try {
     // --- Admin Authorization ---
     const { userId } = getAuth(req);

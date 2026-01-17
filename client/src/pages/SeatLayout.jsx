@@ -22,12 +22,8 @@ const SeatLayout = () => {
 
   const OtherRows = rowGroups.slice(1);
   useEffect(() => {
-    const showData = dummyShowsData.find((show) => show._id === id);
-    setShow({
-      showInfo: showData,
-      dateTime: dummyDateTimeData,
-    });
-  }, [id]);
+    console.log("will show the showtimes for shows");
+  }, []);
 
   const handleClick = (seatId) => {
     if (!selectedTime) {
@@ -65,11 +61,7 @@ const SeatLayout = () => {
       </div>
     );
   };
-
-  if (!show) {
-    return <Loading />;
-  }
-
+  
   return (
     <div className="grid grid-cols-4 gap-x-6 max-w-[1600px] mx-auto mt-10">
       {/* Time Selector Panel */}
@@ -78,7 +70,7 @@ const SeatLayout = () => {
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
             Select Show Timing
           </h3>
-          <div className="grid grid-cols-2 gap-3">
+          {/* <div className="grid grid-cols-2 gap-3">
             {show.dateTime[date].map((item) => {
               const isSelected = selectedTime === item.time;
               return (
@@ -97,7 +89,7 @@ const SeatLayout = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
       </div>
 
