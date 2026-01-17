@@ -7,17 +7,31 @@ import ShowCard from "../components/ShowCard";
 import api from "../api/axiosInstance.js";
 import { toast } from "react-hot-toast";
 import { useAppContext } from "../context/AppContext.jsx";
-import { dummyShowsData } from "../assets/data";
+import DateSelect from "../components/DateSelect.jsx";
 
 const ShowDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { favorites, toggleFavorite, favoritesLoaded, activeShows, fetchActiveShows } = useAppContext();
+  const dummyDateTime = {
+    "2026-01-17": [{ time: "14:00" }, { time: "18:30" }],
+    "2026-01-18": [{ time: "12:00" }, { time: "16:00" }, { time: "20:00" }],
+    "2026-01-20": [{ time: "15:00" }],
+  };
+
+  const {
+    favorites,
+    toggleFavorite,
+    favoritesLoaded,
+    activeShows,
+    fetchActiveShows,
+  } = useAppContext();
 
   // Suggested shows (dummy for now)
-  const SuggestedShows = activeShows.filter(item => item._id !== id).slice(0, 4);
+  const SuggestedShows = activeShows
+    .filter((item) => item._id !== id)
+    .slice(0, 4);
 
   // Fetch show details
   useEffect(() => {
@@ -38,12 +52,14 @@ const ShowDetails = () => {
     fetchShow();
   }, [id]);
 
-  const isFavorite = favorites.some(s => s._id === id);
+  const isFavorite = favorites.some((s) => s._id === id);
 
   const handleToggleFavorite = async () => {
     try {
       await toggleFavorite(id);
-      toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
+      toast.success(
+        isFavorite ? "Removed from favorites" : "Added to favorites"
+      );
     } catch (error) {
       console.error("Failed to toggle favorite", error);
       toast.error("Failed to update favorite");
@@ -106,7 +122,7 @@ const ShowDetails = () => {
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-2">Genres</h2>
           <div className="flex flex-wrap gap-2">
-            {show.genres.map(genre => (
+            {show.genres.map((genre) => (
               <span
                 key={genre.id}
                 className="text-sm px-3 py-1 rounded-full bg-blue-100 text-blue-800"
@@ -133,6 +149,10 @@ const ShowDetails = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="p-6">
+        <DateSelect id="show_123" dateTime={dummyDateTime} />
       </div>
 
       {/* Suggested Shows */}
