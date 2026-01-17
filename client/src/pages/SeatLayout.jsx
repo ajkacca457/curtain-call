@@ -22,12 +22,8 @@ const SeatLayout = () => {
 
   const OtherRows = rowGroups.slice(1);
   useEffect(() => {
-    const showData = dummyShowsData.find((show) => show._id === id);
-    setShow({
-      showInfo: showData,
-      dateTime: dummyDateTimeData,
-    });
-  }, [id]);
+    console.log("will show the showtimes for shows");
+  }, []);
 
   const handleClick = (seatId) => {
     if (!selectedTime) {
@@ -65,11 +61,7 @@ const SeatLayout = () => {
       </div>
     );
   };
-
-  if (!show) {
-    return <Loading />;
-  }
-
+  
   return (
     <div className="grid grid-cols-4 gap-x-6 max-w-[1600px] mx-auto mt-10">
       {/* Time Selector Panel */}
