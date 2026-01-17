@@ -29,7 +29,6 @@ export const AppProvider = ({ children }) => {
         },
       });
       setIsAdmin(data.isAdmin);
-      console.log("Admin status:", data);
     } catch (error) {
       console.error("Error fetching admin status:", error);
       setIsAdmin(false);
@@ -92,7 +91,6 @@ export const AppProvider = ({ children }) => {
       const { data } = await api.get("/api/shows/upcoming-shows");
       if (data.success) {
         setUpcomingShows(data.shows);
-        console.log("Upcoming shows:", data.shows);
         toast.success("Upcoming shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");

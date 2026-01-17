@@ -25,7 +25,6 @@ const ShowDetails = () => {
     toggleFavorite,
     favoritesLoaded,
     activeShows,
-    fetchActiveShows,
   } = useAppContext();
 
   // Suggested shows (dummy for now)
