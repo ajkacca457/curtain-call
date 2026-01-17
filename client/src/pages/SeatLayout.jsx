@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
 import { isoTimeFormat } from "../lib/utils";
 import ScreenImage from "../assets/screenImage.svg";
@@ -9,6 +10,8 @@ import api from "../api/axiosInstance.js";
 const SeatLayout = () => {
   const { id, date } = useParams();
   const navigate = useNavigate();
+  const { user } = useUser(); // Clerk hook
+  const userId = user?.id;
 
   const [show, setShow] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
@@ -24,7 +27,7 @@ const SeatLayout = () => {
     ["H", "J"],
   ];
 
-  // Fetch show and showTimes
+  // Fetch show times
   useEffect(() => {
     const fetchShowTimes = async () => {
       setLoading(true);
@@ -38,7 +41,6 @@ const SeatLayout = () => {
         setLoading(false);
       }
     };
-
     fetchShowTimes();
   }, [id]);
 
@@ -47,24 +49,12 @@ const SeatLayout = () => {
     st.showDateTime.startsWith(date)
   );
 
-  // Reset selected seats when time changes
-  useEffect(() => {
-    setSelectedSeats([]);
-  }, [selectedTime]);
-
-  // Occupied seats from selectedTime
-  const occupiedSeats = selectedTime
-    ? Object.keys(selectedTime.occupiedSeats || {})
-    : [];
-
-  // Handle seat click
-  const handleSeatClick = (seatId) => {
-    if (!selectedTime) return toast.error("Please select show time first");
-
-    if (occupiedSeats.includes(seatId)) return;
-
+  // Handle seat click (select/unselect)
+  const handleSeatClick = (seatId, isOccupied) => {
+    if (!selectedTime) return toast("Please select show time first");
+    if (isOccupied) return; // cannot select occupied or held by others
     if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
-      return toast.error("You can select max 5 seats");
+      return toast("You can select max 5 seats");
     }
 
     setSelectedSeats((prev) =>
@@ -74,7 +64,17 @@ const SeatLayout = () => {
     );
   };
 
-  // Render rows of seats
+  // Calculate occupied seats (permanent + temporary by others)
+  const occupiedSeats = selectedTime
+    ? [
+        ...Object.keys(selectedTime.occupiedSeats || {}),
+        ...Object.keys(selectedTime.temporaryHolds || {}).filter(
+          (seat) => selectedTime.temporaryHolds[seat].userId !== userId
+        ),
+      ]
+    : [];
+
+  // Render a row of seats
   const renderRows = (row, count = 9) => (
     <div className="flex flex-wrap justify-center gap-2 mt-4">
       {Array.from({ length: count }, (_, i) => {
@@ -85,7 +85,7 @@ const SeatLayout = () => {
         return (
           <button
             key={seatId}
-            onClick={() => !isOccupied && handleSeatClick(seatId)}
+            onClick={() => handleSeatClick(seatId, isOccupied)}
             disabled={isOccupied}
             className={`h-10 w-10 rounded border text-sm
               ${
@@ -103,22 +103,32 @@ const SeatLayout = () => {
     </div>
   );
 
-  // Proceed to booking
-  const handleProceed = () => {
-    if (!selectedTime) return toast.error("Please select a show time first");
-    if (selectedSeats.length === 0)
-      return toast.error("Please select at least one seat");
+  // Proceed to hold seats and go to confirm booking
+  const handleProceed = async () => {
+    if (!selectedTime || selectedSeats.length === 0) return;
 
-    navigate("/confirm-booking", {
-      state: {
-        showId: id,
+    try {
+      const payload = {
         showTimeId: selectedTime._id,
         selectedSeats,
-        showTitle: show.title,
-        showDate: date,
-        showPrice: selectedTime.showPrice,
-      },
-    });
+      };
+      const { data } = await api.post("/api/bookings/hold-seats", payload);
+
+      if (data.success) {
+        toast.success("Seats temporarily held! Proceeding to checkout...");
+        navigate("/confirm-booking", {
+          state: {
+            showTimeId: selectedTime._id,
+            selectedSeats,
+            show,
+          },
+        });
+      } else {
+        toast.error(data.message || "Failed to hold seats");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to hold seats");
+    }
   };
 
   if (loading) return <Loading />;
@@ -156,7 +166,6 @@ const SeatLayout = () => {
         {/* Time Selector */}
         <div className="bg-white p-6 rounded-xl shadow mt-6">
           <h3 className="text-xl font-semibold mb-4">Select Show Timing</h3>
-
           {dayShowTimes.length === 0 ? (
             <p className="text-sm text-gray-500">
               No shows available for this date
@@ -166,7 +175,10 @@ const SeatLayout = () => {
               {dayShowTimes.map((st) => (
                 <div
                   key={st._id}
-                  onClick={() => setSelectedTime(st)}
+                  onClick={() => {
+                    setSelectedTime(st);
+                    setSelectedSeats([]); // reset previous selections
+                  }}
                   className={`cursor-pointer px-4 py-2 rounded-lg text-sm text-center
                     ${
                       selectedTime?._id === st._id
@@ -183,7 +195,7 @@ const SeatLayout = () => {
       </div>
 
       {/* Seat Layout */}
-      <div className="col-span-3 bg-gray-50 rounded-xl p-6 shadow-inner">
+      <div className="col-span-3 bg-gray-50 rounded-xl p-6 shadow-inner min-h-[70vh]">
         <div className="text-center">
           <h3 className="text-xl font-semibold mb-4">Select your seats</h3>
           <img src={ScreenImage} alt="screen" className="mx-auto" />
@@ -191,7 +203,6 @@ const SeatLayout = () => {
         </div>
 
         <div className="mt-8">{rowGroups[0].map((row) => renderRows(row))}</div>
-
         <div className="grid grid-cols-2 gap-8 mt-8">
           {rowGroups.slice(1).map((group, idx) => (
             <div key={idx}>{group.map((row) => renderRows(row))}</div>
@@ -199,7 +210,7 @@ const SeatLayout = () => {
         </div>
 
         {/* Proceed button */}
-        {selectedTime && selectedSeats.length > 0 && (
+        {selectedSeats.length > 0 && (
           <div className="mt-10 text-center">
             <button
               onClick={handleProceed}
