@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loading from "../components/Loading";
 import { isoTimeFormat } from "../lib/utils";
@@ -8,6 +8,7 @@ import api from "../api/axiosInstance.js";
 
 const SeatLayout = () => {
   const { id, date } = useParams();
+  const navigate = useNavigate();
 
   const [show, setShow] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
@@ -23,6 +24,7 @@ const SeatLayout = () => {
     ["H", "J"],
   ];
 
+  // Fetch show and showTimes
   useEffect(() => {
     const fetchShowTimes = async () => {
       setLoading(true);
@@ -30,7 +32,6 @@ const SeatLayout = () => {
         const { data } = await api.get(`/api/admin/show-times/${id}`);
         setShow(data.show);
         setShowTimes(data.showTimes || []);
-        setLoading(false);
       } catch (err) {
         toast.error("Failed to load show times");
       } finally {
@@ -41,16 +42,29 @@ const SeatLayout = () => {
     fetchShowTimes();
   }, [id]);
 
-  // filter times by date (YYYY-MM-DD)
+  // Filter times by date
   const dayShowTimes = showTimes.filter((st) =>
     st.showDateTime.startsWith(date)
   );
 
+  // Reset selected seats when time changes
+  useEffect(() => {
+    setSelectedSeats([]);
+  }, [selectedTime]);
+
+  // Occupied seats from selectedTime
+  const occupiedSeats = selectedTime
+    ? Object.keys(selectedTime.occupiedSeats || {})
+    : [];
+
+  // Handle seat click
   const handleSeatClick = (seatId) => {
-    if (!selectedTime) return toast("Please select show time first");
+    if (!selectedTime) return toast.error("Please select show time first");
+
+    if (occupiedSeats.includes(seatId)) return;
 
     if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
-      return toast("You can select max 5 seats");
+      return toast.error("You can select max 5 seats");
     }
 
     setSelectedSeats((prev) =>
@@ -60,19 +74,27 @@ const SeatLayout = () => {
     );
   };
 
+  // Render rows of seats
   const renderRows = (row, count = 9) => (
     <div className="flex flex-wrap justify-center gap-2 mt-4">
       {Array.from({ length: count }, (_, i) => {
         const seatId = `${row}${i + 1}`;
+        const isSelected = selectedSeats.includes(seatId);
+        const isOccupied = occupiedSeats.includes(seatId);
+
         return (
           <button
             key={seatId}
-            onClick={() => handleSeatClick(seatId)}
-            className={`h-10 w-10 rounded border ${
-              selectedSeats.includes(seatId)
-                ? "bg-indigo-600 text-white"
-                : "border-gray-400"
-            }`}
+            onClick={() => !isOccupied && handleSeatClick(seatId)}
+            disabled={isOccupied}
+            className={`h-10 w-10 rounded border text-sm
+              ${
+                isOccupied
+                  ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                  : isSelected
+                  ? "bg-indigo-600 text-white"
+                  : "border-gray-400 hover:bg-gray-100"
+              }`}
           >
             {seatId}
           </button>
@@ -80,6 +102,24 @@ const SeatLayout = () => {
       })}
     </div>
   );
+
+  // Proceed to booking
+  const handleProceed = () => {
+    if (!selectedTime) return toast.error("Please select a show time first");
+    if (selectedSeats.length === 0)
+      return toast.error("Please select at least one seat");
+
+    navigate("/confirm-booking", {
+      state: {
+        showId: id,
+        showTimeId: selectedTime._id,
+        selectedSeats,
+        showTitle: show.title,
+        showDate: date,
+        showPrice: selectedTime.showPrice,
+      },
+    });
+  };
 
   if (loading) return <Loading />;
 
@@ -112,8 +152,9 @@ const SeatLayout = () => {
             </div>
           </div>
         </div>
+
         {/* Time Selector */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-6 rounded-xl shadow mt-6">
           <h3 className="text-xl font-semibold mb-4">Select Show Timing</h3>
 
           {dayShowTimes.length === 0 ? (
@@ -157,14 +198,15 @@ const SeatLayout = () => {
           ))}
         </div>
 
+        {/* Proceed button */}
         {selectedTime && selectedSeats.length > 0 && (
           <div className="mt-10 text-center">
-            <Link
-              to="/my-bookings"
+            <button
+              onClick={handleProceed}
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
             >
-              Proceed to checkout
-            </Link>
+              Proceed to booking
+            </button>
           </div>
         )}
       </div>
