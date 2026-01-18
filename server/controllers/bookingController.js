@@ -140,7 +140,7 @@ export const holdSeats = async (req, res, next) => {
 
         const expiresAt = new Date(now.getTime() + TEMP_HOLD_MINUTES * 60000); // 15 mins
         selectedSeats.forEach((seat) => {
-            showTime.temporaryHolds[seat] = {  userId: userId.toString(), expiresAt }; 
+            showTime.temporaryHolds[seat] = { userId: userId.toString(), expiresAt };
         });
 
         showTime.markModified("temporaryHolds");
@@ -157,42 +157,45 @@ export const holdSeats = async (req, res, next) => {
 }
 
 export const createStripeSession = async (req, res, next) => {
-  try {
-    const { showTimeId, selectedSeats, show } = req.body;
+    try {
+        const { userId } = getAuth(req);
 
-    if (!showTimeId || !selectedSeats?.length || !show) {
-      return res.status(400).json({ message: "Missing booking data" });
-    }
+        if (!userId) return res.status(401).json({ success: false, message: "Unauthorized User" });
 
-    const pricePerSeat = show.showPrice || 350;
-    const totalAmount = pricePerSeat * selectedSeats.length;
+        const { showTimeId, selectedSeats, show } = req.body;
+        if (!showTimeId || !selectedSeats?.length || !show) {
+            return res.status(400).json({ message: "Missing booking data" });
+        }
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "eur", // or "usd"
-            product_data: {
-              name: show.title,
-              description: `Seats: ${selectedSeats.join(", ")}`
+        const pricePerSeat = show.showPrice || 350;
+        const totalAmount = pricePerSeat * selectedSeats.length;
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items: [
+                {
+                    price_data: {
+                        currency: "eur", // or "usd"
+                        product_data: {
+                            name: show.title,
+                            description: `Seats: ${selectedSeats.join(", ")}`
+                        },
+                        unit_amount: totalAmount * 100, // cents
+                    },
+                    quantity: 1,
+                },
+            ],
+            success_url: `${process.env.FRONTEND_URL}/payment-success`,
+            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+            metadata: {
+                showTimeId,
+                seats: JSON.stringify(selectedSeats),
             },
-            unit_amount: totalAmount * 100, // cents
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.FRONTEND_URL}/payment-success`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
-      metadata: {
-        showTimeId,
-        seats: JSON.stringify(selectedSeats),
-      },
-    });
+        });
 
-    res.status(200).json({ url: session.url });
-  } catch (err) {
-    next(err);
-  }
+        res.status(200).json({ url: session.url });
+    } catch (err) {
+        next(err);
+    }
 };
