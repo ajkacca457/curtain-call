@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import Show from "./models/Show.js";
 import News from './models/News.js';
 import Trailer from './models/Trailer.js';
+import ShowTime from './models/ShowTime.js';
 import mongoose from 'mongoose';
 
 // 👇 Recreate __dirname manually
@@ -21,6 +22,10 @@ const news = JSON.parse(fs.readFileSync(newsFilePath, 'utf-8'));
 
 const trailersFilePath = path.join(__dirname, 'data', 'data-trailers.json');
 const trailers = JSON.parse(fs.readFileSync(trailersFilePath, 'utf-8'));
+
+
+const showTimesFilePath = path.join(__dirname, 'data', 'data-showtimes.json');
+const showTimes = JSON.parse(fs.readFileSync(showTimesFilePath, 'utf-8'));
 
 // connect to db;
 
@@ -39,6 +44,9 @@ const importData = async (type) => {
         } else if (type === 'trailers') {
             await Trailer.create(trailers);
             console.log("📰 Trailers data inserted successfully!");
+        } else if (type === 'showtimes') {
+            await ShowTime.create(showTimes);
+            console.log("🎬 Showtimes data inserted successfully!");
         } else {
             console.log("⚠️ Please specify a valid type: shows | news");
         }
@@ -60,6 +68,9 @@ const deleteData = async (type) => {
         } else if (type === 'trailers') {
             await Trailer.deleteMany();
             console.log("🗑️ Trailers data deleted successfully!");
+        } else if (type === 'showtimes') {
+            await ShowTime.deleteMany();
+            console.log("🗑️ Showtimes data deleted successfully!");
         }
         else {
             console.log("⚠️ Please specify a valid type: shows | news");

@@ -1,4 +1,3 @@
-import { err } from "inngest/types";
 import ShowTime from "../models/ShowTime.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
 import Booking from "../models/Booking.js";
@@ -94,4 +93,64 @@ export const getOccupiedSeats = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+
+const TEMP_HOLD_MINUTES = 15;
+
+export const holdSeats = async (req, res, next) => {
+    try {
+        const { userId, showTimeId, selectedSeats } = req.body;
+
+        if (!selectedSeats || selectedSeats.length === 0) {
+            return next(new ErrorResponse("No seats selected", 400));
+        }
+
+        const showTime = await ShowTime.findById(showTimeId);
+        if (!showTime) {
+            return next(new ErrorResponse("Show time not found", 404));
+        }
+        const now = new Date();
+
+        // Clean up expired temporary holds
+        for (const [seat, hold] of Object.entries(showTime.temporaryHolds)) {
+            if (hold.expiresAt < now) {
+                delete showTime.temporaryHolds[seat];  // ✅ proper way to delete key from object
+            }
+        }
+        // Check if any requested seats are permanently occupied
+        const occupiedSeats = Object.keys(showTime.occupiedSeats || {});
+        const tempOccupied = Object.keys(showTime.temporaryHolds || {}).filter(
+            (seat) => showTime.temporaryHolds[seat].userId !== userId
+        );
+
+        const conflictSeats = selectedSeats.filter(
+            (seat) => occupiedSeats.includes(seat) || tempOccupied.includes(seat)
+        );
+
+        if (conflictSeats.length > 0) {
+            return next(
+                new ErrorResponse(
+                    `These seats are already taken: ${conflictSeats.join(", ")}`,
+                    409
+                )
+            );
+        }
+
+        const expiresAt = new Date(now.getTime() + TEMP_HOLD_MINUTES * 60000); // 15 mins
+        selectedSeats.forEach((seat) => {
+            showTime.temporaryHolds[seat] = {  userId: userId.toString(), expiresAt }; 
+        });
+
+        showTime.markModified("temporaryHolds");
+        await showTime.save();
+        res.status(200).json({
+            success: true,
+            message: "Seats temporarily held",
+            temporaryHolds: showTime.temporaryHolds,
+        });
+    } catch (err) {
+        next(err);
+    }
+
 }

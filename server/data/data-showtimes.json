@@ -1,0 +1,86 @@
+[
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-05T15:30:00.000Z",
+    "showPrice": 350,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-05T18:30:00.000Z",
+    "showPrice": 320,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-24T01:45:00.000Z",
+    "showPrice": 420,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-24T02:50:00.000Z",
+    "showPrice": 420,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-24T04:50:00.000Z",
+    "showPrice": 250,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-24T06:30:00.000Z",
+    "showPrice": 250,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-25T11:30:00.000Z",
+    "showPrice": 500,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-25T12:30:00.000Z",
+    "showPrice": 500,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-27T16:45:00.000Z",
+    "showPrice": 275,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-27T17:45:00.000Z",
+    "showPrice": 275,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-30T12:50:00.000Z",
+    "showPrice": 250,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  },
+  {
+    "showId": "690fc632d8c5e0bde16f50a5",
+    "showDateTime": "2026-01-30T15:45:00.000Z",
+    "showPrice": 250,
+    "occupiedSeats": {},
+    "temporaryHolds": {}
+  }
+]

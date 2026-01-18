@@ -1,120 +1,241 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
-import { dummyShowsData, dummyDateTimeData } from "../assets/data";
 import { isoTimeFormat } from "../lib/utils";
 import ScreenImage from "../assets/screenImage.svg";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import api from "../api/axiosInstance.js";
 
 const SeatLayout = () => {
   const { id, date } = useParams();
+  const navigate = useNavigate();
+  const { user } = useUser(); // Clerk hook
+  const userId = user?.id;
+  const { getToken } = useAuth();
+
   const [show, setShow] = useState(null);
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [showTimes, setShowTimes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
   const rowGroups = [
     ["A", "B"],
     ["C", "E"],
     ["D", "F"],
     ["G", "I"],
-    ["H", "J"]
+    ["H", "J"],
   ];
 
-  const OtherRows = rowGroups.slice(1);
+  // Fetch show times
   useEffect(() => {
-    console.log("will show the showtimes for shows");
-  }, []);
+    const fetchShowTimes = async () => {
+      setLoading(true);
+      try {
+        const { data } = await api.get(`/api/admin/show-times/${id}`);
+        setShow(data.show);
+        setShowTimes(data.showTimes || []);
+      } catch (err) {
+        toast.error("Failed to load show times");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchShowTimes();
+  }, [id]);
 
-  const handleClick = (seatId) => {
-    if (!selectedTime) {
-      return toast("please select time to book seat");
+  // Filter times by date
+  const dayShowTimes = showTimes.filter((st) =>
+    st.showDateTime.startsWith(date)
+  );
+
+  // Handle seat click (select/unselect)
+  const handleSeatClick = (seatId, isOccupied) => {
+    if (!selectedTime) return toast("Please select show time first");
+    if (isOccupied) return; // cannot select occupied or held by others
+    if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
+      return toast("You can select max 5 seats");
     }
-    if (!selectedSeats.includes(seatId) && selectedSeats.length > 4) {
-      return toast("you can not select more than 5 seats");
-    }
+
     setSelectedSeats((prev) =>
       prev.includes(seatId)
-        ? prev.filter((item) => item !== seatId)
+        ? prev.filter((s) => s !== seatId)
         : [...prev, seatId]
     );
   };
 
-  const renderRows = (row, count = 9) => {
-    return (
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-        {Array.from({ length: count }, (_, i) => {
-          const seatId = `${row}${i + 1}`;
-          return (
-            <button
-              key={seatId}
-              className={`h-10 w-10 rounded border border-primary/60 cursor-pointer ${
-                selectedSeats.includes(seatId) && "bg-primary text-white"
+  // Calculate occupied seats (permanent + temporary by others)
+  const occupiedSeats = selectedTime
+    ? [
+        ...Object.keys(selectedTime.occupiedSeats || {}),
+        ...Object.keys(selectedTime.temporaryHolds || {}).filter(
+          (seat) => selectedTime.temporaryHolds[seat].userId !== userId
+        ),
+      ]
+    : [];
+
+  // Render a row of seats
+  const renderRows = (row, count = 9) => (
+    <div className="flex flex-wrap justify-center gap-2 mt-4">
+      {Array.from({ length: count }, (_, i) => {
+        const seatId = `${row}${i + 1}`;
+        const isSelected = selectedSeats.includes(seatId);
+        const isOccupied = occupiedSeats.includes(seatId);
+
+        return (
+          <button
+            key={seatId}
+            onClick={() => handleSeatClick(seatId, isOccupied)}
+            disabled={isOccupied}
+            className={`h-10 w-10 rounded border text-sm
+              ${
+                isOccupied
+                  ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                  : isSelected
+                  ? "bg-indigo-600 text-white"
+                  : "border-gray-400 hover:bg-gray-100"
               }`}
-              onClick={() => {
-                handleClick(seatId);
-              }}
-            >
-              {seatId}
-            </button>
-          );
-        })}
+          >
+            {seatId}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  // Proceed to hold seats and go to confirm booking
+  const handleProceed = async () => {
+    if (!selectedTime || selectedSeats.length === 0) return;
+
+    try {
+      const payload = {
+        showTimeId: selectedTime._id,
+        selectedSeats,
+        userId, // send current user ID
+      };
+
+      const res = await api.post("/api/booking/hold-seats", payload);
+      if (res.data.success) {
+        toast.success("Seats temporarily held! Proceeding to checkout...");
+
+        // Optimistically update local temporaryHolds so UI disables these seats
+        selectedTime.temporaryHolds = {
+          ...selectedTime.temporaryHolds,
+          ...selectedSeats.reduce((acc, seat) => {
+            acc[seat] = {
+              userId,
+              expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+            }; // 15 min expiry
+            return acc;
+          }, {}),
+        };
+
+        // Navigate to confirm booking page with necessary info
+        navigate("/shows/confirm-booking", {
+          state: {
+            showTimeId: selectedTime._id,
+            selectedSeats,
+            show,
+          },
+        });
+      } else {
+        toast.error(data.message || "Failed to hold seats");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to hold seats");
+    }
+  };
+
+  if (loading) return <Loading />;
+
+  if (!show || showTimes.length === 0) {
+    return (
+      <div className="p-10 text-center text-gray-500">
+        No showtimes available for this date.
       </div>
     );
-  };
-  
+  }
+
   return (
-    <div className="grid grid-cols-4 gap-x-6 max-w-[1600px] mx-auto mt-10">
-      {/* Time Selector Panel */}
+    <div className="grid grid-cols-4 gap-6 max-w-[1600px] mx-auto mt-10">
       <div className="col-span-1">
-        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Select Show Timing
-          </h3>
-          {/* <div className="grid grid-cols-2 gap-3">
-            {show.dateTime[date].map((item) => {
-              const isSelected = selectedTime === item.time;
-              return (
+        {/* SHOW INFO */}
+        <div className="bg-white rounded-xl shadow p-4">
+          <div className="flex gap-4">
+            <img
+              src={show.poster_path}
+              alt={show.title}
+              className="w-20 h-28 rounded-lg object-cover"
+            />
+            <div>
+              <h3 className="font-semibold">{show.title}</h3>
+              <p className="text-sm text-gray-500">
+                {new Date(date).toDateString()}
+              </p>
+              <p className="text-sm text-gray-500">⏱ {show.runtime} min</p>
+              <p className="text-sm text-gray-600">⭐ {show.vote_average}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Time Selector */}
+        <div className="bg-white p-6 rounded-xl shadow mt-6">
+          <h3 className="text-xl font-semibold mb-4">Select Show Timing</h3>
+          {dayShowTimes.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              No shows available for this date
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {dayShowTimes.map((st) => (
                 <div
-                  key={item.time}
-                  onClick={() => setSelectedTime(item.time)}
-                  className={`cursor-pointer px-4 py-2 rounded-lg text-sm font-medium text-center transition-all
-                  ${
-                    isSelected
-                      ? "bg-indigo-600 text-white shadow"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }
-                `}
+                  key={st._id}
+                  onClick={() => {
+                    setSelectedTime(st);
+                    setSelectedSeats([]); // reset previous selections
+                  }}
+                  className={`cursor-pointer px-4 py-2 rounded-lg text-sm text-center
+                    ${
+                      selectedTime?._id === st._id
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-100 hover:bg-gray-200"
+                    }`}
                 >
-                  {isoTimeFormat(item.time)}
+                  {isoTimeFormat(st.showDateTime)}
                 </div>
-              );
-            })}
-          </div> */}
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Seat Layout Panel Placeholder */}
-      <div className="col-span-3 bg-gray-50 flex flex-col items-center rounded-2xl shadow-inner p-6 border border-gray-100 min-h-[300px]">
-        <div className="text-center mt-10">
-          <h3 className="mb-4 font-semibold text-xl">Select your seats</h3>
-          <img src={ScreenImage} alt="show-stage" />
-          <h4 className="mb-2">Screen Position</h4>
+      {/* Seat Layout */}
+      <div className="col-span-3 bg-gray-50 rounded-xl p-6 shadow-inner min-h-[70vh]">
+        <div className="text-center">
+          <h3 className="text-xl font-semibold mb-4">Select your seats</h3>
+          <img src={ScreenImage} alt="screen" className="mx-auto" />
+          <p className="mt-2 text-sm text-gray-500">Screen</p>
         </div>
 
-        <div className="mt-8">
-          {rowGroups[0].map((item) => renderRows(item))}
-        </div>
-
+        <div className="mt-8">{rowGroups[0].map((row) => renderRows(row))}</div>
         <div className="grid grid-cols-2 gap-8 mt-8">
-          {OtherRows.map((group, index) => {
-            return <div key={index}>{group.map((row) => renderRows(row))}</div>;
-          })}
+          {rowGroups.slice(1).map((group, idx) => (
+            <div key={idx}>{group.map((row) => renderRows(row))}</div>
+          ))}
         </div>
 
-          {selectedTime && selectedSeats.length>0 && <div className="my-10">
-              <Link to="/my-bookings" className="btn btn-primary">Proceed to checkout</Link>
-            </div>}
-
+        {/* Proceed button */}
+        {selectedSeats.length > 0 && (
+          <div className="mt-10 text-center">
+            <button
+              onClick={handleProceed}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
+            >
+              Proceed to booking
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
