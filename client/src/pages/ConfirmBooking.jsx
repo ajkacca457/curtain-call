@@ -22,24 +22,31 @@ const ConfirmBooking = () => {
       const payload = {
         showTimeId,
         selectedSeats,
+        show,
       };
 
-      const { data } = await api.post("/api/bookings/create-booking", payload);
+      const { data } = await api.post(
+        "/api/booking/create-stripe-session",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (data.success) {
-        toast.success("Booking confirmed!");
-        navigate("/my-bookings");
-      } else {
-        toast.error(data.message || "Failed to confirm booking");
-      }
+      window.location.href = data.url; // Redirect to Stripe
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Booking failed");
+      console.log(err);
+      toast.error("Failed to start payment");
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Booking Summary</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center">
+        Booking Summary
+      </h2>
 
       {/* Show Info */}
       <div className="flex gap-4 mb-6 items-center">
@@ -51,7 +58,9 @@ const ConfirmBooking = () => {
         <div>
           <h3 className="text-xl font-semibold">{show.title}</h3>
           <p className="text-sm text-gray-500">Runtime: {show.runtime} min</p>
-          <p className="text-sm text-gray-500">Rating: ⭐ {show.vote_average}</p>
+          <p className="text-sm text-gray-500">
+            Rating: ⭐ {show.vote_average}
+          </p>
         </div>
       </div>
 

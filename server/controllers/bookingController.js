@@ -1,6 +1,10 @@
 import ShowTime from "../models/ShowTime.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
 import Booking from "../models/Booking.js";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const TEMP_HOLD_MINUTES = 15;
 
 
 const checkAvailability = async (showTimeId, selectedSeats) => {
@@ -95,9 +99,6 @@ export const getOccupiedSeats = async (req, res, next) => {
     }
 }
 
-
-const TEMP_HOLD_MINUTES = 15;
-
 export const holdSeats = async (req, res, next) => {
     try {
         const { userId, showTimeId, selectedSeats } = req.body;
@@ -154,3 +155,44 @@ export const holdSeats = async (req, res, next) => {
     }
 
 }
+
+export const createStripeSession = async (req, res, next) => {
+  try {
+    const { showTimeId, selectedSeats, show } = req.body;
+
+    if (!showTimeId || !selectedSeats?.length || !show) {
+      return res.status(400).json({ message: "Missing booking data" });
+    }
+
+    const pricePerSeat = show.showPrice || 350;
+    const totalAmount = pricePerSeat * selectedSeats.length;
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "eur", // or "usd"
+            product_data: {
+              name: show.title,
+              description: `Seats: ${selectedSeats.join(", ")}`
+            },
+            unit_amount: totalAmount * 100, // cents
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.FRONTEND_URL}/payment-success`,
+      cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+      metadata: {
+        showTimeId,
+        seats: JSON.stringify(selectedSeats),
+      },
+    });
+
+    res.status(200).json({ url: session.url });
+  } catch (err) {
+    next(err);
+  }
+};
