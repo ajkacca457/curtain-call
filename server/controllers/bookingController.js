@@ -160,10 +160,3 @@ export const holdSeats = async (req, res, next) => {
     }
 
 }
-
-export const testRoute = async (req, res, next) => {
-    res.status(200).json({
-        success: true,
-        message: "Booking route is working fine"
-    })
-}
