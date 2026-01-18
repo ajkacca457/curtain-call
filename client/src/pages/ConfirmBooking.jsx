@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ScreenImage from "../assets/screenImage.svg";
 import toast from "react-hot-toast";
+import api from "../api/axiosInstance";
 
 const ConfirmBooking = () => {
   const location = useLocation();
@@ -14,26 +14,39 @@ const ConfirmBooking = () => {
     return null;
   }
 
-  // Calculate total amount (assuming show.showPrice is number)
   const ticketPrice = show.showPrice || 350; // fallback price
   const totalAmount = ticketPrice * selectedSeats.length;
 
-  const handleConfirmBooking = () => {
-    // TODO: Call createBooking API
-    toast.success("Booking confirmed!"); 
-    navigate("/my-bookings"); // Redirect after booking
+  const handleConfirmBooking = async () => {
+    try {
+      const payload = {
+        showTimeId,
+        selectedSeats,
+      };
+
+      const { data } = await api.post("/api/bookings/create-booking", payload);
+
+      if (data.success) {
+        toast.success("Booking confirmed!");
+        navigate("/my-bookings");
+      } else {
+        toast.error(data.message || "Failed to confirm booking");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Booking failed");
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Confirm Your Booking</h2>
+    <div className="max-w-2xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Booking Summary</h2>
 
       {/* Show Info */}
-      <div className="flex gap-6 mb-6 items-center">
+      <div className="flex gap-4 mb-6 items-center">
         <img
           src={show.poster_path}
           alt={show.title}
-          className="w-24 h-36 rounded-lg object-cover"
+          className="w-20 h-28 rounded-lg object-cover"
         />
         <div>
           <h3 className="text-xl font-semibold">{show.title}</h3>
@@ -42,31 +55,26 @@ const ConfirmBooking = () => {
         </div>
       </div>
 
-      {/* Selected Seats */}
+      {/* Seats & Pricing */}
       <div className="mb-6">
         <h4 className="text-lg font-medium mb-2">Selected Seats</h4>
-        <div className="flex flex-wrap gap-2">
+        <ul className="border rounded-lg divide-y">
           {selectedSeats.map((seat) => (
-            <div
+            <li
               key={seat}
-              className="px-3 py-1 bg-indigo-600 text-white rounded-lg font-medium"
+              className="flex justify-between px-4 py-2 text-sm font-medium"
             >
-              {seat}
-            </div>
+              <span>{seat}</span>
+              <span>€{ticketPrice}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
-      {/* Screen Illustration */}
-      <div className="text-center mb-6">
-        <img src={ScreenImage} alt="screen" className="mx-auto" />
-        <p className="text-sm text-gray-500 mt-1">Screen</p>
-      </div>
-
-      {/* Pricing */}
-      <div className="mb-6 flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-        <span className="font-medium">Total Seats: {selectedSeats.length}</span>
-        <span className="font-semibold text-lg">Total: ${totalAmount}</span>
+      {/* Total */}
+      <div className="mb-6 flex justify-between items-center bg-gray-100 p-4 rounded-lg font-semibold text-lg">
+        <span>Total ({selectedSeats.length} seats)</span>
+        <span>€{totalAmount}</span>
       </div>
 
       {/* Confirm Button */}
