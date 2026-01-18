@@ -116,10 +116,7 @@ const SeatLayout = () => {
       };
 
       const res = await api.post("/api/booking/hold-seats", payload);
-
-      console.log("Hold seats response:", res);
-
-      if (data.success) {
+      if (res.data.success) {
         toast.success("Seats temporarily held! Proceeding to checkout...");
 
         // Optimistically update local temporaryHolds so UI disables these seats
@@ -135,7 +132,7 @@ const SeatLayout = () => {
         };
 
         // Navigate to confirm booking page with necessary info
-        navigate("/confirm-booking", {
+        navigate("/shows/confirm-booking", {
           state: {
             showTimeId: selectedTime._id,
             selectedSeats,

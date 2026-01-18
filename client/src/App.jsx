@@ -15,7 +15,7 @@ import AddShow from "./components/admin/AddShow.jsx";
 import AdminUpcomingShows from "./components/admin/AdminUpcomingShows.jsx";
 import AdminEditShow from "./components/admin/AdminEditShow.jsx";
 import ManageShowTiming from "./components/admin/ManageShowTiming.jsx";
-
+import ConfirmBooking from "./pages/ConfirmBooking.jsx";
 
 import AboutUs from "./pages/AboutUs.jsx";
 import Contact from "./pages/Contact.jsx";
@@ -38,6 +38,7 @@ const router = createBrowserRouter([
       { path: "/shows", element: <Shows /> },
       { path: "/shows/:id", element: <ShowDetails /> },
       { path: "/shows/:id/:date", element: <SeatLayout /> },
+      { path: "/shows/confirm-booking", element: <ConfirmBooking /> },
       { path: "/my-bookings", element: <Bookings /> },
       { path: "/my-favorite", element: <Favorite /> },
       { path: "/about-us", element: <AboutUs /> },
@@ -61,9 +62,9 @@ const router = createBrowserRouter([
       { path: "add-show", element: <AddShow /> },
       { path: "list-shows", element: <ListShows /> },
       { path: "upcoming-shows", element: <AdminUpcomingShows /> },
-      { path: "list-bookings", element: <BookingList /> }, 
+      { path: "list-bookings", element: <BookingList /> },
       { path: "edit-show/:id", element: <AdminEditShow /> },
-      { path: "shows/:id/show-times", element: <ManageShowTiming /> }
+      { path: "shows/:id/show-times", element: <ManageShowTiming /> },
     ],
   },
 ]);
