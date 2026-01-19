@@ -2,10 +2,13 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/axiosInstance";
+import { useAuth } from "@clerk/clerk-react";
+
 
 const ConfirmBooking = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { getToken } = useAuth();
   const { showTimeId, selectedSeats, show } = location.state || {};
 
   if (!showTimeId || !selectedSeats || !show) {
@@ -30,7 +33,7 @@ const ConfirmBooking = () => {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${await getToken()}`,
           },
         }
       );

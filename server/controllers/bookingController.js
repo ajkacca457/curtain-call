@@ -2,6 +2,8 @@ import ShowTime from "../models/ShowTime.js";
 import ErrorResponse from "../utils/ErrorHandle.js";
 import Booking from "../models/Booking.js";
 import Stripe from "stripe";
+import { getAuth } from "@clerk/express";
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const TEMP_HOLD_MINUTES = 15;
