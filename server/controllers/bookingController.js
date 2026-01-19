@@ -9,76 +9,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const TEMP_HOLD_MINUTES = 15;
 
 
-const checkAvailability = async (showTimeId, selectedSeats) => {
-    try {
-        const showTimeData = await ShowTime.findById(showTimeId);
-        if (!showTimeData) return false;
-
-        const occupiedSeats = showTimeData.occupiedSeats;
-
-        const isSeatTaken = selectedSeats.some(seat => occupiedSeats[seat]);
-
-        return !isSeatTaken;
-
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
-
-export const createBooking = async (req, res, next) => {
-
-    try {
-
-        const { userId } = req.auth();
-        const { showTimeId, selectedSeats } = req.body;
-        const { origin } = req.headers;
-
-        const isAvailable = await checkAvailability(showTimeId, selectedSeats);
-
-        if (!isAvailable) {
-            return next(new ErrorResponse("seats are not available for booking", 404))
-
-        }
-
-        const showTimeData = await ShowTime.findById(showTimeId).populate("showId");
-
-        if (!showTimeData) {
-            return next(new ErrorResponse("show times are not available", 404))
-        }
-
-        const booking = await Booking.create({
-            user: userId,
-            showTime: showTimeId,
-            amount: showTimeData.showPrice * selectedSeats.length,
-            bookedSeats: selectedSeats
-        })
-
-        // update occupied seats 
-
-        selectedSeats.map((seat) => {
-            showTimeData.occupiedSeats[seat] = userId;
-        })
-
-        showTimeData.markModified('occupiedSeats');
-
-        await showTimeData.save();
-
-        // strip gateway initialization
-
-        res.status(200).json({
-            success: true,
-            message: "Booking successful",
-            bookingId: booking._id,
-            showTimeId,
-        })
-    } catch (error) {
-        next(error);
-    }
-}
-
-
 export const getOccupiedSeats = async (req, res, next) => {
 
     try {
@@ -212,7 +142,7 @@ export const stripeWebhookHandler = async (req, res) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_BOOKING_SECRET
     );
   } catch (err) {
     console.error("Webhook signature verification failed.", err.message);

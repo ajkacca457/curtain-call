@@ -9,7 +9,7 @@ router.post("/hold-seats",holdSeats);
 router.post("/create-booking", requireAuth(),createBooking);
 router.post("/create-stripe-session", requireAuth(), createStripeSession);
 router.post(
-  "/webhook",
+  "/confirm-webhook",
   express.raw({ type: "application/json" }),
   stripeWebhookHandler
 );
