@@ -1,5 +1,5 @@
 import express from "express"
-import { createBooking, getOccupiedSeats, holdSeats, createStripeSession, stripeWebHook } from "../controllers/bookingController.js";
+import { createBooking, getOccupiedSeats, holdSeats, createStripeSession, stripeWebhookHandler } from "../controllers/bookingController.js";
 import { requireAuth } from "@clerk/express";
 
 
@@ -11,7 +11,7 @@ router.post("/create-stripe-session", requireAuth(), createStripeSession);
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
-  stripeWebHook
+  stripeWebhookHandler
 );
 router.get("/seats/:showTimeId",getOccupiedSeats);
 

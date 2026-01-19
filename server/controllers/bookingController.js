@@ -204,9 +204,57 @@ export const createStripeSession = async (req, res, next) => {
 };
 
 
-export const stripeWebHook= async (req,res,next)=> {
-    res.status(200).json({
-        message:"hitting the route"
-    })
+export const stripeWebhookHandler = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
 
-}
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error("Webhook signature verification failed.", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+
+    try {
+      const clerkUserId = session.metadata.clerkUserId;
+      const showTimeId = session.metadata.showTimeId;
+      const selectedSeats = JSON.parse(session.metadata.seats);
+
+      const showTime = await ShowTime.findById(showTimeId);
+      if (!showTime) throw new Error("ShowTime not found");
+
+      // Move seats from temporary → occupied
+      selectedSeats.forEach((seat) => {
+        showTime.occupiedSeats[seat] = clerkUserId;
+        showTime.temporaryHolds?.delete(seat);
+      });
+
+      showTime.markModified("occupiedSeats");
+      showTime.markModified("temporaryHolds");
+      await showTime.save();
+
+      // Create booking
+      await Booking.create({
+        user: clerkUserId,
+        showTime: showTimeId,
+        bookedSeats: selectedSeats,
+        amount: session.amount_total / 100,
+        isPaid: true,
+        paymentIntentId: session.payment_intent, 
+      });
+
+    } catch (err) {
+      console.error("Error processing webhook:", err);
+      return res.status(500).json({ success: false });
+    }
+  }
+
+  res.status(200).json({ received: true });
+};

@@ -14,10 +14,10 @@ const bookingSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   bookedSeats: [{ type: String, required: true }],
   isPaid: { type: Boolean, default: false },
-      paymentIntentId: {
-      type: String,
-      required: true,
-    },
+  paymentIntentId: {
+    type: String,
+    required: true,
+  },
 }, { timestamps: true });
 
 const Booking = mongoose.model('Booking', bookingSchema);
