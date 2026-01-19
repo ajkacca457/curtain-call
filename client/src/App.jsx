@@ -16,6 +16,7 @@ import AdminUpcomingShows from "./components/admin/AdminUpcomingShows.jsx";
 import AdminEditShow from "./components/admin/AdminEditShow.jsx";
 import ManageShowTiming from "./components/admin/ManageShowTiming.jsx";
 import ConfirmBooking from "./pages/ConfirmBooking.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 
 import AboutUs from "./pages/AboutUs.jsx";
 import Contact from "./pages/Contact.jsx";
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/shows/confirm-booking", element: <ConfirmBooking /> },
       { path: "/my-bookings", element: <Bookings /> },
       { path: "/my-favorite", element: <Favorite /> },
+      {path: "/payment-success", element:<PaymentSuccess/>},
       { path: "/about-us", element: <AboutUs /> },
       { path: "/contact", element: <Contact /> },
       { path: "/privacy-policy", element: <PrivacyPolicy /> },
