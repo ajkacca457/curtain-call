@@ -191,6 +191,7 @@ export const createStripeSession = async (req, res, next) => {
             success_url: `${process.env.FRONTEND_URL}/payment-success`,
             cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
             metadata: {
+                clerkUserId: userId,
                 showTimeId,
                 seats: JSON.stringify(selectedSeats),
             },
@@ -201,3 +202,11 @@ export const createStripeSession = async (req, res, next) => {
         next(err);
     }
 };
+
+
+export const stripeWebHook= async (req,res,next)=> {
+    res.status(200).json({
+        message:"hitting the route"
+    })
+
+}
