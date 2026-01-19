@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       { path: "/shows/confirm-booking", element: <ConfirmBooking /> },
       { path: "/my-bookings", element: <Bookings /> },
       { path: "/my-favorite", element: <Favorite /> },
-      {path: "/payment-success", element:<PaymentSuccess/>},
+      { path: "/payment-success", element: <PaymentSuccess /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/contact", element: <Contact /> },
       { path: "/privacy-policy", element: <PrivacyPolicy /> },

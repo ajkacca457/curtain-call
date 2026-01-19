@@ -133,7 +133,6 @@ export const createStripeSession = async (req, res, next) => {
     }
 };
 
-
 export const stripeWebhookHandler = async (req, res) => {
     const sig = req.headers["stripe-signature"];
     let event;
@@ -189,4 +188,34 @@ export const stripeWebhookHandler = async (req, res) => {
     }
 
     res.status(200).json({ received: true });
+};
+
+export const getMyBookings = async (req, res, next) => {
+  try {
+    const { userId } = req.auth(); // Clerk auth middleware
+
+    if (!userId) {
+      return next(new ErrorResponse("Unauthorized user", 401));
+    }
+
+    const bookings = await Booking.find({ 
+      user: userId, 
+      isPaid: true 
+    })
+    .populate({
+      path: "showTime",
+      match: { showDateTime: { $gte: new Date() } }, 
+      populate: {
+        path: "showId", 
+      }
+    })
+    .sort({ createdAt: -1 });
+
+    const activeBookings = bookings.filter(b => b.showTime);
+
+    res.status(200).json({ success: true, bookings: activeBookings });
+
+  } catch (err) {
+    next(err);
+  }
 };
