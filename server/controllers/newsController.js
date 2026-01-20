@@ -1,4 +1,5 @@
 import News from "../models/News.js";
+import { clerkClient } from "@clerk/express";
 import ErrorResponse from "../utils/ErrorHandle.js"
 
 // Get all active news
@@ -18,6 +19,20 @@ export const getAllNews = async (req, res, next) => {
 // Create a new announcement (admin only)
 export const createNews = async (req, res, next) => {
   try {
+
+    const { userId } = req.auth(); // populated by requireAuth()
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const clerkUser = await clerkClient.users.getUser(userId);
+    const isAdmin = clerkUser.privateMetadata?.role === "admin";
+
+    if (!isAdmin) {
+      return res.status(403).json({ success: false, message: "Access denied. Admin only." });
+    }
+
     const { title, description, image } = req.body;
 
     if (!title || !description) {
@@ -38,6 +53,20 @@ export const createNews = async (req, res, next) => {
 // Delete a news item (admin only)
 export const deleteNews = async (req, res, next) => {
   try {
+
+    const { userId } = req.auth(); // populated by requireAuth()
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const clerkUser = await clerkClient.users.getUser(userId);
+    const isAdmin = clerkUser.privateMetadata?.role === "admin";
+
+    if (!isAdmin) {
+      return res.status(403).json({ success: false, message: "Access denied. Admin only." });
+    }
+
     const news = await News.findById(req.params.id);
     if (!news) {
       return next(new ErrorResponse("News not found", 404));

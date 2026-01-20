@@ -41,9 +41,12 @@ const AdminNewsManagement = () => {
       return;
 
     try {
+
+      const token= await getToken()
+
       await api.delete(`/api/news/${id}`, {
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       fetchNews();
@@ -62,9 +65,10 @@ const AdminNewsManagement = () => {
     }
 
     try {
+      const token= await getToken()
       await api.post("/api/news", newNews, {
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       setNewNews({ title: "", description: "", image: "" });
