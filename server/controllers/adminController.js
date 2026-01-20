@@ -8,16 +8,22 @@ import Show from "../models/Show.js";
 export const userIsAdmin = async (req, res, next) => {
     try {
         const { userId } = getAuth(req);
+
+        if (!userId) {
+            return res.status(401).json({ success: false });
+        }
+
+        const user = await clerkClient.users.getUser(userId);
+
         res.status(200).json({
             success: true,
-            isAdmin: true,
-            user: userId
-        })
-
+            isAdmin: user.privateMetadata?.role === "admin",
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
+
 
 export const getAdminDashboardData = async (req, res) => {
     try {
@@ -112,23 +118,73 @@ export const getAllDashboardShowTime = async (req, res, next) => {
 
 export const getAllBookings = async (req, res, next) => {
     try {
-        const bookings = await Booking.find({}).populate("user").populate({
-            path: "showTime",
-            populate: { path: "show" }
-        }).sort({ createdAt: -1 });
 
-        if (!bookings || bookings.length < 1) {
-            return next(new ErrorResponse(404, "no bookings made for any shows"));
+        const { userId } = req.auth();
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized. Please sign in.",
+            });
         }
+        const clerkUser = await clerkClient.users.getUser(userId);
+        const isAdmin = clerkUser.privateMetadata?.role === "admin";
+
+        if (!isAdmin) {
+            return res.status(403).json({
+                success: false,
+                message: "Access denied. Admin only.",
+            });
+        }
+
+        const {
+            page = 1,
+            limit = 10,
+            fromDate,
+            toDate,
+            showId
+        } = req.query;
+
+        const query = { isPaid: true };
+
+        // Date filter (optional)
+        if (fromDate || toDate) {
+            query.createdAt = {};
+            if (fromDate) query.createdAt.$gte = new Date(fromDate);
+            if (toDate) query.createdAt.$lte = new Date(toDate);
+        }
+
+        // Show filter (optional)
+        if (showId) {
+            query.showTime = showId;
+        }
+
+        const bookings = await Booking.find(query)
+            .populate({
+                path: "showTime",
+                populate: { path: "showId" }
+            })
+            .populate("user")
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(Number(limit));
+
+        const total = await Booking.countDocuments(query);
 
         res.status(200).json({
             success: true,
-            bookings
-        })
-    } catch (error) {
-        next(error)
+            bookings,
+            pagination: {
+                total,
+                page: Number(page),
+                pages: Math.ceil(total / limit)
+            }
+        });
+    } catch (err) {
+        next(err);
     }
-}
+};
+
 
 export const createSingleShow = async (req, res, next) => {
     try {
@@ -163,53 +219,53 @@ export const createSingleShow = async (req, res, next) => {
 };
 
 export const createShowTime = async (req, res, next) => {
-  try {
-    const { userId } = getAuth(req);
-    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const user = await clerkClient.users.getUser(userId);
-    const isAdmin = user?.privateMetadata?.role === "admin";
-    if (!isAdmin) return res.status(403).json({ success: false, message: "Access denied" });
+        const user = await clerkClient.users.getUser(userId);
+        const isAdmin = user?.privateMetadata?.role === "admin";
+        if (!isAdmin) return res.status(403).json({ success: false, message: "Access denied" });
 
-    // --- Input ---
-    const { showId, showsInput, showPrice } = req.body;
+        // --- Input ---
+        const { showId, showsInput, showPrice } = req.body;
 
-    if (!Array.isArray(showsInput) || showsInput.length === 0) {
-      return next(new ErrorResponse("No show times provided", 400));
-    }
+        if (!Array.isArray(showsInput) || showsInput.length === 0) {
+            return next(new ErrorResponse("No show times provided", 400));
+        }
 
-    const show = await Show.findById(showId);
-    if (!show) return next(new ErrorResponse(`${showId}: show not found`, 404));
+        const show = await Show.findById(showId);
+        if (!show) return next(new ErrorResponse(`${showId}: show not found`, 404));
 
-    let showsToCreate = [];
+        let showsToCreate = [];
 
-    showsInput.forEach((element) => {
-      if (!element.date || !Array.isArray(element.time) || element.time.length === 0) {
-        return next(new ErrorResponse("Invalid date/time format", 400));
-      }
+        showsInput.forEach((element) => {
+            if (!element.date || !Array.isArray(element.time) || element.time.length === 0) {
+                return next(new ErrorResponse("Invalid date/time format", 400));
+            }
 
-      element.time.forEach((item) => {
-        const showDateTime = new Date(`${element.date}T${item}`);
-        showsToCreate.push({
-          showId,
-          showDateTime,
-          showPrice,
-          occupiedSeats: {},
+            element.time.forEach((item) => {
+                const showDateTime = new Date(`${element.date}T${item}`);
+                showsToCreate.push({
+                    showId,
+                    showDateTime,
+                    showPrice,
+                    occupiedSeats: {},
+                });
+            });
         });
-      });
-    });
 
-    if (showsToCreate.length > 0) {
-      await ShowTime.insertMany(showsToCreate, { ordered: false });
+        if (showsToCreate.length > 0) {
+            await ShowTime.insertMany(showsToCreate, { ordered: false });
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Showtimes added successfully",
+        });
+    } catch (error) {
+        next(error);
     }
-
-    res.status(201).json({
-      success: true,
-      message: "Showtimes added successfully",
-    });
-  } catch (error) {
-    next(error);
-  }
 };
 
 export const updateShow = async (req, res, next) => {
@@ -246,23 +302,23 @@ export const updateShow = async (req, res, next) => {
 }
 
 export const getAdminShowTimesByShow = async (req, res, next) => {
-  try {
-    const { showId } = req.params;
+    try {
+        const { showId } = req.params;
 
-    const show = await Show.findById(showId);
-    if (!show) {
-      return next(new ErrorResponse("Show not found", 404));
+        const show = await Show.findById(showId);
+        if (!show) {
+            return next(new ErrorResponse("Show not found", 404));
+        }
+
+        const showTimes = await ShowTime.find({ showId })
+            .sort({ showDateTime: 1 });
+
+        res.status(200).json({
+            success: true,
+            show,
+            showTimes,
+        });
+    } catch (error) {
+        next(error);
     }
-
-    const showTimes = await ShowTime.find({ showId })
-      .sort({ showDateTime: 1 });
-
-    res.status(200).json({
-      success: true,
-      show,
-      showTimes,
-    });
-  } catch (error) {
-    next(error);
-  }
 };

@@ -9,76 +9,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const TEMP_HOLD_MINUTES = 15;
 
 
-const checkAvailability = async (showTimeId, selectedSeats) => {
-    try {
-        const showTimeData = await ShowTime.findById(showTimeId);
-        if (!showTimeData) return false;
-
-        const occupiedSeats = showTimeData.occupiedSeats;
-
-        const isSeatTaken = selectedSeats.some(seat => occupiedSeats[seat]);
-
-        return !isSeatTaken;
-
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
-
-export const createBooking = async (req, res, next) => {
-
-    try {
-
-        const { userId } = req.auth();
-        const { showTimeId, selectedSeats } = req.body;
-        const { origin } = req.headers;
-
-        const isAvailable = await checkAvailability(showTimeId, selectedSeats);
-
-        if (!isAvailable) {
-            return next(new ErrorResponse("seats are not available for booking", 404))
-
-        }
-
-        const showTimeData = await ShowTime.findById(showTimeId).populate("showId");
-
-        if (!showTimeData) {
-            return next(new ErrorResponse("show times are not available", 404))
-        }
-
-        const booking = await Booking.create({
-            user: userId,
-            showTime: showTimeId,
-            amount: showTimeData.showPrice * selectedSeats.length,
-            bookedSeats: selectedSeats
-        })
-
-        // update occupied seats 
-
-        selectedSeats.map((seat) => {
-            showTimeData.occupiedSeats[seat] = userId;
-        })
-
-        showTimeData.markModified('occupiedSeats');
-
-        await showTimeData.save();
-
-        // strip gateway initialization
-
-        res.status(200).json({
-            success: true,
-            message: "Booking successful",
-            bookingId: booking._id,
-            showTimeId,
-        })
-    } catch (error) {
-        next(error);
-    }
-}
-
-
 export const getOccupiedSeats = async (req, res, next) => {
 
     try {
@@ -203,58 +133,89 @@ export const createStripeSession = async (req, res, next) => {
     }
 };
 
-
 export const stripeWebhookHandler = async (req, res) => {
-  const sig = req.headers["stripe-signature"];
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error("Webhook signature verification failed.", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
+    const sig = req.headers["stripe-signature"];
+    let event;
 
     try {
-      const clerkUserId = session.metadata.clerkUserId;
-      const showTimeId = session.metadata.showTimeId;
-      const selectedSeats = JSON.parse(session.metadata.seats);
-
-      const showTime = await ShowTime.findById(showTimeId);
-      if (!showTime) throw new Error("ShowTime not found");
-
-      // Move seats from temporary → occupied
-      selectedSeats.forEach((seat) => {
-        showTime.occupiedSeats[seat] = clerkUserId;
-        showTime.temporaryHolds?.delete(seat);
-      });
-
-      showTime.markModified("occupiedSeats");
-      showTime.markModified("temporaryHolds");
-      await showTime.save();
-
-      // Create booking
-      await Booking.create({
-        user: clerkUserId,
-        showTime: showTimeId,
-        bookedSeats: selectedSeats,
-        amount: session.amount_total / 100,
-        isPaid: true,
-        paymentIntentId: session.payment_intent, 
-      });
-
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_BOOKING_SECRET
+        );
     } catch (err) {
-      console.error("Error processing webhook:", err);
-      return res.status(500).json({ success: false });
+        console.error("Webhook signature verification failed.", err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
     }
-  }
 
-  res.status(200).json({ received: true });
+    if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+
+        try {
+            const clerkUserId = session.metadata.clerkUserId;
+            const showTimeId = session.metadata.showTimeId;
+            const selectedSeats = JSON.parse(session.metadata.seats);
+
+            const showTime = await ShowTime.findById(showTimeId);
+            if (!showTime) throw new Error("ShowTime not found");
+
+            // Move seats from temporary → occupied
+            selectedSeats.forEach((seat) => {
+                showTime.occupiedSeats[seat] = clerkUserId;
+                if (showTime.temporaryHolds && showTime.temporaryHolds[seat]) {
+                    delete showTime.temporaryHolds[seat];
+                }
+            });
+
+            showTime.markModified("occupiedSeats");
+            showTime.markModified("temporaryHolds");
+            await showTime.save();
+
+            // Create booking
+            await Booking.create({
+                user: clerkUserId,
+                showTime: showTimeId,
+                bookedSeats: selectedSeats,
+                amount: session.amount_total / 100,
+                isPaid: true,
+                paymentIntentId: session.payment_intent,
+            });
+
+        } catch (err) {
+            console.error("Error processing webhook:", err);
+            return res.status(500).json({ success: false });
+        }
+    }
+
+    res.status(200).json({ received: true });
+};
+
+export const getMyBookings = async (req, res, next) => {
+  try {
+    const { userId } = req.auth(); // Clerk auth middleware
+
+    if (!userId) {
+      return next(new ErrorResponse("Unauthorized user", 401));
+    }
+
+    const bookings = await Booking.find({ 
+      user: userId, 
+      isPaid: true 
+    })
+    .populate({
+      path: "showTime",
+      match: { showDateTime: { $gte: new Date() } }, 
+      populate: {
+        path: "showId", 
+      }
+    })
+    .sort({ createdAt: -1 });
+
+    const activeBookings = bookings.filter(b => b.showTime);
+
+    res.status(200).json({ success: true, bookings: activeBookings });
+
+  } catch (err) {
+    next(err);
+  }
 };

@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
-import {useUser} from '@clerk/clerk-react';
+import { Link } from "react-router-dom";
+import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
+import { IoTicket, IoHome, IoFilm, IoHeart } from "react-icons/io5";
 
 const AdminNavbar = () => {
-
   const { user } = useUser();
-  console.log("User Info:", user);
+  const { openSignIn } = useClerk();
 
   return (
     <header className="w-full bg-gray-900 text-white shadow-sm">
@@ -17,11 +17,32 @@ const AdminNavbar = () => {
           CurtainsCall
         </Link>
 
+        <div>
+          <span className="text-gray-300">Welcome, {user?.username || 'Admin'}</span>
+        </div>
+
         {/* Admin Info */}
         <div className="flex items-center gap-4 text-sm">
-          <span className="text-gray-300">Welcome, {user?.username || 'Admin'}</span>
-          <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-semibold">
-            {user?.username ? user.username.charAt(0).toUpperCase() : 'A'}
+          <div className="navbar-end">
+            {!user ? (
+              <button
+                className="btn btn-sm btn-outline border-indigo-500 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all"
+                onClick={openSignIn}
+              >
+                Login
+              </button>
+            ) : (
+              <div className="flex items-center gap-3">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox:
+                        "ring-2 ring-indigo-500 hover:ring-indigo-400 transition",
+                    },
+                  }}
+                ></UserButton>
+              </div>
+            )}
           </div>
         </div>
       </div>
