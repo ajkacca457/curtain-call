@@ -8,7 +8,7 @@ const router= express.Router();
 router.get("/is-admin",requireAuth(),userIsAdmin);
 router.get("/dashboard",requireAuth(),getAdminDashboardData);
 router.get("/all-shows",requireAuth(),getAllDashboardShowTime);
-router.get("/all-bookings",getAllBookings);
+router.get("/all-bookings",requireAuth(),getAllBookings);
 router.post("/",requireAuth(),createSingleShow);
 router.put("/shows/:id",requireAuth(),updateShow);
 router.post("/show-time",requireAuth(),createShowTime);
