@@ -39,9 +39,27 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/shows", element: <Shows /> },
       { path: "/shows/:id", element: <ShowDetails /> },
-      { path: "/shows/:id/:date", element: <SeatLayout /> },
-      { path: "/shows/confirm-booking", element: <ConfirmBooking /> },
-      { path: "/my-bookings", element: <Bookings /> },
+      {
+        path: "/shows/:id/:date",
+        element: (
+          <ProtectAppRoute>
+            <SeatLayout />
+          </ProtectAppRoute>
+        ),
+      },
+      {
+        path: "/shows/confirm-booking",
+        element: (
+          <ProtectAppRoute>
+            <ConfirmBooking />
+          </ProtectAppRoute>
+        ),
+      },
+      { path: "/my-bookings", element: (
+        <ProtectAppRoute>
+      <Bookings />
+      </ProtectAppRoute>
+    ) },
       {
         path: "/my-favorite",
         element: (
