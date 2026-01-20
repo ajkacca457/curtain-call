@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import api from "../../api/axiosInstance.js";
+
 
 const ListBookings = () => {
   const { getToken } = useAuth();
@@ -13,40 +15,40 @@ const ListBookings = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const fetchBookings = async () => {
-    try {
-      setLoading(true);
+const fetchBookings = async () => {
+  try {
+    setLoading(true);
 
-      const token = await getToken();
+    const token = await getToken();
 
-      const params = new URLSearchParams({
-        page,
-        limit: 10,
-        ...(fromDate && { fromDate }),
-        ...(toDate && { toDate }),
-      });
+    const params = new URLSearchParams({
+      page,
+      limit: 10,
+      ...(fromDate && { fromDate }),
+      ...(toDate && { toDate }),
+    }).toString();
 
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/admin/all-bookings?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const { data } = await api.get(
+      `/api/admin/all-bookings?${params}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-      const data = await res.json();
+    setBookings(data.bookings);
+    setTotalPages(data.pagination.pages);
+  } catch (err) {
+    console.error(
+      "Failed to fetch bookings:",
+      err.response?.data?.message || err.message
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
-      if (!res.ok) throw new Error(data.message);
-
-      setBookings(data.bookings);
-      setTotalPages(data.pagination.pages);
-    } catch (err) {
-      console.error("Failed to fetch bookings:", err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     fetchBookings();
