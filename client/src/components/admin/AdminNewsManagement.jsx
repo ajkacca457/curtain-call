@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/axiosInstance.js";
-
+import { useAuth } from "@clerk/clerk-react";
 
 const AdminNewsManagement = () => {
   const [newsList, setNewsList] = useState([]);
@@ -10,13 +10,19 @@ const AdminNewsManagement = () => {
   const [showViewModal, setShowViewModal] = useState(false);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newNews, setNewNews] = useState({ title: "", description: "", image: "" });
+  const [newNews, setNewNews] = useState({
+    title: "",
+    description: "",
+    image: "",
+  });
+
+  const { getToken } = useAuth();
 
   // Fetch all news
   const fetchNews = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get("/api/news"); 
+      const { data } = await api.get("/api/news");
       setNewsList(data.news);
     } catch (error) {
       console.error("Error fetching news:", error);
@@ -31,10 +37,15 @@ const AdminNewsManagement = () => {
 
   // Handle deleting a news item
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this news item?")) return;
+    if (!window.confirm("Are you sure you want to delete this news item?"))
+      return;
 
     try {
-      await axios.delete(`/api/news/${id}`);
+      await api.delete(`/api/news/${id}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       fetchNews();
       setShowViewModal(false);
     } catch (error) {
@@ -51,7 +62,11 @@ const AdminNewsManagement = () => {
     }
 
     try {
-      await axios.post("/api/news", newNews);
+      await api.post("/api/news", newNews, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       setNewNews({ title: "", description: "", image: "" });
       setShowCreateModal(false);
       fetchNews();
@@ -95,7 +110,9 @@ const AdminNewsManagement = () => {
                 }}
               >
                 <td className="p-2">{news.title}</td>
-                <td className="p-2">{new Date(news.date).toLocaleDateString()}</td>
+                <td className="p-2">
+                  {new Date(news.date).toLocaleDateString()}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -109,7 +126,11 @@ const AdminNewsManagement = () => {
             <h3 className="text-lg font-bold mb-2">{selectedNews.title}</h3>
             <p className="mb-4">{selectedNews.description}</p>
             {selectedNews.image && (
-              <img src={selectedNews.image} alt={selectedNews.title} className="mb-4 max-h-48 w-full object-cover" />
+              <img
+                src={selectedNews.image}
+                alt={selectedNews.title}
+                className="mb-4 max-h-48 w-full object-cover"
+              />
             )}
             <div className="flex justify-end space-x-2">
               <button
@@ -139,14 +160,18 @@ const AdminNewsManagement = () => {
                 type="text"
                 placeholder="Title"
                 value={newNews.title}
-                onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
+                onChange={(e) =>
+                  setNewNews({ ...newNews, title: e.target.value })
+                }
                 className="border px-2 py-1 rounded"
                 required
               />
               <textarea
                 placeholder="Description"
                 value={newNews.description}
-                onChange={(e) => setNewNews({ ...newNews, description: e.target.value })}
+                onChange={(e) =>
+                  setNewNews({ ...newNews, description: e.target.value })
+                }
                 className="border px-2 py-1 rounded"
                 rows={4}
                 required
@@ -155,7 +180,9 @@ const AdminNewsManagement = () => {
                 type="text"
                 placeholder="Image URL (optional)"
                 value={newNews.image}
-                onChange={(e) => setNewNews({ ...newNews, image: e.target.value })}
+                onChange={(e) =>
+                  setNewNews({ ...newNews, image: e.target.value })
+                }
                 className="border px-2 py-1 rounded"
               />
               <div className="flex justify-end space-x-2 mt-2">
@@ -166,7 +193,10 @@ const AdminNewsManagement = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
                   Add
                 </button>
               </div>
