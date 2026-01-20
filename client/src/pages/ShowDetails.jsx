@@ -8,19 +8,17 @@ import api from "../api/axiosInstance.js";
 import { toast } from "react-hot-toast";
 import { useAppContext } from "../context/AppContext.jsx";
 import DateSelect from "../components/DateSelect.jsx";
+import { useUser } from "@clerk/clerk-react";
 
 const ShowDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
-  const {
-    favorites,
-    toggleFavorite,
-    favoritesLoaded,
-    activeShows,
-  } = useAppContext();
+  const { favorites, toggleFavorite, favoritesLoaded, activeShows } =
+    useAppContext();
 
   // Suggested shows (dummy for now)
   const SuggestedShows = activeShows
@@ -45,7 +43,7 @@ const ShowDetails = () => {
         if (timesRes.success && timesRes.showTimes.length > 0) {
           // Only future showTimes
           const futureShowTimes = timesRes.showTimes.filter(
-            (s) => new Date(s.showDateTime) >= new Date()
+            (s) => new Date(s.showDateTime) >= new Date(),
           );
           setShowTimes(futureShowTimes);
         } else {
@@ -68,7 +66,7 @@ const ShowDetails = () => {
     try {
       await toggleFavorite(id);
       toast.success(
-        isFavorite ? "Removed from favorites" : "Added to favorites"
+        isFavorite ? "Removed from favorites" : "Added to favorites",
       );
     } catch (error) {
       console.error("Failed to toggle favorite", error);
@@ -76,9 +74,9 @@ const ShowDetails = () => {
     }
   };
 
-  if (loading || !show || !favoritesLoaded) return <Loading />;
+  if (loading || !show) return <Loading />;
+  if (user && !favoritesLoaded) return <Loading />;
 
-  // Group showTimes by date
   const groupedShowTimes = showTimes.reduce((acc, item) => {
     const date = new Date(item.showDateTime).toISOString().split("T")[0];
     if (!acc[date]) acc[date] = [];
@@ -111,7 +109,10 @@ const ShowDetails = () => {
             {/* Favorite Heart */}
             <button
               onClick={handleToggleFavorite}
-              className="absolute top-2 right-2 text-2xl p-2 rounded-full hover:scale-110 transition-transform text-red-500"
+              disabled={!user || !favoritesLoaded}
+              className={`absolute top-2 right-2 text-2xl p-2 rounded-full transition
+    ${!user ? "opacity-50 cursor-not-allowed" : "hover:scale-110"}
+    text-red-500`}
             >
               {isFavorite ? <FaHeart /> : <FaRegHeart />}
             </button>
@@ -176,15 +177,21 @@ const ShowDetails = () => {
       </div>
 
       {/* DateSelect */}
-      <div className="p-6 max-w-6xl mx-auto">
-        {Object.keys(groupedShowTimes).length > 0 ? (
-          <DateSelect id={id} dateTime={groupedShowTimes} />
-        ) : (
-          <div className="p-6 text-center text-red-600 font-semibold text-lg rounded bg-red-100">
-            No upcoming showtimes available for this show.
-          </div>
-        )}
-      </div>
+      {user ? (
+        <div className="p-6 max-w-6xl mx-auto">
+          {Object.keys(groupedShowTimes).length > 0 ? (
+            <DateSelect id={id} dateTime={groupedShowTimes} />
+          ) : (
+            <div className="p-6 text-center text-red-600 font-semibold text-lg rounded bg-red-100">
+              No upcoming showtimes available for this show.
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="p-6 text-center text-red-600 font-semibold text-lg rounded bg-red-100">
+           Login or Register to book the show.
+        </div>
+      )}
 
       {/* Suggested Shows */}
       <div className="max-w-[1600px] mx-auto px-4 py-8">
