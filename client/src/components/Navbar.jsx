@@ -18,7 +18,15 @@ const Navbar = () => {
   const navItems = [
     { label: "Home", to: "/", icon: <IoHome className="inline mr-1" /> },
     { label: "Shows", to: "/shows", icon: <IoFilm className="inline mr-1" /> },
-    { label: "My Favorite", to: "/my-favorite", icon: <IoHeart className="inline mr-1" /> },
+    ...(user
+      ? [
+          {
+            label: "My Favorite",
+            to: "/my-favorite",
+            icon: <IoHeart className="inline mr-1" />,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -53,7 +61,10 @@ const Navbar = () => {
             >
               {navItems.map((item) => (
                 <li key={item.to}>
-                  <Link className="hover:text-indigo-600 flex items-center" to={item.to}>
+                  <Link
+                    className="hover:text-indigo-600 flex items-center"
+                    to={item.to}
+                  >
                     {item.icon} {item.label}
                   </Link>
                 </li>
@@ -75,7 +86,10 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1 text-gray-700 font-medium space-x-4">
             {navItems.map((item) => (
               <li key={item.to}>
-                <Link className="hover:text-indigo-600 transition-colors flex items-center" to={item.to}>
+                <Link
+                  className="hover:text-indigo-600 transition-colors flex items-center"
+                  to={item.to}
+                >
                   {item.icon} {item.label}
                 </Link>
               </li>
@@ -97,7 +111,8 @@ const Navbar = () => {
               <UserButton
                 appearance={{
                   elements: {
-                    userButtonAvatarBox: "ring-2 ring-indigo-500 hover:ring-indigo-400 transition",
+                    userButtonAvatarBox:
+                      "ring-2 ring-indigo-500 hover:ring-indigo-400 transition",
                   },
                 }}
               >
