@@ -22,11 +22,10 @@ import AdminUpcomingShows from "./components/admin/AdminUpcomingShows.jsx";
 import AdminEditShow from "./components/admin/AdminEditShow.jsx";
 import ManageShowTiming from "./components/admin/ManageShowTiming.jsx";
 import AdminNewsManagement from "./components/admin/AdminNewsManagement.jsx";
-
+import ProtectAppRoute from "./components/ProtectAppRoute.jsx";
 
 import { AppProvider } from "./context/AppContext.jsx";
 import { AdminProvider } from "./context/AdminContext.jsx";
-
 
 const router = createBrowserRouter([
   {
@@ -43,7 +42,14 @@ const router = createBrowserRouter([
       { path: "/shows/:id/:date", element: <SeatLayout /> },
       { path: "/shows/confirm-booking", element: <ConfirmBooking /> },
       { path: "/my-bookings", element: <Bookings /> },
-      { path: "/my-favorite", element: <Favorite /> },
+      {
+        path: "/my-favorite",
+        element: (
+          <ProtectAppRoute>
+            <Favorite />
+          </ProtectAppRoute>
+        ),
+      },
       { path: "/payment-success", element: <PaymentSuccess /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/contact", element: <Contact /> },

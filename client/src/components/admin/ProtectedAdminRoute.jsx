@@ -8,9 +8,6 @@ export default function ProtectedAdminRoute({ children }) {
   const { user, isAdmin, checkingAdmin } = useAppContext();
   const navigate = useNavigate();
   const [toastShown, setToastShown] = useState(false); // prevent multiple toasts
-
-  console.log(user, isAdmin, checkingAdmin);
-
   // Redirect non-admin users and show toast
   useEffect(() => {
     if (user && !isAdmin && !checkingAdmin) {
