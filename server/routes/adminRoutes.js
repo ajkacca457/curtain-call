@@ -6,8 +6,8 @@ import { requireAdmin } from "../middlewares/requireAdmin.js";
 const router= express.Router();
 
 
-router.get("/is-admin",requireAuth(),requireAdmin,userIsAdmin);
-router.get("/dashboard",requireAuth(),getAdminDashboardData);
+router.get("/is-admin",requireAuth(),userIsAdmin);
+router.get("/dashboard",requireAuth(),requireAdmin,getAdminDashboardData);
 router.get("/all-shows",requireAuth(),getAllDashboardShowTime);
 router.get("/all-bookings",requireAuth(),getAllBookings);
 router.post("/",requireAuth(),createSingleShow);
