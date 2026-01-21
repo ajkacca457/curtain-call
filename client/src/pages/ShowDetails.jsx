@@ -17,11 +17,11 @@ const ShowDetails = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
-  const { favorites, toggleFavorite, favoritesLoaded, activeShows } =
+  const { favorites, toggleFavorite, favoritesLoaded, suggestedShowsPool } =
     useAppContext();
 
   // Suggested shows (dummy for now)
-  const SuggestedShows = activeShows
+  const SuggestedShows = suggestedShowsPool
     .filter((item) => item._id !== id)
     .slice(0, 4);
 
@@ -189,7 +189,7 @@ const ShowDetails = () => {
         </div>
       ) : (
         <div className="p-6 text-center text-red-600 font-semibold text-lg rounded bg-red-100">
-           Login or Register to book the show.
+          Login or Register to book the show.
         </div>
       )}
 
@@ -199,11 +199,12 @@ const ShowDetails = () => {
           Other shows you can watch:
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {SuggestedShows.map((s) => (
-            <ShowCard key={s._id} show={s} />
-          ))}
+          {SuggestedShows.length > 0 ? (
+            SuggestedShows.map((s) => <ShowCard key={s._id} show={s} />)
+          ) : (
+            <p className="text-gray-500">Loading suggested shows...</p>
+          )}
         </div>
-
         <div className="flex justify-end">
           <Link
             to="/shows"

@@ -160,6 +160,7 @@ export const AppProvider = ({ children }) => {
         shows,
         upcomingShows,
         loadingShows,
+        suggestedShowsPool,
         setSortBy,
         fetchAdminStatus,
         fetchFavorites,
