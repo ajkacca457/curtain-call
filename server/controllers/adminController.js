@@ -27,19 +27,6 @@ export const userIsAdmin = async (req, res, next) => {
 
 export const getAdminDashboardData = async (req, res) => {
     try {
-        const { userId } = req.auth(); // populated by requireAuth()
-
-        if (!userId) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
-        }
-
-        const clerkUser = await clerkClient.users.getUser(userId);
-        const isAdmin = clerkUser.privateMetadata?.role === "admin";
-
-        if (!isAdmin) {
-            return res.status(403).json({ success: false, message: "Access denied. Admin only." });
-        }
-
         const confirmedBookings = await Booking.find({ isPaid: true });
         const allActiveShows = await ShowTime.find({ showDateTime: { $gte: new Date() } }).populate("showId");
         const totalUsers = await User.countDocuments();
