@@ -8,7 +8,6 @@ export default function ProtectedAdminRoute({ children }) {
   const { user, isAdmin, checkingAdmin } = useAppContext();
   const navigate = useNavigate();
   const [toastShown, setToastShown] = useState(false); // prevent multiple toasts
-
   // Redirect non-admin users and show toast
   useEffect(() => {
     if (user && !isAdmin && !checkingAdmin) {
@@ -20,6 +19,8 @@ export default function ProtectedAdminRoute({ children }) {
     }
   }, [user, isAdmin, checkingAdmin, navigate, toastShown]);
 
+  if (!user) return <SignIn fallbackRedirectUrl="/" />;
+
   // Show spinner while checking admin status
   if (checkingAdmin) {
     return (
@@ -28,10 +29,6 @@ export default function ProtectedAdminRoute({ children }) {
       </div>
     );
   }
-
-  // If not logged in, show SignIn
-  if (!user) return <SignIn fallbackRedirectUrl="/admin" />;
-
   // If user is not admin (redirect already triggered), don't render children
   if (!isAdmin) return null;
 

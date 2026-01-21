@@ -1,29 +1,15 @@
-import { useState, useEffect } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import { Navigation } from 'swiper/modules'
-import { useAppContext } from '../context/AppContext'
-import Loading from './Loading.jsx'
-import { formatDate } from '../lib/utils.js'
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
+import { useAppContext } from "../context/AppContext";
+import Loading from "./Loading.jsx";
+import { formatDate } from "../lib/utils.js";
 
 const UpcomingShowsCarousel = () => {
-  const { upcomingShows, fetchUpcomingShows } = useAppContext()
-  const [loading, setLoading] = useState(true)
+  const { upcomingShows, loadingShows } = useAppContext();
 
-  useEffect(() => {
-    const loadUpcomingShows = async () => {
-      setLoading(true)
-      await fetchUpcomingShows()
-      setLoading(false)
-    }
-
-    loadUpcomingShows()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // 👈 intentionally empty
-
-  if (loading) return <Loading />
-
+  if (loadingShows) return <Loading />;
   if (!upcomingShows?.length) {
     return (
       <div className="max-w-[1600px] mx-auto px-4 py-12">
@@ -32,7 +18,7 @@ const UpcomingShowsCarousel = () => {
         </h2>
         <p className="text-gray-500">No upcoming shows available.</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -51,7 +37,7 @@ const UpcomingShowsCarousel = () => {
           1024: { slidesPerView: 3 },
         }}
       >
-        {upcomingShows.map(show => (
+        {upcomingShows.map((show) => (
           <SwiperSlide key={show._id}>
             <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden h-full">
               <img
@@ -72,7 +58,7 @@ const UpcomingShowsCarousel = () => {
                 )}
 
                 <p className="text-gray-600 text-sm">
-                  Release Date:{' '}
+                  Release Date:{" "}
                   <span className="font-medium">
                     {formatDate(show.release_date)}
                   </span>
@@ -83,7 +69,7 @@ const UpcomingShowsCarousel = () => {
         ))}
       </Swiper>
     </div>
-  )
-}
+  );
+};
 
-export default UpcomingShowsCarousel
+export default UpcomingShowsCarousel;

@@ -13,6 +13,8 @@ export const AppProvider = ({ children }) => {
   const [shows, setShows] = useState([]);
   const [activeShows, setActiveShows] = useState([]);
   const [upcomingShows, setUpcomingShows] = useState([]);
+  const [suggestedShowsPool, setSuggestedShowsPool] = useState([]);
+  const [loadingShows, setLoadingShows] = useState(true);
   const [sortBy, setSortBy] = useState(SORT_TYPES.NEWEST);
   const [rawShows, setRawShows] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -86,28 +88,32 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchUpcomingShows = async () => {
+  const fetchUpcomingAndSuggestedPool = async () => {
+    setLoadingShows(true);
     try {
-      const { data } = await api.get("/api/shows/upcoming-shows");
-      if (data.success) {
-        setUpcomingShows(data.shows);
-        toast.success("Upcoming shows fetched successfully!");
-      } else {
-        toast.error("Failed to fetch shows.");
+      const { data: upcomingData } = await api.get("/api/shows/upcoming-shows");
+      if (upcomingData.success) {
+        setUpcomingShows(upcomingData.shows);
+      }
+
+      const { data: allData } = await api.get("/api/shows/all-shows");
+      if (allData.success) {
+        setSuggestedShowsPool(allData.shows);
       }
     } catch (error) {
-      console.error("Error fetching shows:", error);
+      console.error("Failed to fetch upcoming or all shows:", error);
       toast.error("Failed to fetch shows.");
+    } finally {
+      setLoadingShows(false);
     }
   };
-
 
   const toggleFavorite = async (showId) => {
     try {
       const { data } = await api.post(
         "/api/user/favorite",
         { showId },
-        { headers: { Authorization: `Bearer ${await getToken()}` } }
+        { headers: { Authorization: `Bearer ${await getToken()}` } },
       );
 
       if (data.success) {
@@ -137,6 +143,10 @@ export const AppProvider = ({ children }) => {
     setActiveShows(sortShows(rawShows, sortBy));
   }, [rawShows, sortBy]);
 
+  useEffect(() => {
+    fetchUpcomingAndSuggestedPool();
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -149,7 +159,8 @@ export const AppProvider = ({ children }) => {
         sortBy,
         shows,
         upcomingShows,
-        fetchUpcomingShows,
+        loadingShows,
+        suggestedShowsPool,
         setSortBy,
         fetchAdminStatus,
         fetchFavorites,
