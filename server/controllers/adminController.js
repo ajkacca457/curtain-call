@@ -55,27 +55,6 @@ export const getAdminDashboardData = async (req, res) => {
 
 export const getAllDashboardShowTime = async (req, res, next) => {
     try {
-        const { userId } = req.auth();
-
-        if (!userId) {
-            return res.status(401).json({
-                success: false,
-                message: "Unauthorized. Please sign in.",
-            });
-        }
-
-        // ✅ Get Clerk user details to verify role
-        const clerkUser = await clerkClient.users.getUser(userId);
-        const isAdmin = clerkUser.privateMetadata?.role === "admin";
-
-        if (!isAdmin) {
-            return res.status(403).json({
-                success: false,
-                message: "Access denied. Admin only.",
-            });
-        }
-
-        // ✅ Fetch upcoming showtimes and populate Show data
         const showTimes = await ShowTime.find({
             showDateTime: { $gte: new Date() },
         })
