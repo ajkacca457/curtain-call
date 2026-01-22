@@ -12,18 +12,18 @@ import UserRouter from "./routes/userRoutes.js";
 import NewsRouter from "./routes/newsRoutes.js";
 import TrailerRouter from "./routes/trailerRoutes.js";
 import ErrorHandler from "./middlewares/ErrorHandler.js";
-import { stripeWebhookHandler } from './controllers/bookingController.js';
+// import { stripeWebhookHandler } from './controllers/bookingController.js';
 
 
 const app = express();
 
 app.use(cors());
 
-app.post(
-  "/api/booking/confirm-webhook",
-  express.raw({ type: "application/json" }),
-  stripeWebhookHandler
-);  
+// app.post(
+//   "/api/booking/confirm-webhook",
+//   express.raw({ type: "application/json" }),
+//   stripeWebhookHandler
+// );  
 
 app.use(express.json());
 app.use(clerkMiddleware());
