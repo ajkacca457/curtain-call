@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
-import api from "../api/axiosInstance.js"
-import {format} from "date-fns"
+import { useState, useEffect } from "react";
+import api from "../api/axiosInstance.js";
+import { format } from "date-fns";
 
 const NewsAndAnnouncements = () => {
   const [newsItems, setNewsItems] = useState([]);
@@ -9,38 +9,51 @@ const NewsAndAnnouncements = () => {
     const fetchNews = async () => {
       try {
         const response = await api.get("/api/news");
-        const {news}= response.data;
+        const { news } = response.data;
         setNewsItems(news);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
     };
-
     fetchNews();
   }, []);
 
-  return (
-    <section className="max-w-[1600px] mx-auto px-4 py-16">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-10 text-left">
-        📰 News & Announcements
-      </h2>
+  if (!newsItems.length) return null;
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {newsItems.length>0 && newsItems.map((item) => (
+  return (
+    <section className="max-w-[1600px] mx-auto px-6 py-16">
+
+      {/* Header */}
+      <div className="mb-10">
+        <div className="flex items-center gap-4 mb-3">
+          <div className="w-8 h-0.5 bg-[#d4af37]" />
+          <span className="text-xs uppercase tracking-widest text-[#d4af37]">Latest</span>
+        </div>
+        <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#f5f5f5]">
+          News & Announcements
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
+        {newsItems.map((item) => (
           <div
-            key={item.id}
-            className="bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-100 p-6 transition"
+            key={item._id || item.id}
+            className="bg-[#111] border border-[#222] rounded-lg p-6 hover:border-[#333] transition-colors duration-200"
           >
-            <p className="text-sm text-gray-400 mb-2">{format(new Date(item.date), "EEEE, MMMM do, yyyy")}</p>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <p className="text-xs uppercase tracking-wider text-[#d4af37] mb-3">
+              {format(new Date(item.date), "MMM d, yyyy")}
+            </p>
+            <h3 className="font-serif text-lg font-semibold text-[#f5f5f5] mb-2 leading-snug">
               {item.title}
             </h3>
-            <p className="text-gray-600 text-sm">{item.description}</p>
+            <p className="text-sm text-[#888] leading-relaxed">
+              {item.description}
+            </p>
           </div>
         ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default NewsAndAnnouncements
+export default NewsAndAnnouncements;

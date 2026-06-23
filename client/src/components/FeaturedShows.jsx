@@ -1,4 +1,3 @@
-import { dummyShowsData } from "../assets/data";
 import ShowCard from "./ShowCard";
 import { useState, useEffect } from "react";
 import api from "../api/axiosInstance.js";
@@ -21,31 +20,43 @@ const FeaturedShows = () => {
         setLoading(false);
       }
     };
-
     fetchFeaturedShows();
   }, []);
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 4);
-  };
-
-  const visibleShows = Array.isArray(featured)
-    ? featured.slice(0, visibleCount)
-    : [];
+  const visibleShows = featured.slice(0, visibleCount);
 
   if (loading) {
-    return <p className="p-6 text-gray-500">Loading featured shows...</p>;
+    return (
+      <section className="max-w-[1600px] mx-auto px-6 py-16">
+        <div className="flex items-center gap-4 mb-10">
+          <div className="w-8 h-0.5 bg-[#d4af37]" />
+          <span className="text-xs uppercase tracking-widest text-[#d4af37]">Featured</span>
+        </div>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+          {[1,2,3,4].map(i => (
+            <div key={i} className="h-96 bg-[#1a1a1a] rounded-lg animate-pulse" />
+          ))}
+        </div>
+      </section>
+    );
   }
 
-  if (!visibleShows.length) {
-    return <p className="p-6 text-gray-500">No featured shows available.</p>;
-  }
+  if (!visibleShows.length) return null;
 
   return (
-    <section className="max-w-[1600px] mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold mb-6">🎭 Featured Shows</h2>
+    <section className="max-w-[1600px] mx-auto px-6 py-16">
+      {/* Section heading */}
+      <div className="mb-10">
+        <div className="flex items-center gap-4 mb-3">
+          <div className="w-8 h-0.5 bg-[#d4af37]" />
+          <span className="text-xs uppercase tracking-widest text-[#d4af37]">Featured</span>
+        </div>
+        <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#f5f5f5]">
+          Featured Shows
+        </h2>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6 mb-10">
         {visibleShows.map((show) => (
           <ShowCard key={show._id || show.id} show={show} />
         ))}
@@ -54,8 +65,8 @@ const FeaturedShows = () => {
       {visibleCount < featured.length && (
         <div className="flex justify-center">
           <button
-            onClick={handleLoadMore}
-            className="px-6 py-2 text-sm font-medium bg-gray-100 border border-gray-300 rounded-full hover:bg-gray-200 transition"
+            onClick={() => setVisibleCount((prev) => prev + 4)}
+            className="px-8 py-2.5 text-xs uppercase tracking-widest border border-[#d4af37] text-[#d4af37] rounded hover:bg-[#d4af37] hover:text-[#0a0a0a] transition-colors duration-200"
           >
             Load More
           </button>
