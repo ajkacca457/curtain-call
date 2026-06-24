@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#0a0a0a"/>
+  
+  <!-- Curtain left -->
+  <path d="M4 4 Q8 10 6 18 Q8 22 10 28 L4 28 Z" fill="#d4af37" opacity="0.9"/>
+  
+  <!-- Curtain right -->
+  <path d="M28 4 Q24 10 26 18 Q24 22 22 28 L28 28 Z" fill="#d4af37" opacity="0.9"/>
+  
+  <!-- Stage floor line -->
+  <rect x="4" y="27" width="24" height="1.5" rx="0.75" fill="#d4af37"/>
+  
+  <!-- Spotlight arc -->
+  <path d="M10 4 Q16 14 22 4" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/>
+  
+  <!-- CC text -->
+  <text x="16" y="20" font-family="Georgia, serif" font-size="10" font-weight="700" fill="#d4af37" text-anchor="middle" letter-spacing="0.5">CC</text>
+</svg>
