@@ -14,13 +14,13 @@ const Favorite = () => {
 
   if (!favorites || favorites.length === 0)
     return (
-      <div className="text-center py-20 text-gray-600 text-lg">
+      <div className="text-center py-20 text-gray-600 text-lg min-h-screen">
         You have no favorite shows yet.
       </div>
     );
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-8">
+    <div className="max-w-[1600px] mx-auto px-4 py-8 min-h-screen">
       <h1 className="text-3xl font-bold text-left my-8">
         Your Favorite Shows and Events:
       </h1>
