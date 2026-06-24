@@ -10,7 +10,7 @@ import api from "../api/axiosInstance.js";
 const SeatLayout = () => {
   const { id, date } = useParams();
   const navigate = useNavigate();
-  const { user } = useUser(); // Clerk hook
+  const { user } = useUser();
   const userId = user?.id;
   const { getToken } = useAuth();
 
@@ -20,15 +20,8 @@ const SeatLayout = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
 
-  const rowGroups = [
-    ["A", "B"],
-    ["C", "E"],
-    ["D", "F"],
-    ["G", "I"],
-    ["H", "J"],
-  ];
+  const rowGroups = [["A","B"],["C","E"],["D","F"],["G","I"],["H","J"]];
 
-  // Fetch show times
   useEffect(() => {
     const fetchShowTimes = async () => {
       setLoading(true);
@@ -45,56 +38,43 @@ const SeatLayout = () => {
     fetchShowTimes();
   }, [id]);
 
-  // Filter times by date
-  const dayShowTimes = showTimes.filter((st) =>
-    st.showDateTime.startsWith(date)
-  );
+  const dayShowTimes = showTimes.filter((st) => st.showDateTime.startsWith(date));
 
-  // Handle seat click (select/unselect)
   const handleSeatClick = (seatId, isOccupied) => {
-    if (!selectedTime) return toast("Please select show time first");
-    if (isOccupied) return; // cannot select occupied or held by others
-    if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
-      return toast("You can select max 5 seats");
-    }
-
+    if (!selectedTime) return toast("Please select a show time first");
+    if (isOccupied) return;
+    if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5)
+      return toast("Maximum 5 seats per booking");
     setSelectedSeats((prev) =>
-      prev.includes(seatId)
-        ? prev.filter((s) => s !== seatId)
-        : [...prev, seatId]
+      prev.includes(seatId) ? prev.filter((s) => s !== seatId) : [...prev, seatId]
     );
   };
 
-  // Calculate occupied seats (permanent + temporary by others)
-  const occupiedSeats = selectedTime
-    ? [
-        ...Object.keys(selectedTime.occupiedSeats || {}),
-        ...Object.keys(selectedTime.temporaryHolds || {}).filter(
-          (seat) => selectedTime.temporaryHolds[seat].userId !== userId
-        ),
-      ]
-    : [];
+  const occupiedSeats = selectedTime ? [
+    ...Object.keys(selectedTime.occupiedSeats || {}),
+    ...Object.keys(selectedTime.temporaryHolds || {}).filter(
+      (seat) => selectedTime.temporaryHolds[seat].userId !== userId
+    ),
+  ] : [];
 
-  // Render a row of seats
   const renderRows = (row, count = 9) => (
-    <div className="flex flex-wrap justify-center gap-2 mt-4">
+    <div className="flex flex-wrap justify-center gap-1.5 mt-2">
       {Array.from({ length: count }, (_, i) => {
         const seatId = `${row}${i + 1}`;
         const isSelected = selectedSeats.includes(seatId);
         const isOccupied = occupiedSeats.includes(seatId);
-
         return (
           <button
             key={seatId}
             onClick={() => handleSeatClick(seatId, isOccupied)}
             disabled={isOccupied}
-            className={`h-10 w-10 rounded border text-sm
-              ${
-                isOccupied
-                  ? "bg-gray-300 cursor-not-allowed text-gray-500"
-                  : isSelected
-                  ? "bg-indigo-600 text-white"
-                  : "border-gray-400 hover:bg-gray-100"
+            title={seatId}
+            className={`w-9 h-9 rounded text-[10px] font-medium transition-all duration-150
+              ${isOccupied
+                ? "bg-[#1a1a1a] border border-[#222] text-[#555] cursor-not-allowed"
+                : isSelected
+                  ? "bg-[#d4af37] border border-[#d4af37] text-[#0a0a0a] font-bold cursor-pointer"
+                  : "bg-[#111] border border-[#333] text-[#888] cursor-pointer hover:border-[#555]"
               }`}
           >
             {seatId}
@@ -104,43 +84,18 @@ const SeatLayout = () => {
     </div>
   );
 
-  // Proceed to hold seats and go to confirm booking
   const handleProceed = async () => {
     if (!selectedTime || selectedSeats.length === 0) return;
-
     try {
-      const payload = {
-        showTimeId: selectedTime._id,
-        selectedSeats,
-        userId, // send current user ID
-      };
-
+      const payload = { showTimeId: selectedTime._id, selectedSeats, userId };
       const res = await api.post("/api/booking/hold-seats", payload);
       if (res.data.success) {
-        toast.success("Seats temporarily held! Proceeding to checkout...");
-
-        // Optimistically update local temporaryHolds so UI disables these seats
-        selectedTime.temporaryHolds = {
-          ...selectedTime.temporaryHolds,
-          ...selectedSeats.reduce((acc, seat) => {
-            acc[seat] = {
-              userId,
-              expiresAt: new Date(Date.now() + 15 * 60 * 1000),
-            }; // 15 min expiry
-            return acc;
-          }, {}),
-        };
-
-        // Navigate to confirm booking page with necessary info
+        toast.success("Seats held — proceeding to checkout");
         navigate("/shows/confirm-booking", {
-          state: {
-            showTimeId: selectedTime._id,
-            selectedSeats,
-            show,
-          },
+          state: { showTimeId: selectedTime._id, selectedSeats, show, showPrice: selectedTime.showPrice },
         });
       } else {
-        toast.error(data.message || "Failed to hold seats");
+        toast.error(res.data.message || "Failed to hold seats");
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to hold seats");
@@ -148,91 +103,103 @@ const SeatLayout = () => {
   };
 
   if (loading) return <Loading />;
-
   if (!show || showTimes.length === 0) {
     return (
-      <div className="p-10 text-center text-gray-500">
+      <div className="py-16 text-center text-[#888]">
         No showtimes available for this date.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-4 gap-6 max-w-[1600px] mx-auto mt-10">
-      <div className="col-span-1">
-        {/* SHOW INFO */}
-        <div className="bg-white rounded-xl shadow p-4">
-          <div className="flex gap-4">
-            <img
-              src={show.poster_path}
-              alt={show.title}
-              className="w-20 h-28 rounded-lg object-cover"
-            />
+    <div className="max-w-[1600px] mx-auto px-6 py-8 grid grid-cols-[280px_1fr] gap-6">
+
+      {/* Sidebar */}
+      <div className="flex flex-col gap-4">
+
+        {/* Show info */}
+        <div className="bg-[#111] border border-[#222] rounded-lg p-4">
+          <div className="flex gap-3">
+            <img src={show.poster_path} alt={show.title} className="w-16 h-24 rounded object-cover flex-shrink-0 border border-[#222]" />
             <div>
-              <h3 className="font-semibold">{show.title}</h3>
-              <p className="text-sm text-gray-500">
-                {new Date(date).toDateString()}
+              <h3 className="font-serif text-sm font-semibold text-[#f5f5f5] mb-2">{show.title}</h3>
+              <p className="text-xs text-[#888] mb-1">
+                {new Date(date + "T00:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
               </p>
-              <p className="text-sm text-gray-500">⏱ {show.runtime} min</p>
-              <p className="text-sm text-gray-600">⭐ {show.vote_average}</p>
+              <p className="text-xs text-[#888] mb-1">⏱ {show.runtime} min</p>
+              <p className="text-xs text-[#d4af37]">★ {show.vote_average}</p>
             </div>
           </div>
         </div>
 
-        {/* Time Selector */}
-        <div className="bg-white p-6 rounded-xl shadow mt-6">
-          <h3 className="text-xl font-semibold mb-4">Select Show Timing</h3>
+        {/* Time selector */}
+        <div className="bg-[#111] border border-[#222] rounded-lg p-5">
+          <h3 className="font-serif text-base font-semibold text-[#f5f5f5] mb-4">Show Time</h3>
           {dayShowTimes.length === 0 ? (
-            <p className="text-sm text-gray-500">
-              No shows available for this date
-            </p>
+            <p className="text-sm text-[#888]">No shows for this date</p>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {dayShowTimes.map((st) => (
-                <div
+                <button
                   key={st._id}
-                  onClick={() => {
-                    setSelectedTime(st);
-                    setSelectedSeats([]); // reset previous selections
-                  }}
-                  className={`cursor-pointer px-4 py-2 rounded-lg text-sm text-center
-                    ${
-                      selectedTime?._id === st._id
-                        ? "bg-indigo-600 text-white"
-                        : "bg-gray-100 hover:bg-gray-200"
+                  onClick={() => { setSelectedTime(st); setSelectedSeats([]); }}
+                  className={`py-2 px-1 rounded text-xs cursor-pointer transition-all duration-200
+                    ${selectedTime?._id === st._id
+                      ? "border border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]"
+                      : "border border-[#333] bg-[#1a1a1a] text-[#888] hover:border-[#555]"
                     }`}
                 >
                   {isoTimeFormat(st.showDateTime)}
-                </div>
+                </button>
               ))}
             </div>
           )}
         </div>
+
+        {/* Legend */}
+        <div className="bg-[#111] border border-[#222] rounded-lg p-4">
+          <h3 className="text-xs font-medium uppercase tracking-wider text-[#555] mb-3">Legend</h3>
+          {[
+            { bg: "bg-[#111]", border: "border-[#333]", label: "Available" },
+            { bg: "bg-[#d4af37]", border: "border-[#d4af37]", label: "Selected" },
+            { bg: "bg-[#1a1a1a]", border: "border-[#222]", label: "Occupied" },
+          ].map(({ bg, border, label }) => (
+            <div key={label} className="flex items-center gap-2.5 mb-2">
+              <div className={`w-5 h-5 rounded ${bg} border ${border}`} />
+              <span className="text-xs text-[#888]">{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Seat Layout */}
-      <div className="col-span-3 bg-gray-50 rounded-xl p-6 shadow-inner min-h-[70vh]">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold mb-4">Select your seats</h3>
-          <img src={ScreenImage} alt="screen" className="mx-auto" />
-          <p className="mt-2 text-sm text-gray-500">Screen</p>
+      {/* Seat layout */}
+      <div className="bg-[#111] border border-[#222] rounded-lg p-8 min-h-[70vh]">
+        <div className="text-center mb-6">
+          <h3 className="font-serif text-xl font-semibold text-[#f5f5f5] mb-4">Choose Your Seats</h3>
+          <img src={ScreenImage} alt="screen" className="max-w-[360px] mx-auto opacity-20 invert" />
+          <p className="text-xs text-[#555] mt-1.5 tracking-widest uppercase">Screen</p>
         </div>
 
-        <div className="mt-8">{rowGroups[0].map((row) => renderRows(row))}</div>
-        <div className="grid grid-cols-2 gap-8 mt-8">
+        <div className="mt-6">
+          {rowGroups[0].map((row) => renderRows(row))}
+        </div>
+        <div className="grid grid-cols-2 gap-8 mt-6">
           {rowGroups.slice(1).map((group, idx) => (
             <div key={idx}>{group.map((row) => renderRows(row))}</div>
           ))}
         </div>
 
-        {/* Proceed button */}
         {selectedSeats.length > 0 && (
-          <div className="mt-10 text-center">
+          <div className="mt-10 text-center border-t border-[#222] pt-7">
+            <p className="text-sm text-[#888] mb-4">
+              {selectedSeats.length} seat{selectedSeats.length > 1 ? "s" : ""} selected:{" "}
+              <span className="text-[#f5f5f5]">{selectedSeats.join(", ")}</span>
+            </p>
             <button
               onClick={handleProceed}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
+              className="px-10 py-3.5 text-xs uppercase tracking-widest border border-[#d4af37] text-[#d4af37] rounded hover:bg-[#d4af37] hover:text-[#0a0a0a] transition-colors duration-200"
             >
-              Proceed to booking
+              Proceed to Checkout
             </button>
           </div>
         )}
