@@ -1,129 +1,266 @@
-# 🎭 Curtain Call – Booking Platform
+# CurtainCall
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+**A full-stack theatre and live events booking platform** with real-time seat selection, Stripe payments, and a complete admin dashboard.
 
-**Curtain Call** is a modern theater booking platform with Stripe payment integration, Clerk authentication, and a fully-featured admin dashboard. Users can book seats, pay securely, and track their bookings, while admins can manage shows, bookings, and news/announcements.  
+🔗 **Live Demo:** [curtain-call-front.vercel.app](https://curtain-call-front.vercel.app)  
+📹 **Admin Walkthrough:** [INSERT_LOOM_LINK]
 
-Live Demo: [INSERT_LIVE_URL_HERE]  
-
----
-
-## 📹 Video / GIF Presentation
-
-🎬 **Demo Video:** [INSERT_VIDEO_LINK_HERE]  
-
-Alternatively, replace screenshots below with **GIFs** showing interactions: booking flow, admin dashboard, or modal actions.
+> ⚠️ **Testing Payments:** This app uses Stripe in **test mode**. Do not use a real card.  
+> Use Stripe's test card: `4242 4242 4242 4242` · Expiry: any future date · CVC: any 3 digits
 
 ---
 
-## 🖼 Screenshots / GIFs
+## Overview
 
-| User Booking Flow | Admin Dashboard |
-|-----------------|----------------|
-| ![User Booking](path/to/user-booking.gif) | ![Admin Dashboard](path/to/admin-dashboard.gif) |
+CurtainCall lets users browse shows, select seats in real time, and complete purchases through Stripe Checkout. An admin dashboard allows full management of shows, showtimes, bookings, and news announcements.
 
-| Admin News Management | Show Management |
-|----------------------|----------------|
-| ![Admin News](path/to/admin-news.gif) | ![Admin Shows](path/to/admin-shows.gif) |
-
-> Replace `path/to/...` with GIFs or video thumbnails. Clicking can link to video playback if you host them externally.  
+Built as a portfolio project to demonstrate a production-grade full-stack architecture with third-party integrations.
 
 ---
 
-## 🏗 Tech Stack
+## Tech Stack
 
-- **Frontend:** React (Vite) + Tailwind CSS  
-- **Backend:** Node.js + Express.js  
-- **Database:** MongoDB  
-- **Authentication:** Clerk  
-- **Payments:** Stripe Checkout + Webhook  
-- **Deployment:** TBD (Vercel/Netlify for frontend, Railway/Render for backend)  
+**Frontend**
+- React 19 + Vite 7
+- Tailwind CSS v4 + DaisyUI
+- Clerk (authentication)
+- React Router DOM v7
+- Swiper, React Player, React Hot Toast, React Icons
 
----
+**Backend**
+- Node.js 22 + Express 5
+- MongoDB + Mongoose
+- Clerk Express SDK
+- Stripe (Checkout + Webhooks)
+- Inngest (Clerk user sync via webhooks)
 
-## 🛠 Features
-
-### **User-Facing Features**
-
-- Browse shows and select seats  
-- Temporary seat hold during checkout  
-- Stripe checkout with automatic confirmation via webhook  
-- View all future bookings with detailed info  
-- Responsive and modern UI  
-
-### **Admin Dashboard**
-
-- **Bookings:** View all bookings, filter by date, pagination  
-- **Shows:** Manage active/upcoming shows  
-- **News/Announcements:**  
-  - Add, view, delete news in a modal-based table  
-  - Single-page management, click-to-view details  
-- **Statistics:** Total bookings, revenue, active shows, total users  
-
-### **Payment Flow**
-
-1. User selects show & seats  
-2. Seats held temporarily in backend  
-3. Stripe Checkout session initiated  
-4. Webhook confirms payment  
-5. Seats marked as occupied & booking created  
+**Deployment**
+- Frontend → Vercel
+- Backend → Vercel (serverless)
+- Database → MongoDB Atlas
 
 ---
 
-## 💻 Backend Models
+## Features
 
-### **ShowTime**
-- `showId` → Reference to Show  
-- `showDateTime`  
-- `showPrice`  
-- `occupiedSeats` → Object mapping seat → userId  
-- `temporaryHolds` → Object mapping seat → { userId, expiresAt }  
+### User
+- Browse active and upcoming shows
+- View show details, cast, genres, tagline
+- Select seats with real-time 15-minute hold
+- Stripe Checkout with webhook confirmation
+- View booking history filtered by all / today / upcoming / past
+- Add shows to favourites
+- Dark cinematic responsive UI
 
-### **Booking**
-- `user` → ObjectId reference  
-- `showTime` → ObjectId reference  
-- `bookedSeats` → Array of strings  
-- `amount`, `isPaid`, `paymentIntentId`  
-
-### **News**
-- `title`, `description`, `image`, `isActive`, `date`  
-
----
-
-## ⚡ Key Backend Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/booking/create-stripe-session` | POST | Create Stripe checkout session |
-| `/api/booking/confirm-webhook` | POST | Webhook to confirm payment |
-| `/api/admin/all-bookings` | GET | Admin: fetch all bookings |
-| `/api/news` | GET | Fetch active news |
-| `/api/news` | POST | Admin: create news |
-| `/api/news/:id` | DELETE | Admin: delete news |
-
-> All admin routes are protected with `requireAuth()` + `userIsAdmin()`.
+### Admin
+- Dashboard with stats — total bookings, revenue, active shows, users
+- Add and edit shows
+- Activate / deactivate shows
+- Manage showtimes and pricing per show
+- View and filter all bookings with date range and pagination
+- Manage news and announcements
+- View upcoming shows
 
 ---
 
-## 💻 Installation & Local Setup
+## Payment Flow
+
+```
+User selects seats
+      ↓
+Seats temporarily held (15 min) in backend
+      ↓
+Stripe Checkout session created
+      ↓
+User completes payment on Stripe
+      ↓
+Stripe webhook fires → seats marked occupied → booking created
+```
+
+---
+
+## Local Setup
+
+### Prerequisites
+- Node.js 22.x
+- MongoDB Atlas account
+- Clerk account
+- Stripe account
+
+### Clone & Install
 
 ```bash
-# Clone repo
-git clone https://github.com/YOUR_USERNAME/curtain-call.git
+git clone https://github.com/ajkacca457/curtain-call.git
 cd curtain-call
 
-# Install dependencies
-npm install
+# Install server dependencies
+cd server && npm install
 
-# Environment Variables (.env)
+# Install client dependencies
+cd ../client && npm install
+```
+
+### Environment Variables
+
+**server/.env**
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+INNGEST_EVENT_KEY=your_inngest_event_key
+INNGEST_SIGNING_KEY=your_inngest_signing_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_BOOKING_SECRET=your_webhook_secret
+STRIPE_WEBHOOK_BOOKING_SECRET=your_stripe_webhook_booking_secret
 FRONTEND_URL=http://localhost:5173
-MONGO_URI=your_mongodb_uri
+```
 
-# Run backend
-npm run dev
+**client/.env**
+```env
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_CURRENCY=€
+VITE_API_BASE_URL=http://localhost:5000
+```
 
-# Run frontend (Vite)
-cd client
-npm run dev
+### Run
+
+```bash
+# Terminal 1 — backend
+cd server && npm run dev
+
+# Terminal 2 — frontend
+cd client && npm run dev
+```
+
+Frontend: `http://localhost:5173`  
+Backend: `http://localhost:5000`
+
+---
+
+## Project Structure
+
+```
+curtain-call/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable components + admin
+│   │   ├── context/        # AppContext, AdminContext
+│   │   ├── pages/          # Route-level pages
+│   │   ├── api/            # Axios instance
+│   │   └── lib/            # Utilities
+│   └── public/
+├── server/                 # Express backend
+│   ├── controllers/        # Route handlers
+│   ├── models/             # Mongoose schemas
+│   ├── routes/             # Express routers
+│   ├── middlewares/        # Auth, error handling
+│   ├── inngest/            # Clerk user sync functions
+│   └── config/             # DB connection
+└── README.md
+```
+
+---
+
+## Key API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/shows/active-shows` | Get all active shows |
+| GET | `/api/shows/featured` | Get featured shows |
+| GET | `/api/shows/upcoming-shows` | Get upcoming shows |
+| GET | `/api/shows/:id` | Get single show |
+| GET | `/api/shows/showtime/:showId` | Get showtimes for a show |
+| POST | `/api/booking/hold-seats` | Temporarily hold seats |
+| POST | `/api/booking/create-stripe-session` | Create Stripe checkout session |
+| GET | `/api/booking/my-bookings` | Get current user bookings |
+| GET | `/api/booking/seats/:showTimeId` | Get occupied seats |
+| GET | `/api/admin/dashboard` | Admin dashboard stats |
+| GET | `/api/admin/all-bookings` | Admin: all bookings |
+| GET | `/api/admin/all-shows` | Admin: all shows with showtimes |
+| POST | `/api/admin/` | Admin: create show |
+| PUT | `/api/admin/shows/:id` | Admin: update show |
+| POST | `/api/admin/show-time` | Admin: create showtime |
+| PATCH | `/api/shows/toggle-active/:id` | Admin: toggle show active status |
+| GET | `/api/news` | Get active news |
+| GET | `/api/trailers` | Get all trailers |
+
+---
+
+## Data Models
+
+**Show**
+```
+title, overview, poster_path, backdrop_path
+genres          → Array
+casts           → Array
+release_date    → Date
+tagline, original_language
+vote_average, vote_count, runtime
+isActive        → Boolean (default: true)
+isFeatured      → Boolean (default: false)
+```
+
+**ShowTime**
+```
+showId          → ref: Show
+showDateTime    → Date
+showPrice       → Number
+occupiedSeats   → { seatId: userId }
+temporaryHolds  → { seatId: { userId, expiresAt } }
+```
+
+**Booking**
+```
+user            → Clerk userId (String)
+showTime        → ref: ShowTime
+bookedSeats     → [String]
+amount          → Number
+isPaid          → Boolean
+paymentIntentId → String
+```
+
+**User**
+```
+_id             → Clerk userId (String)
+name            → String
+email           → String (unique)
+image           → String
+```
+
+**News**
+```
+title, description
+date            → Date (default: now)
+image           → String (optional)
+isActive        → Boolean (default: true)
+```
+
+**Trailer**
+```
+showId          → ref: Show
+title, thumbnail, videoUrl
+releaseDate     → Date
+```
+
+---
+
+## Known Limitations / Future Plans
+
+- [ ] Tests (unit + integration)
+- [ ] Contact form submission
+- [ ] Newsletter subscription
+- [ ] Interactive navbar scroll behaviour
+- [ ] TypeScript migration
+
+---
+
+## Author
+
+**Avijit Karmaker**  
+[GitHub](https://github.com/ajkacca457) · [Portfolio](https://avijitkarmaker.com)
+
+---
+
+## License
+
+MIT

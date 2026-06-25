@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext.jsx";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import api from "../../api/axiosInstance.js";
 
 const AdminShows = () => {
   const { shows, fetchAllShows } = useAppContext();
@@ -16,8 +18,15 @@ const AdminShows = () => {
     load();
   }, []);
 
-  const toggleActive = (showId) => {
-    console.log("Toggle active for show:", showId);
+  const toggleActive = async (showId) => {
+    try {
+      await api.patch(`/api/shows/toggle-active/${showId}`);
+      await fetchAllShows(); 
+      toast.success("Show status updated");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update show status");
+    }
   };
 
   const filteredShows = shows.filter((show) => {
@@ -115,7 +124,7 @@ const AdminShows = () => {
                     </div>
                     <button
                       onClick={() => toggleActive(show._id)}
-                      className={`text-sm px-2 py-1 rounded ${
+                      className={`text-sm px-2 py-1 rounded cursor-pointer ${
                         show.isActive
                           ? "bg-red-100 text-red-600"
                           : "bg-green-100 text-green-600"

@@ -38,7 +38,7 @@ const Trailers = () => {
         </div>
 
         {/* Player + sidebar layout */}
-        <div className="flex flex-col lg:flex-row gap-6 items-start max-w-[1200px] mx-auto">
+        <div className="flex flex-col lg:flex-row gap-6 items-start max-w-[1600px] mx-auto">
 
           {/* Main player */}
           <div className="w-full lg:flex-1">

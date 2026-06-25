@@ -63,7 +63,6 @@ export const AppProvider = ({ children }) => {
       if (data.success) {
         setRawShows(data.shows);
         setActiveShows(sortShows(data.shows, sortBy));
-        toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
       }
@@ -78,7 +77,6 @@ export const AppProvider = ({ children }) => {
       const { data } = await api.get("/api/shows/all-shows");
       if (data.success) {
         setShows(data.shows);
-        toast.success("Shows fetched successfully!");
       } else {
         toast.error("Failed to fetch shows.");
       }
@@ -108,6 +106,27 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // const toggleFavorite = async (showId) => {
+  //   try {
+  //     const { data } = await api.post(
+  //       "/api/user/favorite",
+  //       { showId },
+  //       { headers: { Authorization: `Bearer ${await getToken()}` } },
+  //     );
+
+  //     if (data.success) {
+  //       setFavorites((prev) => {
+  //         const exists = prev.some((s) => s._id === showId);
+  //         return exists
+  //           ? prev.filter((s) => s._id !== showId)
+  //           : [...prev, { _id: showId }];
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to toggle favorite", error);
+  //   }
+  // };
+
   const toggleFavorite = async (showId) => {
     try {
       const { data } = await api.post(
@@ -117,12 +136,7 @@ export const AppProvider = ({ children }) => {
       );
 
       if (data.success) {
-        setFavorites((prev) => {
-          const exists = prev.some((s) => s._id === showId);
-          return exists
-            ? prev.filter((s) => s._id !== showId)
-            : [...prev, { _id: showId }];
-        });
+        await fetchFavorites(); // re-fetch instead of optimistic update
       }
     } catch (error) {
       console.error("Failed to toggle favorite", error);
