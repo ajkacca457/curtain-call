@@ -249,7 +249,6 @@ releaseDate     → Date
 - [ ] Tests (unit + integration)
 - [ ] Contact form submission
 - [ ] Newsletter subscription
-- [ ] Dynamic hero section from API
 - [ ] Interactive navbar scroll behaviour
 - [ ] TypeScript migration
 
