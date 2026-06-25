@@ -12,7 +12,7 @@ const AdminLayout = () => {
           <AdminSidebar />
         </div>
 
-        <div className="col-span-4 h-full overflow-y-auto bg-gray-50 pb-12">
+        <div className="col-span-4 h-full overflow-y-auto bg-gray-50 text-gray-800 pb-12">
           <Outlet />
         </div>
       </div>

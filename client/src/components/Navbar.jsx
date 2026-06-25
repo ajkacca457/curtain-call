@@ -1,118 +1,72 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
-import { IoTicket, IoHome, IoFilm, IoHeart } from "react-icons/io5";
+import { IoTicket, IoHome, IoFilm, IoHeart, IoMenu, IoClose } from "react-icons/io5";
+import { useState } from "react";
 
 const Navbar = () => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleBookingsClick = () => {
-    if (!user) {
-      openSignIn();
-    } else {
-      navigate("/my-bookings");
-    }
+    if (!user) openSignIn();
+    else navigate("/my-bookings");
   };
 
   const navItems = [
-    { label: "Home", to: "/", icon: <IoHome className="inline mr-1" /> },
-    { label: "Shows", to: "/shows", icon: <IoFilm className="inline mr-1" /> },
-    ...(user
-      ? [
-          {
-            label: "My Favorite",
-            to: "/my-favorite",
-            icon: <IoHeart className="inline mr-1" />,
-          },
-        ]
-      : []),
+    { label: "Home",      to: "/",           icon: <IoHome /> },
+    { label: "Shows",     to: "/shows",      icon: <IoFilm /> },
+    ...(user ? [{ label: "Favourites", to: "/my-favorite", icon: <IoHeart /> }] : []),
   ];
 
+  const isActive = (to) =>
+    to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+
   return (
-    <div className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur-md">
-      <div className="navbar max-w-[1600px] mx-auto px-6 py-3">
-        {/* Start */}
-        <div className="navbar-start">
-          {/* Mobile dropdown */}
-          <div className="dropdown">
-            <label
-              tabIndex={0}
-              className="btn btn-ghost lg:hidden text-gray-700 hover:bg-indigo-50"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-white/95 backdrop-blur-lg rounded-xl w-56 border border-gray-100"
-            >
-              {navItems.map((item) => (
-                <li key={item.to}>
-                  <Link
-                    className="hover:text-indigo-600 flex items-center"
-                    to={item.to}
-                  >
-                    {item.icon} {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <nav className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-[#222]">
+      <div className="max-w-[1600px] mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link
-            to="/"
-            className="text-2xl font-semibold font-playfair text-gray-800 tracking-wide hover:text-indigo-600 transition-colors"
-          >
-            Curtains<span className="text-indigo-600">Call</span>
+          <Link to="/" className="no-underline">
+            <span className="font-serif text-xl font-bold tracking-wide text-[#f5f5f5]">
+              Curtain<span className="text-[#d4af37]">Call</span>
+            </span>
           </Link>
-        </div>
 
-        {/* Center (desktop links) */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 text-gray-700 font-medium space-x-4">
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-2">
             {navItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  className="hover:text-indigo-600 transition-colors flex items-center"
-                  to={item.to}
-                >
-                  {item.icon} {item.label}
-                </Link>
-              </li>
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded text-xs font-medium uppercase tracking-widest transition-colors duration-200 no-underline
+                  ${isActive(item.to)
+                    ? "text-[#d4af37] border-b border-[#d4af37]"
+                    : "text-[#888] hover:text-[#f5f5f5]"
+                  }`}
+              >
+                {item.icon} {item.label}
+              </Link>
             ))}
-          </ul>
-        </div>
+          </div>
 
-        {/* End (login/user button) */}
-        <div className="navbar-end">
-          {!user ? (
-            <button
-              className="btn btn-sm btn-outline border-indigo-500 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all"
-              onClick={openSignIn}
-            >
-              Login
-            </button>
-          ) : (
-            <div className="flex items-center gap-3">
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+            {!user ? (
+              <button
+                onClick={openSignIn}
+                className="px-5 py-2 text-xs font-medium uppercase tracking-widest border border-[#d4af37] text-[#d4af37] rounded hover:bg-[#d4af37] hover:text-[#0a0a0a] transition-colors duration-200"
+              >
+                Sign In
+              </button>
+            ) : (
               <UserButton
                 appearance={{
                   elements: {
-                    userButtonAvatarBox:
-                      "ring-2 ring-indigo-500 hover:ring-indigo-400 transition",
+                    userButtonAvatarBox: "ring-2 ring-[#d4af37] ring-offset-2 ring-offset-[#0a0a0a]",
                   },
                 }}
               >
@@ -124,11 +78,36 @@ const Navbar = () => {
                   />
                 </UserButton.MenuItems>
               </UserButton>
-            </div>
-          )}
+            )}
+
+            {/* Mobile hamburger */}
+            <button
+              className="lg:hidden text-[#888] text-2xl bg-transparent border-none cursor-pointer"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <IoClose /> : <IoMenu />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div className="lg:hidden border-t border-[#222] py-3">
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-2.5 px-2 py-3 text-sm no-underline border-b border-[#222]
+                  ${isActive(item.to) ? "text-[#d4af37]" : "text-[#888]"}`}
+              >
+                {item.icon} {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </nav>
   );
 };
 

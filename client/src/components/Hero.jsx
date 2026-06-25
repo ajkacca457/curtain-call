@@ -1,46 +1,61 @@
-import HeroImg from '../assets/hero-display.jpg'
+import HeroImg from '../assets/hero-display.jpg';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <div
-      className='relative h-[80vh] bg-cover bg-center bg-no-repeat max-w-[1600px] mx-auto rounded-2xl'
-      style={{ backgroundImage: `url(${HeroImg})` }}
-    >
-      {/* Overlay */}
-      <div className='absolute inset-0 bg-black opacity-70 rounded-2xl'></div>
+    <div className="max-w-[1600px] mx-auto px-6 pt-6">
+      <div
+        className="relative min-h-[82vh] rounded-xl overflow-hidden bg-cover bg-center flex items-end"
+        style={{ backgroundImage: `url(${HeroImg})` }}
+      >
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/60 to-[#0a0a0a]/10 rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent rounded-xl" />
 
-      {/* Content */}
-      <div className='relative z-10 flex flex-col items-end justify-end h-full p-8'>
-        <h4 className='text-purple-300 font-bold text-lg tracking-wider drop-shadow-md mb-4'>
-          NOW SHOWING
-        </h4>
-               {/* Small details */}
-        <div className='text-gray-300 text-sm tracking-wide space-x-4 mb-2 drop-shadow-sm text-right'>
-          <span className='text-purple-300'>Genre: Musical Drama</span>
-          <span className='text-purple-300'>•</span>
-          <span className='text-purple-300'>Runtime: 2h 30m</span>
-          <span className='text-purple-300'>•</span>
-          <span className='text-purple-300'>Writer: Andrew Lloyd Webber</span>
-        </div>
-        <h1 className='text-purple-400 text-4xl font-semibold tracking-wide drop-shadow-md'>
-          Phantom of the Opera
-        </h1>
-        <p className='mt-4 text-md text-gray-200 max-w-xl drop-shadow-sm text-right'>
-          Dive into the hauntingly beautiful tale of love and mystery beneath the Paris Opera House.  
-          Featuring iconic music and unforgettable performances, this classic musical continues to captivate audiences worldwide.
-        </p>
+        {/* Content — pinned to bottom */}
+        <div className="relative z-10 pb-14 px-14 max-w-2xl">
 
-        <div className='mt-6 flex gap-4'>
-          <button className='bg-transparent border border-purple-400 text-purple-400 px-6 py-2 rounded-full text-sm hover:bg-purple-400 hover:text-black transition cursor-pointer'>
-            Book Tickets
-          </button>
-          <button className='bg-transparent border border-purple-400 text-purple-400 px-6 py-2 rounded-full text-sm hover:bg-purple-400 hover:text-black transition cursor-pointer'>
-            Watch Trailer
-          </button>
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-8 h-px bg-[#d4af37]" />
+            <span className="text-[#d4af37] text-xs font-medium uppercase tracking-[0.16em]">
+              Now Showing
+            </span>
+          </div>
+
+          {/* Meta */}
+          <div className="flex gap-5 mb-4 flex-wrap">
+            {["Musical Drama", "2h 30m", "Andrew Lloyd Webber"].map((tag, i) => (
+              <span key={i} className="text-[#888] text-xs tracking-wide">{tag}</span>
+            ))}
+          </div>
+
+          {/* Title */}
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-[#f5f5f5] leading-tight mb-5">
+            Phantom of<br />the Opera
+          </h1>
+
+          {/* Description */}
+          <p className="text-[#888] text-sm leading-relaxed mb-8 max-w-md">
+            A haunting tale of love and mystery beneath the Paris Opera House.
+            Iconic music, unforgettable performances — a timeless classic.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex gap-4 flex-wrap">
+            <Link to="/shows">
+              <button className="bg-[#d4af37] text-[#0a0a0a] font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded hover:opacity-90 transition-opacity">
+                Book Tickets
+              </button>
+            </Link>
+            <button className="border border-[#d4af37] text-[#d4af37] text-xs uppercase tracking-widest px-8 py-3.5 rounded hover:bg-[#d4af37] hover:text-[#0a0a0a] transition-colors">
+              Watch Trailer
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

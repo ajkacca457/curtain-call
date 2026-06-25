@@ -4,12 +4,11 @@ import toast from "react-hot-toast";
 import api from "../api/axiosInstance";
 import { useAuth } from "@clerk/clerk-react";
 
-
 const ConfirmBooking = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getToken } = useAuth();
-  const { showTimeId, selectedSeats, show } = location.state || {};
+  const { showTimeId, selectedSeats, show, showPrice } = location.state || {};
 
   if (!showTimeId || !selectedSeats || !show) {
     toast.error("Booking information missing!");
@@ -17,28 +16,16 @@ const ConfirmBooking = () => {
     return null;
   }
 
-  const ticketPrice = show.showPrice || 350; // fallback price
+  const ticketPrice = showPrice || 350;
   const totalAmount = ticketPrice * selectedSeats.length;
 
   const handleConfirmBooking = async () => {
     try {
-      const payload = {
-        showTimeId,
-        selectedSeats,
-        show,
-      };
-
-      const { data } = await api.post(
-        "/api/booking/create-stripe-session",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        }
-      );
-
-      window.location.href = data.url; // Redirect to Stripe
+      const payload = { showTimeId, selectedSeats, show };
+      const { data } = await api.post("/api/booking/create-stripe-session", payload, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+      window.location.href = data.url;
     } catch (err) {
       console.log(err);
       toast.error("Failed to start payment");
@@ -46,56 +33,61 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-center">
-        Booking Summary
-      </h2>
+    <div className="max-w-xl mx-auto px-6 py-12">
+      <div className="bg-[#111] border border-[#222] rounded-lg px-9 py-10">
 
-      {/* Show Info */}
-      <div className="flex gap-4 mb-6 items-center">
-        <img
-          src={show.poster_path}
-          alt={show.title}
-          className="w-20 h-28 rounded-lg object-cover"
-        />
-        <div>
-          <h3 className="text-xl font-semibold">{show.title}</h3>
-          <p className="text-sm text-gray-500">Runtime: {show.runtime} min</p>
-          <p className="text-sm text-gray-500">
-            Rating: ⭐ {show.vote_average}
-          </p>
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-8 h-0.5 bg-[#d4af37]" />
+            <span className="text-xs uppercase tracking-widest text-[#d4af37]">Checkout</span>
+          </div>
+          <h2 className="font-serif text-3xl font-bold text-[#f5f5f5]">Booking Summary</h2>
         </div>
-      </div>
 
-      {/* Seats & Pricing */}
-      <div className="mb-6">
-        <h4 className="text-lg font-medium mb-2">Selected Seats</h4>
-        <ul className="border rounded-lg divide-y">
+        {/* Show info */}
+        <div className="flex gap-5 mb-7 pb-7 border-b border-[#222]">
+          <img
+            src={show.poster_path}
+            alt={show.title}
+            className="w-18 h-24 rounded object-cover flex-shrink-0 border border-[#222]"
+          />
+          <div>
+            <h3 className="font-serif text-xl font-semibold text-[#f5f5f5] mb-2">{show.title}</h3>
+            <p className="text-sm text-[#888] mb-1">Runtime: {show.runtime} min</p>
+            <p className="text-sm text-[#d4af37]">★ {show.vote_average}</p>
+          </div>
+        </div>
+
+        {/* Seats */}
+        <h4 className="text-xs font-medium uppercase tracking-widest text-[#888] mb-3">
+          Selected Seats
+        </h4>
+        <div className="mb-6">
           {selectedSeats.map((seat) => (
-            <li
-              key={seat}
-              className="flex justify-between px-4 py-2 text-sm font-medium"
-            >
-              <span>{seat}</span>
-              <span>€{ticketPrice}</span>
-            </li>
+            <div key={seat} className="flex justify-between py-2.5 border-b border-[#222] text-sm">
+              <span className="text-[#f5f5f5]">Seat {seat}</span>
+              <span className="text-[#888]">€{ticketPrice}</span>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
 
-      {/* Total */}
-      <div className="mb-6 flex justify-between items-center bg-gray-100 p-4 rounded-lg font-semibold text-lg">
-        <span>Total ({selectedSeats.length} seats)</span>
-        <span>€{totalAmount}</span>
-      </div>
+        {/* Total */}
+        <div className="flex justify-between items-center p-4 mb-7 bg-[#d4af37]/10 border border-[#a8892a] rounded-lg">
+          <span className="text-sm font-medium text-[#f5f5f5]">
+            Total ({selectedSeats.length} seat{selectedSeats.length > 1 ? "s" : ""})
+          </span>
+          <span className="font-serif text-2xl font-bold text-[#d4af37]">
+            €{totalAmount}
+          </span>
+        </div>
 
-      {/* Confirm Button */}
-      <div className="text-center">
+        {/* CTA */}
         <button
           onClick={handleConfirmBooking}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
+          className="w-full bg-[#d4af37] text-[#0a0a0a] font-bold text-xs uppercase tracking-widest py-3.5 rounded hover:opacity-90 transition-opacity duration-200"
         >
-          Confirm Booking
+          Confirm & Pay
         </button>
       </div>
     </div>
