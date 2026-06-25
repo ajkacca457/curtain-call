@@ -235,3 +235,15 @@ export const getUpcomingShows = async (req, res, next) => {
         next(error)        
     }
 } 
+
+export const toggleShowActive = async (req, res, next) => {
+  try {
+    const show = await Show.findById(req.params.id);
+    if (!show) return next(new ErrorResponse("Show not found", 404));
+    show.isActive = !show.isActive;
+    await show.save();
+    res.status(200).json({ success: true, isActive: show.isActive });
+  } catch (error) {
+    next(error);
+  }
+};
