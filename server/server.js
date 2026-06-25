@@ -37,6 +37,11 @@ app.use("/api/user",UserRouter);
 app.use("/api/news",NewsRouter);
 app.use("/api/trailers", TrailerRouter);
 
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: `Route ${req.method} ${req.url} not found` });
+});
+
 app.use(ErrorHandler);
 
 const PORT = process.env.PORT || 5000;
