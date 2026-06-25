@@ -5,6 +5,9 @@
 🔗 **Live Demo:** [curtain-call-front.vercel.app](https://curtain-call-front.vercel.app)  
 📹 **Admin Walkthrough:** [INSERT_LOOM_LINK]
 
+> ⚠️ **Testing Payments:** This app uses Stripe in **test mode**. Do not use a real card.  
+> Use Stripe's test card: `4242 4242 4242 4242` · Expiry: any future date · CVC: any 3 digits
+
 ---
 
 ## Overview
